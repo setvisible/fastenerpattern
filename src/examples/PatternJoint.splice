@@ -1,0 +1,83 @@
+{
+    "author": "S. Vavassori",
+    "fasteners": [
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.0001,
+            "position_y": -0.0105,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.0068,
+            "position_y": -0.0064,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.0101,
+            "position_y": 0,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.0064,
+            "position_y": 0.0066,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.0003,
+            "position_y": 0.011,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.006,
+            "position_y": 0.0074,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.0092,
+            "position_y": 0.0001,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.007,
+            "position_y": -0.0069,
+            "thickness": 0.003
+        }
+    ],
+    "load": {
+        "fx": 250,
+        "fy": 500,
+        "mz": 0
+    },
+    "name": "Pattern Joint"
+}

@@ -1,0 +1,101 @@
+{
+    "author": "S. Vavassori",
+    "fasteners": [
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.0011085594234354573,
+            "position_y": -0.024536552856387564,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.01279780170854551,
+            "position_y": -0.02104193171383254,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.0055495088627320034,
+            "position_y": -0.023736552856387566,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.006802198291454489,
+            "position_y": -0.01794193171383254,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.0006914405765645427,
+            "position_y": -0.010636552856387567,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": 0.00730219829145449,
+            "position_y": -0.01164193171383254,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.0016558699947129697,
+            "position_y": -0.017536552856387563,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.0053558699947129695,
+            "position_y": -0.010636552856387567,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.008997801708545512,
+            "position_y": -0.01614193171383254,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "New fastener",
+            "position_x": -0.006797801708545512,
+            "position_y": -0.02314193171383254,
+            "thickness": 0.003
+        }
+    ],
+    "load": {
+        "fx": -100,
+        "fy": -50,
+        "mz": 10
+    },
+    "name": "Random Joint"
+}

@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/logo/logo.ico</file>
+        <file>icons/logo/logo_24x24.png</file>
+        <file>icons/logo/logo_32x32.png</file>
+        <file>icons/logo/logo_128x128.png</file>
+        <file>icons/logo/logo_256x256.png</file>
+        <file>icons/menu/bolt_add_24x24.png</file>
+        <file>icons/menu/bolt_delete_24x24.png</file>
+        <file>icons/menu/bolt_duplicate_24x24.png</file>
+        <file>icons/menu/bolt_select_all_24x24.png</file>
+        <file>icons/menu/file_new_24x24.png</file>
+        <file>icons/menu/file_open_24x24.png</file>
+        <file>icons/menu/file_save_24x24.png</file>
+        <file>icons/menu/file_save_as_24x24.png</file>
+        <file>icons/menu/view_axes_24x24.png</file>
+        <file>icons/menu/view_background_24x24.png</file>
+        <file>icons/menu/view_force_component_24x24.png</file>
+        <file>icons/menu/view_force_resultant_24x24.png</file>
+        <file>icons/menu/view_force_torque_24x24.png</file>
+        <file>icons/menu/view_grid_24x24.png</file>
+        <file>icons/menu/view_labels_24x24.png</file>
+        <file>icons/menu/view_snap_24x24.png</file>
+    </qresource>
+</RCC>

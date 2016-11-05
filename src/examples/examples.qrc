@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/examples/">
+        <file>4BoltJoint.splice</file>
+        <file>PatternJoint.splice</file>
+        <file>RandomJoint.splice</file>
+    </qresource>
+</RCC>

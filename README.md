@@ -1,19 +1,29 @@
 # FastenerPattern
 
-FastenerPattern is a solution for designing Fastener Patterns (i.e. Bolted and Riveted Joints) in Aerostructures, for Windows, Mac OS X and Linux.
+![logo_256x256.png](src/icons/logo/logo_256x256.png)
 
-Its core is developed in C++, based on the Qt framework.
+**FastenerPattern** is a solution for designing fastener patterns (i.e. *bolted* and *riveted* joints) in Aerostructures, for Windows, Mac OS X and Linux.
+
+Its core is developed in C++, based on the [Qt framework](https://www.qt.io/ "Qt framework"). It uses the [Boost::Units](http://www.boost.org/ "Boost") module.
 
 
-## Download
+## CP solver
 
-Go to the [download](https://github.com/setvisible/fastenerpattern/releases "Download") page
+Optionaly, FastenerPattern can use a third-party CP solver called CPFP (*Constraint Programming Solver for FastenerPattern*). 
 
-**NOTE: Work in progress**
+More info [here](cpsolver/README.txt "here").
+
+
+## Installation
+
+Download the most recent package from the [download](https://github.com/setvisible/fastenerpattern/releases "Last Releases") page, unzip it and run it.
+
+Read the [User's Manual](user-manual/User_Manual.pdf "User_Manual.pdf").
+
 
 ## Build
 
-1. Download `FastenerPattern.tar.gz` [here](https://github.com/setvisible/fastenerpattern/releases "Download").
+1. Download `FastenerPattern.tar.gz` [here](https://github.com/setvisible/fastenerpattern/releases "Last Releases").
 
 2. Unzip:
 
@@ -27,7 +37,7 @@ Go to the [download](https://github.com/setvisible/fastenerpattern/releases "Dow
             $ mkdir -p build
             $ cd build/
             $ cmake ..
-            $ make -j64
+            $ make -j
             $ make install
 
      - On Windows (MinGW)
@@ -35,7 +45,7 @@ Go to the [download](https://github.com/setvisible/fastenerpattern/releases "Dow
             > mkdir build
             > cd build/
             > cmake .. -G "MinGW Makefiles"
-            > make -j64
+            > make -j
             > make install
 
        (the last command could require admin rights)
@@ -49,12 +59,6 @@ Go to the [download](https://github.com/setvisible/fastenerpattern/releases "Dow
 
          Then, double click the Visual Studio project (vcxproj).
 
-
-## Usage
-
-Just run the executable.
-
-The user's manual is [here](https://github.com/setvisible/fastenerpattern/user-manual "User's manual directory").
 
 ## License
 
