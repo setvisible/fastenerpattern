@@ -5,6 +5,7 @@
 /.*
 /*
 !/3rd
+!/cpsolver
 !/include
 !/src
 !/test
