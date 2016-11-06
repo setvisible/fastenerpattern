@@ -18,75 +18,106 @@
 
 #include "arcarrowitem.h"
 #include "arrowitem.h"
+#include "utils_scale.h"
 #include <Core/Tensor>
 
 #include <QtCore/QDebug>
+#include <QtCore/QtMath>
 #include <QtGui/QPainter>
+#include <QtWidgets/QGraphicsTextItem>
+
 
 TensorItem::TensorItem(QGraphicsItem *parent) : QGraphicsItemGroup(parent)
   , m_arrowXY(new ArrowItem(this))
   , m_arrowX(new ArrowItem(this))
   , m_arrowY(new ArrowItem(this))
   , m_arcArrowZ(new ArcArrowItem(this))
-  , m_isArrowInverted(false)
-  , m_isComponantVisible(true)
-  , m_isResultantVisible(true)
-  , m_isTorqueVisible(true)
+  , m_labelXY(new QGraphicsTextItem(this))
+  , m_labelX(new QGraphicsTextItem(this))
+  , m_labelY(new QGraphicsTextItem(this))
+  , m_labelZ(new QGraphicsTextItem(this))
+  , m_arrowInverted(false)
+  , m_componantVisible(false)
+  , m_resultantVisible(true)
+  , m_torqueVisible(true)
+  , m_labelVisible(false)
   , m_loadScaleFactor(1.0)
   , m_torqueScaleFactor(1.0)
   , m_fx(0.0)
   , m_fy(0.0)
   , m_tz(0.0)
 {
-   this->setCacheMode(QGraphicsItem::DeviceCoordinateCache);
+    this->setCacheMode(QGraphicsItem::DeviceCoordinateCache);
     this->setZValue(100);
 
-    m_arrowXY->setColor(QColor(255,127,39));    // orange
-    m_arrowX->setColor(QColor(237,28,36));      // red
-    m_arrowY->setColor(QColor(34,177,76));      // green
-    m_arcArrowZ->setColor(QColor(0,162,232));   // blue
+    m_arrowXY->setColor(   QColor(255,127, 39));   // orange
+    m_arrowX->setColor(    QColor(237, 28, 36));   // red
+    m_arrowY->setColor(    QColor( 34,177, 76));   // green
+    m_arcArrowZ->setColor( QColor(  0,162,232));   // blue
+
+    m_labelXY->setDefaultTextColor(QColor(255,127, 39));   // orange
+    m_labelX->setDefaultTextColor( QColor(237, 28, 36));   // red
+    m_labelY->setDefaultTextColor( QColor( 34,177, 76));   // green
+    m_labelZ->setDefaultTextColor( QColor(  0,162,232));   // blue
+
+    m_labelXY->setVisible(m_labelVisible);
+    m_labelX->setVisible( m_labelVisible);
+    m_labelY->setVisible( m_labelVisible);
+    m_labelZ->setVisible( m_labelVisible);
 }
 
 bool TensorItem::isArrowInverted() const
 {
-    return m_isArrowInverted;
+    return m_arrowInverted;
 }
 
 void TensorItem::setInvertedArrow(bool inverted)
 {
-    m_isArrowInverted = inverted;
+    m_arrowInverted = inverted;
     updateArrows();
 }
 
-bool TensorItem::isComponantVisible() const
+bool TensorItem::isComponentVisible() const
 {
-    return m_isComponantVisible;
+    return m_componantVisible;
 }
 
-void TensorItem::setComponantVisible(bool visible)
+void TensorItem::setComponentVisible(bool visible)
 {
-    m_isComponantVisible = visible;
+    m_componantVisible = visible;
     updateArrows();
 }
 
 bool TensorItem::isResultantVisible() const
 {
-    return m_isResultantVisible;
+    return m_resultantVisible;
 }
 
 void TensorItem::setResultantVisible(bool visible)
 {
-    m_isResultantVisible = visible;
+    m_resultantVisible = visible;
     updateArrows();
 }
 
 bool TensorItem::isTorqueVisible() const
 {
-    return m_isTorqueVisible;
+    return m_torqueVisible;
 }
+
 void TensorItem::setTorqueVisible(bool visible)
 {
-    m_isTorqueVisible = visible;
+    m_torqueVisible = visible;
+    updateArrows();
+}
+
+bool TensorItem::isLabelVisible() const
+{
+    return m_labelVisible;
+}
+
+void TensorItem::setLabelVisible(bool visible)
+{
+    m_labelVisible = visible;
     updateArrows();
 }
 
@@ -133,16 +164,17 @@ void TensorItem::updateArrows()
     Q_ASSERT(m_arrowY);
     Q_ASSERT(m_arcArrowZ);
 
-    m_arrowXY->setVisible(m_isResultantVisible);
-    m_arrowX->setVisible(m_isComponantVisible);
-    m_arrowY->setVisible(m_isComponantVisible);
-    m_arcArrowZ->setVisible(m_isTorqueVisible);
+    /* Arrows */
+    m_arrowXY->setVisible(m_resultantVisible);
+    m_arrowX->setVisible(m_componantVisible);
+    m_arrowY->setVisible(m_componantVisible);
+    m_arcArrowZ->setVisible(m_torqueVisible);
 
     /// \todo Use pow(1.000152, factor) instead ?
 
     /// \todo  m_fx, m_fy... can be 0, NaN of Infinite. What to do in such case ?
 
-    if (m_isArrowInverted) {
+    if (m_arrowInverted) {
         m_arrowXY->setLine(QLineF(m_fx*m_loadScaleFactor, -1* m_fy*m_loadScaleFactor, 0, 0));
         m_arrowX->setLine(QLineF( m_fx*m_loadScaleFactor, 0, 0, 0));
         m_arrowY->setLine(QLineF(0, -1*m_fy*m_loadScaleFactor, 0, 0));
@@ -155,6 +187,32 @@ void TensorItem::updateArrows()
     m_arcArrowZ->setRect(-25,-25, 50, 50);
     m_arcArrowZ->setStartAngle(-10 * 16);
     m_arcArrowZ->setSpanAngle( 20 * 16);    /* test */
+
+
+    /* Labels */
+    m_labelXY->setVisible(m_resultantVisible && m_labelVisible);
+    m_labelX->setVisible( m_componantVisible && m_labelVisible);
+    m_labelY->setVisible( m_componantVisible && m_labelVisible);
+    m_labelZ->setVisible( m_torqueVisible    && m_labelVisible);
+
+    qreal fxy = qSqrt( qPow(m_fx, 2) + qPow(m_fy, 2));
+    m_labelXY->setPlainText(QString("Fxy=%0N").arg(fxy, 0, 'f', 1));
+    m_labelX->setPlainText(QString("Fx=%0N").arg(m_fx, 0, 'f', 1));
+    m_labelY->setPlainText(QString("Fy=%0N").arg(m_fy, 0, 'f', 1));
+    m_labelZ->setPlainText(QString("Tz=%0N.m").arg(m_tz, 0, 'f', 1));
+
+    qreal w = m_labelXY->boundingRect().height() ;
+    QPointF offset(C_ARROW_SIZE / 2, -w);
+    if (m_arrowInverted) {
+        m_labelXY->setPos( m_arrowXY->line().p1() + offset);
+        m_labelX->setPos(  m_arrowX->line().p1()  + offset);
+        m_labelY->setPos(  m_arrowY->line().p1()  + offset);
+    } else {
+        m_labelXY->setPos( m_arrowXY->line().p2() + offset);
+        m_labelX->setPos(  m_arrowX->line().p2()  + offset);
+        m_labelY->setPos(  m_arrowY->line().p2()  + offset);
+    }
+    m_labelZ->setPos(offset);
 
     QGraphicsItem::update();
 }

@@ -90,13 +90,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 
     /* [5] */
-    /* Connect the GUI widgets together (selection, focus, etc.) */
+    /* Connect the rest of the GUI widgets together (selection, focus, etc.) */
     QObject::connect(ui->spliceToolBar, SIGNAL(axesVisibilityChanged(bool)),
                      ui->spliceGraphicsWidget, SLOT(setAxesVisible(bool)));
     QObject::connect(ui->spliceToolBar, SIGNAL(gridVisibilityChanged(bool)),
                      ui->spliceGraphicsWidget, SLOT(setGridVisible(bool)));
     QObject::connect(ui->spliceToolBar, SIGNAL(imageVisibilityChanged(bool)),
                      ui->spliceGraphicsWidget, SLOT(setImageVisible(bool)));
+    QObject::connect(ui->spliceToolBar, SIGNAL(componentVisibilityChanged(bool)),
+                     ui->spliceGraphicsWidget, SLOT(setComponentVisible(bool)));
+    QObject::connect(ui->spliceToolBar, SIGNAL(resultantVisibilityChanged(bool)),
+                     ui->spliceGraphicsWidget, SLOT(setResultantVisible(bool)));
+    QObject::connect(ui->spliceToolBar, SIGNAL(torqueVisibilityChanged(bool)),
+                     ui->spliceGraphicsWidget, SLOT(setTorqueVisible(bool)));
+    QObject::connect(ui->spliceToolBar, SIGNAL(labelVisibilityChanged(bool)),
+                     ui->spliceGraphicsWidget, SLOT(setLabelVisible(bool)));
+    QObject::connect(ui->spliceToolBar, SIGNAL(snapEnabled(bool)),
+                     ui->spliceGraphicsWidget, SLOT(setSnapEnable(bool)));
 
 
     createActions();
@@ -136,14 +146,24 @@ void MainWindow::newFile()
         ui->spliceToolBar->setGridVisible(true);
         ui->spliceToolBar->setImageVisible(false);
         ui->spliceGraphicsWidget->setImageUrl(QUrl());
+        ui->spliceToolBar->setComponentVisible(false);
+        ui->spliceToolBar->setResultantVisible(true);
+        ui->spliceToolBar->setTorqueVisible(true);
+        ui->spliceToolBar->setLabelVisible(false);
+        ui->spliceToolBar->setSnapEnable(false);
 
         setClean();
     }
 }
 
+static bool isExampleFile(const QFileInfo &file)
+{
+    return file.filePath().startsWith(":/");
+}
+
 bool MainWindow::save()
 {
-    if (m_currentFile.isFile()) {
+    if (m_currentFile.isFile() && !isExampleFile(m_currentFile)) {
         return saveFile(m_currentFile.absoluteFilePath());
     } else {
         return saveAs();
@@ -152,7 +172,8 @@ bool MainWindow::save()
 
 bool MainWindow::saveAs()
 {
-    QString filePath = askSaveFileName(".splice", tr("Splice Data File (*.splice)"));
+    QString filePath = askSaveFileName(QStringLiteral("Splice Data File (*.splice)"),
+                                       tr("Splice Data File"));
     if (filePath.isEmpty()) {
         return false;
     }
@@ -228,10 +249,11 @@ void MainWindow::setClean()
 QString MainWindow::askSaveFileName(const QString &fileFilter, const QString &title)
 {
     QString suggestedPath;
-    if (!m_currentFile.canonicalFilePath().isEmpty()) {
+    if (!m_currentFile.canonicalFilePath().isEmpty() && !isExampleFile(m_currentFile)) {
         suggestedPath = m_currentFile.canonicalFilePath();
     }else{
         suggestedPath = QDir::currentPath() + QDir::separator() + m_currentFile.fileName();
+        suggestedPath = QDir::toNativeSeparators(suggestedPath);
     }
     return QFileDialog::getSaveFileName(this, title, suggestedPath, fileFilter);
 }

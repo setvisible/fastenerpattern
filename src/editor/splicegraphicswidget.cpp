@@ -33,6 +33,11 @@
 SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView(parent)
   , m_mainLayout(new QVBoxLayout(this))
   , m_backgroundWidget(new BackgroundWidget(this))
+  , m_componentVisible(false)
+  , m_resultantVisible(true)
+  , m_torqueVisible(true)
+  , m_labelVisible(false)
+  , m_snapEnable(false)
 {
     m_backgroundWidget->enableFeatures(
                 QFlags<BackgroundWidget::Features>(
@@ -96,7 +101,7 @@ void SpliceGraphicsWidget::onFastenerPositionChanged()
     fastener.positionX = item->truePositionX() *mm;
     fastener.positionY = item->truePositionY() *mm;
     model()->setFastener(index, fastener);
-  }
+}
 
 void SpliceGraphicsWidget::fastenersInserted(const int index, const Fastener &fastener)
 {
@@ -109,6 +114,11 @@ void SpliceGraphicsWidget::fastenersInserted(const int index, const Fastener &fa
 
     item->setTruePosition(fastener.positionX.value() *1000, fastener.positionY.value() *1000);
     item->setTrueDiameter(fastener.diameter.value() *1000);
+
+    item->setResultantVisible(m_resultantVisible);
+    item->setComponentVisible(m_componentVisible);
+    item->setTorqueVisible(m_torqueVisible);
+    item->setLabelVisible(m_labelVisible);
 }
 
 void SpliceGraphicsWidget::fastenersChanged(const int index, const Fastener &fastener)
@@ -182,6 +192,73 @@ bool SpliceGraphicsWidget::isImageVisible() const
 void SpliceGraphicsWidget::setImageVisible(bool visible)
 {
     m_backgroundWidget->setImageVisible(visible);
+}
+
+bool SpliceGraphicsWidget::isComponentVisible() const
+{
+    return m_componentVisible;
+}
+
+void SpliceGraphicsWidget::setComponentVisible(bool visible)
+{
+    m_componentVisible = visible;
+    m_appliedLoadItem->setComponentVisible(visible);
+    foreach(auto &f, m_fastenerItems) {
+        f->setComponentVisible(visible);
+    }
+}
+
+bool SpliceGraphicsWidget::isResultantVisible() const
+{
+    return m_resultantVisible;
+}
+
+void SpliceGraphicsWidget::setResultantVisible(bool visible)
+{
+    m_resultantVisible = visible;
+    m_appliedLoadItem->setResultantVisible(visible);
+    foreach(auto &f, m_fastenerItems) {
+        f->setResultantVisible(visible);
+    }
+}
+
+bool SpliceGraphicsWidget::isTorqueVisible() const
+{
+    return m_torqueVisible;
+}
+
+void SpliceGraphicsWidget::setTorqueVisible(bool visible)
+{
+    m_torqueVisible = visible;
+    m_appliedLoadItem->setTorqueVisible(visible);
+    foreach(auto &f, m_fastenerItems) {
+        f->setTorqueVisible(visible);
+    }
+}
+
+bool SpliceGraphicsWidget::isLabelVisible() const
+{
+    return m_labelVisible;
+}
+
+void SpliceGraphicsWidget::setLabelVisible(bool visible)
+{
+    m_labelVisible = visible;
+    m_appliedLoadItem->setLabelVisible(visible);
+    foreach(auto &f, m_fastenerItems) {
+        f->setLabelVisible(visible);
+    }
+}
+
+bool SpliceGraphicsWidget::isSnapEnable() const
+{
+    return m_snapEnable;
+}
+
+void SpliceGraphicsWidget::setSnapEnable(bool enable)
+{
+    /// \todo implement setSnapEnable
+    m_snapEnable = enable;
 }
 
 qreal SpliceGraphicsWidget::pixelsPerUnit() const

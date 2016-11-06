@@ -29,6 +29,10 @@ class FastenerItem : public QGraphicsObject
     Q_PROPERTY(qreal truePositionY READ truePositionY)
     Q_PROPERTY(qreal trueDiameter READ trueDiameter WRITE setTrueDiameter)
     Q_PROPERTY(Tensor result READ result WRITE setResult)
+    Q_PROPERTY(bool componentVisible READ isComponentVisible WRITE setComponentVisible)
+    Q_PROPERTY(bool resultantVisible READ isResultantVisible WRITE setResultantVisible)
+    Q_PROPERTY(bool torqueVisible READ isTorqueVisible WRITE setTorqueVisible)
+    Q_PROPERTY(bool labelVisible READ isLabelVisible WRITE setLabelVisible)
 
 public:
     explicit FastenerItem(QGraphicsItem *parent = Q_NULLPTR);
@@ -46,6 +50,18 @@ public:
 
     Tensor result() const;
     void setResult(const Tensor &tensor);
+
+    bool isComponentVisible() const;
+    void setComponentVisible(bool visible);
+
+    bool isResultantVisible() const;
+    void setResultantVisible(bool visible);
+
+    bool isTorqueVisible() const;
+    void setTorqueVisible(bool visible);
+
+    bool isLabelVisible() const;
+    void setLabelVisible(bool visible);
 
 private:
     TensorItem *m_tensorItem;

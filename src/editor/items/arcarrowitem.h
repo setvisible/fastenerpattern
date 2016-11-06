@@ -29,13 +29,13 @@ public:
 
     QColor color() const;
     void setColor(const QColor &color);
+
     qreal diameter() const;
     void setDiameter(qreal diameter);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
-
 
 private:
     QColor m_color;

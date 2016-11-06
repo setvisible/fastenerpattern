@@ -95,12 +95,9 @@
    <addaction name="menuE_xamples"/>
    <addaction name="menu_Help"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <property name="movable">
-    <bool>false</bool>
-   </property>
-   <property name="floatable">
-    <bool>false</bool>
+  <widget class="QToolBar" name="fileToolBar">
+   <property name="windowTitle">
+    <string>File</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -116,7 +113,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="SpliceToolbar" name="spliceToolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Edit</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>

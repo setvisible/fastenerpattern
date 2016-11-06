@@ -35,6 +35,11 @@ class SpliceGraphicsWidget : public AbstractSpliceView
     Q_PROPERTY(bool axesVisible READ isAxesVisible WRITE setAxesVisible)
     Q_PROPERTY(bool gridVisible READ isGridVisible WRITE setGridVisible)
     Q_PROPERTY(bool imageVisible READ isImageVisible WRITE setImageVisible)
+    Q_PROPERTY(bool componentVisible READ isComponentVisible WRITE setComponentVisible)
+    Q_PROPERTY(bool resultantVisible READ isResultantVisible WRITE setResultantVisible)
+    Q_PROPERTY(bool torqueVisible READ isTorqueVisible WRITE setTorqueVisible)
+    Q_PROPERTY(bool labelVisible READ isLabelVisible WRITE setLabelVisible)
+    Q_PROPERTY(bool snapEnable READ isSnapEnable WRITE setSnapEnable)
     Q_PROPERTY(qreal pixelsPerUnit READ pixelsPerUnit WRITE setPixelsPerUnit)
     Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl)
 
@@ -52,17 +57,34 @@ public Q_SLOTS:
 
     /* Graphics Options */
     bool isAxesVisible() const;
-    bool isGridVisible() const;
-    bool isImageVisible() const;
-    qreal pixelsPerUnit() const;
-    QUrl imageUrl() const;
-
     void setAxesVisible(bool visible);
-    void setGridVisible(bool visible);
-    void setImageVisible(bool visible);    
-    void setPixelsPerUnit(qreal pxPerUnit);
-    void setImageUrl(const QUrl &url);
 
+    bool isGridVisible() const;
+    void setGridVisible(bool visible);
+
+    bool isImageVisible() const;
+    void setImageVisible(bool visible);
+
+    bool isComponentVisible() const;
+    void setComponentVisible(bool visible);
+
+    bool isResultantVisible() const;
+    void setResultantVisible(bool visible);
+
+    bool isTorqueVisible() const;
+    void setTorqueVisible(bool visible);
+
+    bool isLabelVisible() const;
+    void setLabelVisible(bool visible);
+
+    bool isSnapEnable() const;
+    void setSnapEnable(bool enable);
+
+    qreal pixelsPerUnit() const;
+    void setPixelsPerUnit(qreal pxPerUnit);
+
+    QUrl imageUrl() const;
+    void setImageUrl(const QUrl &url);
 
 private Q_SLOTS:
     void update();
@@ -75,6 +97,11 @@ private:
     BackgroundWidget *m_backgroundWidget;
     TensorItem *m_appliedLoadItem;
     QList<FastenerItem*> m_fastenerItems;
+    bool m_componentVisible;
+    bool m_resultantVisible;
+    bool m_torqueVisible;
+    bool m_labelVisible;
+    bool m_snapEnable;
 
     /// \todo  InstantaneousCentreOfRotation ( = + )
     /// \todo  Parts (Undeformed)

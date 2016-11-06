@@ -94,3 +94,51 @@ void FastenerItem::setResult(const Tensor &tensor)
     m_tensorItem->setTensor(tensor);
     QGraphicsItem::update();
 }
+
+bool FastenerItem::isComponentVisible() const
+{
+    Q_ASSERT(m_tensorItem);
+    return m_tensorItem->isComponentVisible();
+}
+
+void FastenerItem::setComponentVisible(bool visible)
+{
+    Q_ASSERT(m_tensorItem);
+    m_tensorItem->setComponentVisible(visible);
+}
+
+bool FastenerItem::isResultantVisible() const
+{
+    Q_ASSERT(m_tensorItem);
+    return m_tensorItem->isResultantVisible();
+}
+
+void FastenerItem::setResultantVisible(bool visible)
+{
+    Q_ASSERT(m_tensorItem);
+    m_tensorItem->setResultantVisible(visible);
+}
+
+bool FastenerItem::isTorqueVisible() const
+{
+    Q_ASSERT(m_tensorItem);
+    return m_tensorItem->isTorqueVisible();
+}
+
+void FastenerItem::setTorqueVisible(bool visible)
+{
+    Q_ASSERT(m_tensorItem);
+    m_tensorItem->setTorqueVisible(visible);
+}
+
+bool FastenerItem::isLabelVisible() const
+{
+    Q_ASSERT(m_tensorItem);
+    return m_tensorItem->isLabelVisible();
+}
+
+void FastenerItem::setLabelVisible(bool visible)
+{
+    Q_ASSERT(m_tensorItem);
+    m_tensorItem->setLabelVisible(visible);
+}

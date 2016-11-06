@@ -29,7 +29,7 @@ ScalablePointItem::ScalablePointItem(QGraphicsItem *parent) : QGraphicsObject(pa
     /// \todo this->setBrush(QBrush(QColor(255,127,39), Qt::SolidPattern)); // orange
 
     this->setFlag(QGraphicsItem::ItemIsMovable);
-    this->setFlag(QGraphicsItem::ItemIsSelectable);    
+    this->setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 QRectF ScalablePointItem::boundingRect() const

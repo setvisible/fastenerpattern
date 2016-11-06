@@ -62,12 +62,12 @@ void SpliceToolbar::setModel(AbstractSpliceModel *model)
 void SpliceToolbar::createActions()
 {
     {
-        QAction *buttonAdd = new QAction(
+        m_buttonAdd = new QAction(
                     QIcon(":/icons/menu/bolt_add_24x24.png"),
                     tr("&New Fastener"), this);
-        buttonAdd->setStatusTip(tr("Add a new fastener"));
-        QObject::connect(buttonAdd, SIGNAL(triggered(bool)), this, SLOT(add()));
-        this->addAction(buttonAdd);
+        m_buttonAdd->setStatusTip(tr("Add a new fastener"));
+        QObject::connect(m_buttonAdd, SIGNAL(triggered(bool)), this, SLOT(add()));
+        this->addAction(m_buttonAdd);
     }
     {
         m_buttonCopy = new QAction(
@@ -79,13 +79,13 @@ void SpliceToolbar::createActions()
         this->addAction(m_buttonCopy);
     }
     {
-        QAction *buttonSelectAll = new QAction(
+        m_buttonSelectAll = new QAction(
                     QIcon(":/icons/menu/bolt_select_all_24x24.png"),
                     tr("&Select All"), this);
-        buttonSelectAll->setStatusTip(tr("Select all the fasteners"));
-        buttonSelectAll->setShortcuts(QKeySequence::SelectAll);
-        QObject::connect(buttonSelectAll, SIGNAL(triggered(bool)), this, SLOT(selectAll()));
-        this->addAction(buttonSelectAll);
+        m_buttonSelectAll->setStatusTip(tr("Select all the fasteners"));
+        m_buttonSelectAll->setShortcuts(QKeySequence::SelectAll);
+        QObject::connect(m_buttonSelectAll, SIGNAL(triggered(bool)), this, SLOT(selectAll()));
+        this->addAction(m_buttonSelectAll);
     }
     {
         m_buttonRemove = new QAction(
@@ -98,31 +98,82 @@ void SpliceToolbar::createActions()
     }
     this->addSeparator();
     {
-        m_buttonAxes = new QAction(
+        m_buttonShowAxes = new QAction(
                     QIcon(":/icons/menu/view_axes_24x24.png"),
                     tr("Show &Axes"), this);
-        m_buttonAxes->setCheckable(true);
-        m_buttonAxes->setStatusTip(tr("Set the axes visible"));
-        QObject::connect(m_buttonAxes, SIGNAL(toggled(bool)), SIGNAL(axesVisibilityChanged(bool)));
-        this->addAction(m_buttonAxes);
+        m_buttonShowAxes->setCheckable(true);
+        m_buttonShowAxes->setStatusTip(tr("Show the axes"));
+        QObject::connect(m_buttonShowAxes, SIGNAL(toggled(bool)), SIGNAL(axesVisibilityChanged(bool)));
+        this->addAction(m_buttonShowAxes);
     }
     {
-        m_buttonGrid = new QAction(
+        m_buttonShowGrid = new QAction(
                     QIcon(":/icons/menu/view_grid_24x24.png"),
                     tr("Show &Grid"), this);
-        m_buttonGrid->setCheckable(true);
-        m_buttonGrid->setStatusTip(tr("Set the grid visible"));
-        QObject::connect(m_buttonGrid, SIGNAL(toggled(bool)), SIGNAL(gridVisibilityChanged(bool)));
-        this->addAction(m_buttonGrid);
+        m_buttonShowGrid->setCheckable(true);
+        m_buttonShowGrid->setStatusTip(tr("Show the grid"));
+        QObject::connect(m_buttonShowGrid, SIGNAL(toggled(bool)), SIGNAL(gridVisibilityChanged(bool)));
+        this->addAction(m_buttonShowGrid);
     }
     {
-        m_buttonBG = new QAction(
+        m_buttonShowBG = new QAction(
                     QIcon(":/icons/menu/view_background_24x24.png"),
                     tr("Show &Background Image"), this);
-        m_buttonBG->setCheckable(true);
-        m_buttonBG->setStatusTip(tr("Set the background image visible"));
-        QObject::connect(m_buttonBG, SIGNAL(toggled(bool)), SIGNAL(imageVisibilityChanged(bool)));
-        this->addAction(m_buttonBG);
+        m_buttonShowBG->setCheckable(true);
+        m_buttonShowBG->setStatusTip(tr("Show the background image"));
+        QObject::connect(m_buttonShowBG, SIGNAL(toggled(bool)), SIGNAL(imageVisibilityChanged(bool)));
+        this->addAction(m_buttonShowBG);
+    }
+    this->addSeparator();
+    {
+        m_buttonShowComponent = new QAction(
+                    QIcon(":/icons/menu/view_force_component_24x24.png"),
+                    tr("Show &Component"), this);
+        m_buttonShowComponent->setCheckable(true);
+        m_buttonShowComponent->setStatusTip(tr("Show the load component"));
+        QObject::connect(m_buttonShowComponent, SIGNAL(toggled(bool)), SIGNAL(componentVisibilityChanged(bool)));
+        this->addAction(m_buttonShowComponent);
+    }
+    {
+        m_buttonShowResultant = new QAction(
+                    QIcon(":/icons/menu/view_force_resultant_24x24.png"),
+                    tr("Show &Resultant"), this);
+        m_buttonShowResultant->setCheckable(true);
+        m_buttonShowResultant->setStatusTip(tr("Show the load resultant"));
+        QObject::connect(m_buttonShowResultant, SIGNAL(toggled(bool)), SIGNAL(resultantVisibilityChanged(bool)));
+        this->addAction(m_buttonShowResultant);
+    }
+    {
+        m_buttonShowTorque = new QAction(
+                    QIcon(":/icons/menu/view_force_torque_24x24.png"),
+                    tr("Show &Torque"), this);
+        m_buttonShowTorque->setCheckable(true);
+        m_buttonShowTorque->setStatusTip(tr("Show the load torque"));
+        QObject::connect(m_buttonShowTorque, SIGNAL(toggled(bool)), SIGNAL(torqueVisibilityChanged(bool)));
+        this->addAction(m_buttonShowTorque);
+    }
+    {
+        m_buttonShowLabel = new QAction(
+                    QIcon(":/icons/menu/view_labels_24x24.png"),
+                    tr("Show Lab&els"), this);
+        m_buttonShowLabel->setCheckable(true);
+        m_buttonShowLabel->setStatusTip(tr("Show the labels"));
+        QObject::connect(m_buttonShowLabel, SIGNAL(toggled(bool)), SIGNAL(labelVisibilityChanged(bool)));
+        this->addAction(m_buttonShowLabel);
+
+    }
+    this->addSeparator();
+    {
+        m_buttonSnap = new QAction(
+                    QIcon(":/icons/menu/view_snap_24x24.png"),
+                    tr("S&nap Objects"), this);
+        m_buttonSnap->setCheckable(true);
+        m_buttonSnap->setStatusTip(tr("Snap the objects to the grid"));
+        QObject::connect(m_buttonSnap, SIGNAL(toggled(bool)), SIGNAL(snapEnabled(bool)));
+        this->addAction(m_buttonSnap);
+
+        /// \todo implement it
+        m_buttonSnap->setVisible(false);
     }
 }
 
@@ -132,34 +183,83 @@ void SpliceToolbar::createActions()
 
 bool SpliceToolbar::isAxesVisible() const
 {
-    return m_buttonAxes->isChecked();
+    return m_buttonShowAxes->isChecked();
 }
 
 void SpliceToolbar::setAxesVisible(bool visible)
 {
-    m_buttonAxes->setChecked(visible);
+    m_buttonShowAxes->setChecked(visible);
 }
 
 bool SpliceToolbar::isGridVisible() const
 {
-    return m_buttonGrid->isChecked();
+    return m_buttonShowGrid->isChecked();
 }
 
 void SpliceToolbar::setGridVisible(bool visible)
 {
-    m_buttonGrid->setChecked(visible);
+    m_buttonShowGrid->setChecked(visible);
 }
 
 bool SpliceToolbar::isImageVisible() const
 {
-    return m_buttonBG->isChecked();
+    return m_buttonShowBG->isChecked();
 }
 
 void SpliceToolbar::setImageVisible(bool visible)
 {
-    m_buttonBG->setChecked(visible);
+    m_buttonShowBG->setChecked(visible);
 }
 
+bool SpliceToolbar::isComponentVisible() const
+{
+    return m_buttonShowComponent->isChecked();
+}
+
+void SpliceToolbar::setComponentVisible(bool visible)
+{
+    m_buttonShowComponent->setChecked(visible);
+}
+
+bool SpliceToolbar::isResultantVisible() const
+{
+    return m_buttonShowResultant->isChecked();
+}
+
+void SpliceToolbar::setResultantVisible(bool visible)
+{
+    m_buttonShowResultant->setChecked(visible);
+}
+
+bool SpliceToolbar::isTorqueVisible() const
+{
+    return m_buttonShowTorque->isChecked();
+}
+
+void SpliceToolbar::setTorqueVisible(bool visible)
+{
+    m_buttonShowTorque->setChecked(visible);
+}
+
+bool SpliceToolbar::isLabelVisible() const
+{
+    return m_buttonShowLabel->isChecked();
+}
+
+void SpliceToolbar::setLabelVisible(bool visible)
+{
+    m_buttonShowLabel->setChecked(visible);
+}
+
+bool SpliceToolbar::isSnapEnable() const
+{
+    return m_buttonSnap->isChecked();
+}
+
+void SpliceToolbar::setSnapEnable(bool enable)
+{
+    m_buttonSnap->setChecked(enable);
+}
 
 /***********************************************************************************
  ***********************************************************************************/

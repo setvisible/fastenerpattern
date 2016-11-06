@@ -35,6 +35,7 @@ public:
 
 private:
     QColor m_color;
+
 };
 
 

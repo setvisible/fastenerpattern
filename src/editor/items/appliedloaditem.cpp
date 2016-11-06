@@ -22,10 +22,15 @@
 AppliedLoadItem::AppliedLoadItem(QGraphicsItem *parent) : TensorItem(parent)
 {
     setInvertedArrow(true);
-    setComponantVisible(false);
-    m_arrowXY->setColor(QColor(221,0,166));     // magenta
-    m_arrowX->setColor(QColor(221,0,166));      // magenta
-    m_arrowY->setColor(QColor(221,0,166));      // magenta
-    m_arcArrowZ->setColor(QColor(221,0,166));   // magenta
+
+    QColor magenta(221,0,166);
+    m_arrowXY->setColor( magenta );
+    m_arrowX->setColor( magenta );
+    m_arrowY->setColor( magenta );
+    m_arcArrowZ->setColor( magenta );
+    m_labelXY->setDefaultTextColor( magenta );
+    m_labelX->setDefaultTextColor( magenta );
+    m_labelY->setDefaultTextColor( magenta );
+    m_labelZ->setDefaultTextColor( magenta );
 }
 

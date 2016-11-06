@@ -56,12 +56,12 @@ public:
 
 
 private:
+    ScalableImageObject *m_object;
     ScalablePointItem *m_scalePoints[4];
     QPixmap m_pixmap;
     QRect m_rect;
     QUrl m_url;
 
-    ScalableImageObject *m_object;
 
 };
 
