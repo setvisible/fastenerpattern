@@ -9,7 +9,7 @@ Its core is developed in C++, based on the [Qt framework](https://www.qt.io/ "Qt
 
 ## CP solver
 
-Optionaly, FastenerPattern can use a third-party CP solver called CPFP (*Constraint Programming Solver for FastenerPattern*). 
+Optionally, FastenerPattern can use a third-party CP solver called CPFP (*Constraint Programming Solver for FastenerPattern*). 
 
 More info [here](cpsolver/README.md "here").
 

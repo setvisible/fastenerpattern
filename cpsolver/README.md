@@ -4,6 +4,6 @@
 
 CPFP can be found [here](https://github.com/setvisible/cpfp "CPFP's git repository").
 
-*Rem: CPFP is stored in a separated repository for maintenance reasons and a better dependancies separation.*
+*Rem: CPFP is stored in a separated repository for maintenance reasons and a better dependencies separation.*
 
 

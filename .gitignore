@@ -11,9 +11,10 @@
 !/test
 !/user-manual
 !/.gitignore
+!/CMakeLists.txt
 !/doxyfile
 !/LICENSE
-!/BoltGroup.pro
+!/FastenerPattern.pro
 !/README.md
 !/version.pri
 
