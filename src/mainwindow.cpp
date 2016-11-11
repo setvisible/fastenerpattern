@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
   , ui(new Ui::MainWindow)
   , m_calculator(new SpliceCalculator(this))
   , m_dirty(false)
+  , m_physicalFile(false)
 {
     ui->setupUi(this);
     ui->splitter->setStretchFactor(0,0);
@@ -137,8 +138,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::newFile()
 {
     if (maybeSave()) {
+        m_physicalFile = false;
         m_currentFile = QFileInfo();
-        m_currentFile.setFile("untitled.splice");
+        m_currentFile.setFile(QStringLiteral("untitled.splice"));
         m_calculator->clear();
 
         /* Settings */
@@ -156,14 +158,22 @@ void MainWindow::newFile()
     }
 }
 
-static bool isExampleFile(const QFileInfo &file)
+bool MainWindow::isExampleFile() const
 {
-    return file.filePath().startsWith(":/");
+    return m_currentFile.filePath().startsWith(":/");
+}
+
+bool MainWindow::isPhysicalFile() const
+{
+    return m_physicalFile
+            && m_currentFile.isFile()
+            && !m_currentFile.isSymLink()
+            && !isExampleFile();
 }
 
 bool MainWindow::save()
 {
-    if (m_currentFile.isFile() && !isExampleFile(m_currentFile)) {
+    if ( isPhysicalFile() ){
         return saveFile(m_currentFile.absoluteFilePath());
     } else {
         return saveAs();
@@ -221,12 +231,12 @@ bool MainWindow::maybeSave()
     return true;
 }
 
-static QString niceFileName(const QFileInfo &fileinfo)
+QString MainWindow::niceFileName() const
 {
-    if (!fileinfo.canonicalFilePath().isEmpty()) {
-        return QDir::toNativeSeparators(fileinfo.canonicalFilePath());
+    if ( isPhysicalFile() ){
+        return QDir::toNativeSeparators(m_currentFile.canonicalFilePath());
     }else{
-        return fileinfo.fileName();
+        return m_currentFile.fileName();
     }
 }
 
@@ -234,14 +244,14 @@ void MainWindow::setDirty()
 {
     if (!m_dirty) {
         m_dirty = true;
-        this->setWindowTitle( niceFileName(m_currentFile) + QStringLiteral("* - FastenerPattern"));
+        this->setWindowTitle( niceFileName() + QStringLiteral("* - FastenerPattern"));
     }
 }
 
 void MainWindow::setClean()
 {
     m_dirty = false;
-    this->setWindowTitle( niceFileName(m_currentFile) + QStringLiteral(" - FastenerPattern "));
+    this->setWindowTitle( niceFileName() + QStringLiteral(" - FastenerPattern "));
 }
 
 /***********************************************************************************
@@ -249,7 +259,7 @@ void MainWindow::setClean()
 QString MainWindow::askSaveFileName(const QString &fileFilter, const QString &title)
 {
     QString suggestedPath;
-    if (!m_currentFile.canonicalFilePath().isEmpty() && !isExampleFile(m_currentFile)) {
+    if ( isPhysicalFile() ) {
         suggestedPath = m_currentFile.canonicalFilePath();
     }else{
         suggestedPath = QDir::currentPath() + QDir::separator() + m_currentFile.fileName();
@@ -261,7 +271,7 @@ QString MainWindow::askSaveFileName(const QString &fileFilter, const QString &ti
 QString MainWindow::askOpenFileName(const QString &fileFilter, const QString &title)
 {
     QString currentDir = QDir::currentPath();
-    if (m_currentFile.isFile()) {
+    if ( isPhysicalFile() ){
         currentDir = m_currentFile.absolutePath();
     }
     return QFileDialog::getOpenFileName(this, title, currentDir, fileFilter);
@@ -325,6 +335,7 @@ bool MainWindow::saveFile(const QString &path)
     QJsonDocument saveDoc(json);
     file.write( saveDoc.toJson() );
 
+    m_physicalFile = true;
     m_currentFile.setFile(path);
     this->statusBar()->showMessage(tr("File saved"), 2000);
     setClean();
@@ -363,6 +374,7 @@ bool MainWindow::loadFile(const QString &path)
     }
 
     m_calculator->read(loadDoc.object());
+    m_physicalFile = true;
     m_currentFile = path;
     this->statusBar()->showMessage(tr("File loaded"), 5000);
     setClean();

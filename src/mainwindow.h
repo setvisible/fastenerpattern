@@ -28,7 +28,7 @@ class MainWindow;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT   
+    Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -63,7 +63,11 @@ private:
     SpliceCalculator *m_calculator;
 
     bool m_dirty;
+    bool m_physicalFile;
     QFileInfo m_currentFile;
+    inline QString niceFileName() const;
+    inline bool isExampleFile() const;
+    inline bool isPhysicalFile() const;
 
     void createActions();
     void createMenus();
