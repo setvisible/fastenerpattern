@@ -21,12 +21,12 @@
 
 Q_DECL_CONSTEXPR static inline bool fuzzyCompare(double p1, double p2)
 {
-    return (qAbs(p1 - p2) * 10. <= qMin(qAbs(p1), qAbs(p2)));
+    return qFuzzyCompare(p1, p2);
 }
 
 Q_DECL_CONSTEXPR static inline bool fuzzyCompare(float p1, float p2)
 {
-    return (qAbs(p1 - p2) * 10.f <= qMin(qAbs(p1), qAbs(p2)));
+    return qFuzzyCompare(p1, p2);
 }
 
 #endif // CORE_GLOBAL_H
