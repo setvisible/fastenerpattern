@@ -222,6 +222,8 @@ void SpliceCalculator::recalculate()
     /// \todo see  Mandelbrot Example  or  Blocking Fortune Client Example
     if (m_solver && m_splice) {
         m_results = m_solver->calculate( m_splice );
+        return;
     }
+    m_results.clear();
 }
 

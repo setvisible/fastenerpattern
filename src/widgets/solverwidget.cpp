@@ -21,10 +21,12 @@
 
 SolverWidget::SolverWidget(QWidget *parent) : QWidget(parent)
   , ui(new Ui::SolverWidget)
+  , m_params(SolverParameters::NoSolver)
 {
     ui->setupUi(this);
 
     QButtonGroup *maingroup = new QButtonGroup(this);
+    maingroup->addButton(ui->radioSolver_0);
     maingroup->addButton(ui->radioSolver_1);
     maingroup->addButton(ui->radioSolver_2);
 
@@ -32,12 +34,16 @@ SolverWidget::SolverWidget(QWidget *parent) : QWidget(parent)
     RBSgroup->addButton(ui->radioRBS_1);
     RBSgroup->addButton(ui->radioRBS_2);
 
+    QObject::connect(ui->radioSolver_0, SIGNAL(toggled(bool)), this, SLOT(onRadioToggled()));
     QObject::connect(ui->radioSolver_1, SIGNAL(toggled(bool)), this, SLOT(onRadioToggled()));
     QObject::connect(ui->radioSolver_2, SIGNAL(toggled(bool)), this, SLOT(onRadioToggled()));
     QObject::connect(ui->radioRBS_1, SIGNAL(toggled(bool)), this, SLOT(onRadioToggled()));
     QObject::connect(ui->radioRBS_2, SIGNAL(toggled(bool)), this, SLOT(onRadioToggled()));
 
     setParams(SolverParameters::RigidBodySolverWithIsoBearing);
+
+    /* tempo */
+    ui->radioSolver_2->setEnabled(false);
 }
 
 SolverWidget::~SolverWidget()
@@ -59,8 +65,10 @@ void SolverWidget::setParams(SolverParameters params)
     ui->radioRBS_1->setEnabled(ui->radioSolver_1->isChecked());
     ui->radioRBS_2->setEnabled(ui->radioSolver_1->isChecked());
 
-    m_params = params;
     toGUI(params);
+    m_params = params;
+
+    Q_ASSERT(m_params == params); /* This is not trivial because toGUI() re-entres setParams(). */
     emit paramsChanged(m_params);
 }
 
@@ -73,6 +81,9 @@ void SolverWidget::onRadioToggled()
 void SolverWidget::toGUI(SolverParameters params)
 {
     switch (params) {
+    case SolverParameters::NoSolver:
+        ui->radioSolver_0->setChecked(true);
+        break;
     case SolverParameters::RigidBodySolverWithIsoBearing:
         ui->radioSolver_1->setChecked(true);
         ui->radioRBS_1->setChecked(true);
@@ -85,7 +96,6 @@ void SolverWidget::toGUI(SolverParameters params)
         ui->radioSolver_2->setChecked(true);
         break;
     case SolverParameters::OptimisationSolver:
-    case SolverParameters::NoSolver:
     default:
         break;
     }
@@ -93,7 +103,9 @@ void SolverWidget::toGUI(SolverParameters params)
 
 SolverParameters SolverWidget::fromGUI() const
 {
-    if (ui->radioSolver_1->isChecked()) {
+    if (ui->radioSolver_0->isChecked()) {
+        return SolverParameters::NoSolver;
+    } else if (ui->radioSolver_1->isChecked()) {
         if(ui->radioRBS_1->isChecked()) {
             return SolverParameters::RigidBodySolverWithIsoBearing;
         }else if(ui->radioRBS_2->isChecked()) {
