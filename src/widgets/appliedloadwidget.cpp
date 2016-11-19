@@ -53,7 +53,7 @@ void AppliedLoadWidget::onValueChanged(double  /*value*/)
 
 void AppliedLoadWidget::appliedLoadChanged()
 {
-    Tensor lc = model()->loadcase();
+    Tensor lc = model()->appliedLoad();
     this->setAppliedLoad( lc );
 }
 

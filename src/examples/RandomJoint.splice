@@ -1,5 +1,7 @@
 {
     "author": "S. Vavassori",
+    "date": "01/11/2016",
+    "description": "An example of pattern",
     "fasteners": [
         {
             "DoF_X": true,
@@ -97,5 +99,5 @@
         "fy": -500,
         "mz": 10
     },
-    "name": "Random Joint"
+    "title": "Random Joint"
 }

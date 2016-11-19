@@ -57,7 +57,7 @@ QList<Tensor> RigidBodySolver::calculate(const Splice *splice)
 
     QList<Tensor> res;
 
-    const int count = splice->fasteners().count();
+    const int count = splice->fastenerCount();
 
     // ---------------------------------
     struct Data {
@@ -74,7 +74,9 @@ QList<Tensor> RigidBodySolver::calculate(const Splice *splice)
 
     QList<Data> _list;
 
-    foreach(const Fastener &f, splice->fasteners()) {
+    for (int i = 0 ; i < count ; ++i) {
+        const Fastener f = splice->fastenerAt(i);
+    //foreach(const Fastener &f, splice->fasteners()) {
 
         Data d { 0.*m_2, 0.*m_2, 0.*m_3, 0.*m_3 };
 
@@ -118,7 +120,7 @@ QList<Tensor> RigidBodySolver::calculate(const Splice *splice)
     QList<Inertia> inertias;
 
     for (int i = 0 ; i < count ; ++i) {
-        const Fastener f = splice->fasteners().at(i);
+        const Fastener f = splice->fastenerAt(i);
         Inertia inertia;
         inertia.x = _list[i].Ax * boost::units::pow<2>(f.positionY - CoG_y);
         inertia.y = _list[i].Ay * boost::units::pow<2>(f.positionX - CoG_x);
@@ -145,7 +147,7 @@ QList<Tensor> RigidBodySolver::calculate(const Splice *splice)
     // ---------------------------------
 
     for (int i = 0 ; i < count ; ++i) {
-        const Fastener f = splice->fasteners().at(i);
+        const Fastener f = splice->fastenerAt(i);
 
         Tensor fastenerload;
         fastenerload.force_x =

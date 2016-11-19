@@ -28,6 +28,8 @@
 #include <QJsonObject>
 
 
+/*! \brief Constructor.
+ */
 SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent)
   , m_params(SolverParameters::NoSolver)
   , m_solver(Q_NULLPTR)
@@ -36,9 +38,21 @@ SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent
     this->clear();
 }
 
+/**********************************************************************
+ **********************************************************************/
+/*! \brief Clear and emit the change, in order to update the views,
+ * that derive from AbstractSpliceView.
+ */
 void SpliceCalculator::clear()
 {
-    m_splice->m_name = "untitled";
+    m_splice->setTitle(QStringLiteral("untitled"));
+    m_splice->setAuthor(QStringLiteral("-"));
+    m_splice->setDate(QStringLiteral("-"));
+    m_splice->setDescription(QString());
+
+    QSet<int> emptySet;
+    setSelection(emptySet);
+
     setAppliedLoad(Tensor(0*N, 0*N, 0*N_m));
 
     int i = fastenerCount();
@@ -48,6 +62,65 @@ void SpliceCalculator::clear()
     }
 }
 
+/**********************************************************************
+ **********************************************************************/
+QString SpliceCalculator::title() const
+{
+    return m_splice->title();
+}
+
+void SpliceCalculator::setTitle(const QString &title)
+{
+    if (m_splice->title() != title) {
+        m_splice->setTitle(title);
+        emit changed();
+    }
+}
+
+/**********************************************************************
+ **********************************************************************/
+QString SpliceCalculator::author() const
+{
+    return m_splice->author();
+}
+
+void SpliceCalculator::setAuthor(const QString &author)
+{
+    if (m_splice->author() != author) {
+        m_splice->setAuthor(author);
+        emit changed();
+    }
+}
+
+/**********************************************************************
+ **********************************************************************/
+QString SpliceCalculator::date() const
+{
+    return m_splice->date();
+}
+
+void SpliceCalculator::setDate(const QString &date)
+{
+    if (m_splice->date() != date) {
+        m_splice->setDate(date);
+        emit changed();
+    }
+}
+
+/**********************************************************************
+ **********************************************************************/
+QString SpliceCalculator::description() const
+{
+    return m_splice->description();
+}
+
+void SpliceCalculator::setDescription(const QString &description)
+{
+    if (m_splice->description() != description) {
+        m_splice->setDescription(description);
+        emit changed();
+    }
+}
 
 /**********************************************************************
  **********************************************************************/
@@ -75,20 +148,20 @@ void SpliceCalculator::write(QJsonObject &json) const
 
 int SpliceCalculator::fastenerCount() const
 {
-    return m_splice->m_fasteners.count();
+    return m_splice->fastenerCount();
 }
 
 Fastener SpliceCalculator::fastenerAt(const int index) const
 {
-    if (index >= 0 && index < m_splice->m_fasteners.count()) {
-        return m_splice->m_fasteners.at(index);
+    if (index >= 0 && index < m_splice->fastenerCount()) {
+        return m_splice->fastenerAt(index);
     }
     return Fastener();
 }
 
-Tensor SpliceCalculator::loadcase() const
+Tensor SpliceCalculator::appliedLoad() const
 {
-    return m_splice->m_appliedLoad;
+    return m_splice->appliedLoad();
 }
 
 Tensor SpliceCalculator::resultAt(const int index) const
@@ -109,7 +182,7 @@ QSet<int> SpliceCalculator::selectedIndexes() const
 
 bool SpliceCalculator::insertFastener(const int index, const Fastener &fastener)
 {
-    m_splice->m_fasteners.insert(index, fastener);
+    m_splice->insertFastener(index, fastener);
     emit fastenersInserted(index, fastener);
     emit changed();
     recalculate();
@@ -122,8 +195,8 @@ bool SpliceCalculator::removeFastener(const int index)
     if (m_selectedIndexes.remove( index )) {
         emit selectionChanged();
     }
-    if (index >= 0 && index < m_splice->m_fasteners.count()) {
-        m_splice->m_fasteners.removeAt(index);
+    if (index >= 0 && index < m_splice->fastenerCount()) {
+        m_splice->removeFastenerAt(index);
         emit fastenersRemoved(index);
         emit changed();
         recalculate();
@@ -135,15 +208,14 @@ bool SpliceCalculator::removeFastener(const int index)
 
 bool SpliceCalculator::setFastener(const int index, const Fastener &fastener)
 {
-    if (index < 0 || index >= m_splice->m_fasteners.count())
+    if (index < 0 || index >= m_splice->fastenerCount())
         return false;
 
-    const Fastener old = m_splice->m_fasteners.at(index);
+    const Fastener old = m_splice->fastenerAt(index);
     if (old == fastener)
         return false;
 
-    /// \todo intead of m_splice->m_fasteners[index].swap(fastener);
-    m_splice->m_fasteners[index] = fastener;
+    m_splice->setFastenerAt(index, fastener);
 
     emit fastenersChanged(index, fastener);
     emit changed();
@@ -154,9 +226,9 @@ bool SpliceCalculator::setFastener(const int index, const Fastener &fastener)
 
 bool SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
 {
-    if (m_splice->m_appliedLoad == loadcase)
+    if (m_splice->appliedLoad() == loadcase)
         return false;
-    m_splice->m_appliedLoad = loadcase;
+    m_splice->setAppliedLoad(loadcase);
     emit appliedLoadChanged();
     emit changed();
     recalculate();

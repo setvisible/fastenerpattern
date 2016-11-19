@@ -28,37 +28,53 @@ class QJsonObject;
 
 class Splice : public QObject
 {
-    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(QString author READ author WRITE setAuthor)
+    Q_PROPERTY(QString date READ date WRITE setDate)
+    Q_PROPERTY(QString description READ description WRITE setDescription)
     Q_PROPERTY(Tensor appliedLoad READ appliedLoad WRITE setAppliedLoad)
 
-    friend class SpliceCalculator;
+    //friend class SpliceCalculator;
 
 public:
     explicit Splice(QObject *parent = 0);
-
 
     /* JSON Serialization */
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
-    QString name() const;
-    void setName(const QString &name);
+    QString title() const;
+    void setTitle(const QString &title);
 
     QString author() const;
     void setAuthor(const QString &author);
 
+    QString date() const;
+    void setDate(const QString &date);
+
+    QString description() const;
+    void setDescription(const QString &description);
+
     Tensor appliedLoad() const;
     void setAppliedLoad(const Tensor &appliedLoad);
 
-    QList<Fastener> fasteners() const;
+
+    int fastenerCount() const;
+    const Fastener& fastenerAt(const int index) const;
+
+    void insertFastener(const int index, const Fastener &fastener);
     void addFastener(const Fastener &fastener);
     void addFastener(const QList<Fastener> &fasteners);
+    void setFastenerAt(const int index, const Fastener &fastener);
+    void removeFastenerAt(const int index);
     void removeAllFasteners();
 
-protected:
-    QString m_name;
+private:
+//protected:
+    QString m_title;
     QString m_author;
+    QString m_date;
+    QString m_description;
 
     Tensor m_appliedLoad;
     QList<Fastener> m_fasteners;
@@ -66,7 +82,6 @@ protected:
     /// \todo Solver Options
     /// \todo QPolygonF m_frontier;
 
-private:
 
 };
 

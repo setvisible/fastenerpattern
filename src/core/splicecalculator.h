@@ -31,6 +31,10 @@ class Splice;
 class SpliceCalculator : public AbstractSpliceModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString title READ title WRITE setTitle)
+    Q_PROPERTY(QString author READ author WRITE setAuthor)
+    Q_PROPERTY(QString date READ date WRITE setDate)
+    Q_PROPERTY(QString description READ description WRITE setDescription)
     Q_PROPERTY(SolverParameters solverParameters READ solverParameters WRITE setSolverParameters)
 
 public:
@@ -42,9 +46,21 @@ public:
 
     void clear();
 
+    QString title() const;
+    void setTitle(const QString &title);
+
+    QString author() const;
+    void setAuthor(const QString &author);
+
+    QString date() const;
+    void setDate(const QString &date);
+
+    QString description() const;
+    void setDescription(const QString &description);
+
     virtual int fastenerCount() const Q_DECL_OVERRIDE;
     virtual Fastener fastenerAt(const int index) const Q_DECL_OVERRIDE;
-    virtual Tensor loadcase() const Q_DECL_OVERRIDE;
+    virtual Tensor appliedLoad() const Q_DECL_OVERRIDE;
     virtual Tensor resultAt(const int index) const Q_DECL_OVERRIDE;
     virtual QSet<int> selectedIndexes() const Q_DECL_OVERRIDE;
 
@@ -55,10 +71,10 @@ public Q_SLOTS:
     virtual bool insertFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
     virtual bool removeFastener(const int index) Q_DECL_OVERRIDE;
     virtual bool setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual bool setAppliedLoad(const Tensor &loadcase) Q_DECL_OVERRIDE;
+    virtual bool setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
     virtual bool setSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
 
-    SolverParameters solverParameters()const;
+    SolverParameters solverParameters() const;
     void setSolverParameters(SolverParameters params);
 
 private:

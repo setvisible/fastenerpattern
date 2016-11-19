@@ -1,8 +1,8 @@
 #isEmpty(TEMPLATE):TEMPLATE=app
-TARGET       = tst_rigidbodysolver
+TARGET       = tst_splicecalculator
 CONFIG      += testcase
 QT           = core testlib
-SOURCES     += tst_rigidbodysolver.cpp
+SOURCES     += tst_splicecalculator.cpp
 
 # 3rd libraries:
 include($$PWD/../../3rd/boost.pri)

@@ -3,4 +3,5 @@ CONFIG  += ordered
 
 SUBDIRS += \
     $$PWD/boost \
-    $$PWD/rigidbodysolver
+    $$PWD/rigidbodysolver \
+    $$PWD/splicecalculator

@@ -35,8 +35,10 @@ Splice::Splice(QObject *parent) : QObject(parent)
 /* JSON Serialization */
 void Splice::read(const QJsonObject &json)
 {
-    m_name = json["name"].toString();
+    m_title = json["title"].toString();
     m_author = json["author"].toString();
+    m_date = json["date"].toString();
+    m_description = json["description"].toString();
 
     QJsonObject load = json["load"].toObject();
     m_appliedLoad.read(load);
@@ -63,8 +65,10 @@ void Splice::read(const QJsonObject &json)
 
 void Splice::write(QJsonObject &json) const
 {
-    json["name"] = m_name;
+    json["title"] = m_title;
     json["author"] = m_author;
+    json["date"] = m_date;
+    json["description"] = m_description;
 
     QJsonObject load;
     m_appliedLoad.write(load);
@@ -80,24 +84,55 @@ void Splice::write(QJsonObject &json) const
 
 }
 
-QString Splice::name() const
+/**********************************************************************
+ **********************************************************************/
+QString Splice::title() const
 {
-    return m_name;
-}
-void Splice::setName(const QString &name)
-{
-    m_name = name;
+    return m_title;
 }
 
+void Splice::setTitle(const QString &title)
+{
+    m_title = title;
+}
+
+/**********************************************************************
+ **********************************************************************/
 QString Splice::author() const
 {
     return m_author;
 }
+
 void Splice::setAuthor(const QString &author)
 {
     m_author = author;
 }
 
+/**********************************************************************
+ **********************************************************************/
+QString Splice::date() const
+{
+    return m_date;
+}
+
+void Splice::setDate(const QString &date)
+{
+    m_date = date;
+}
+
+/**********************************************************************
+ **********************************************************************/
+QString Splice::description() const
+{
+    return m_description;
+}
+void Splice::setDescription(const QString &description)
+{
+    m_description = description;
+}
+
+/**********************************************************************
+ **********************************************************************/
 Tensor Splice::appliedLoad() const
 {
     return m_appliedLoad;
@@ -108,9 +143,21 @@ void Splice::setAppliedLoad(const Tensor &loadcase)
     m_appliedLoad = loadcase;
 }
 
-QList<Fastener> Splice::fasteners() const
+/**********************************************************************
+ **********************************************************************/
+int Splice::fastenerCount() const
 {
-    return m_fasteners;
+    return m_fasteners.count();
+}
+
+const Fastener& Splice::fastenerAt(const int index) const
+{
+    return m_fasteners.at(index);
+}
+
+void Splice::insertFastener(const int index, const Fastener &fastener)
+{
+    m_fasteners.insert(index, fastener);
 }
 
 void Splice::addFastener(const Fastener &fastener)
@@ -121,6 +168,16 @@ void Splice::addFastener(const Fastener &fastener)
 void Splice::addFastener(const QList<Fastener> &fasteners)
 {
     m_fasteners.append(fasteners);
+}
+
+void Splice::setFastenerAt(const int index, const Fastener &fastener)
+{
+    m_fasteners[index] = fastener;
+}
+
+void Splice::removeFastenerAt(const int index)
+{
+    m_fasteners.removeAt(index);
 }
 
 void Splice::removeAllFasteners()

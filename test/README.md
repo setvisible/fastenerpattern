@@ -5,3 +5,6 @@
 
  - `/rigidbodysolver`    
         Contains the automatic unit tests for the class `RigidBodySolver` (requires QtTest from the Qt framework).
+
+ - `/splicecalculator`    
+        Contains the automatic unit tests for the class `SpliceCalculator` (requires QtTest from the Qt framework).

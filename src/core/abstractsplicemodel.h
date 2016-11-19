@@ -32,7 +32,7 @@ public:
 
     Q_INVOKABLE virtual int fastenerCount() const = 0;
     Q_INVOKABLE virtual Fastener fastenerAt(const int index) const = 0;
-    Q_INVOKABLE virtual Tensor loadcase() const = 0;
+    Q_INVOKABLE virtual Tensor appliedLoad() const = 0;
     Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
     Q_INVOKABLE virtual QSet<int> selectedIndexes() const = 0;
 

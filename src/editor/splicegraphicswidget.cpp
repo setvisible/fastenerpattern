@@ -142,7 +142,7 @@ void SpliceGraphicsWidget::fastenersRemoved(const int index)
 
 void SpliceGraphicsWidget::appliedLoadChanged()
 {
-    m_appliedLoadItem->setTensor( model()->loadcase() );
+    m_appliedLoadItem->setTensor( model()->appliedLoad() );
 }
 
 void SpliceGraphicsWidget::selectionChanged()

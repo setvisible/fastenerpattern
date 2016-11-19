@@ -1,5 +1,7 @@
 {
     "author": "S. Vavassori",
+    "date": "01/11/2016",
+    "description": "A pattern with 4 bolts",
     "fasteners": [
         {
             "DoF_X": true,
@@ -43,5 +45,5 @@
         "fy": 100,
         "mz": 10
     },
-    "name": "4 Bolt Joint"
+    "title": "4 Bolt Joint"
 }
