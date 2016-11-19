@@ -20,6 +20,7 @@
 #include "about.h"
 #include "version.h"
 #include <Core/SpliceCalculator>
+#include <Dialogs/PropertiesDialog>
 #include <Widgets/AppliedLoadWidget>
 #include <Widgets/FastenerWidget>
 #include <Widgets/MainWidget>
@@ -202,6 +203,13 @@ void MainWindow::open()
     }
 }
 
+/***********************************************************************************
+ ***********************************************************************************/
+void MainWindow::showFileProperties()
+{
+    PropertiesDialog dialog(m_calculator, this);
+    dialog.exec();
+}
 
 /***********************************************************************************
  ***********************************************************************************/
@@ -297,13 +305,23 @@ void MainWindow::createActions()
     ui->action_SaveAs->setStatusTip(tr("Save the splice to a different file"));
     connect(ui->action_SaveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
 
+#ifdef Q_OS_WIN
+    ui->action_Properties->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F10));
+#else
+    ui->action_Properties->setShortcuts(QKeySequence::Preferences);
+#endif
+    ui->action_Properties->setStatusTip(tr("Show the properties of the current file"));
+    connect(ui->action_Properties, SIGNAL(triggered()), this, SLOT(showFileProperties()));
+
     ui->action_Exit->setShortcuts(QKeySequence::Quit);
     ui->action_Exit->setStatusTip(tr("Quit FastenerPattern"));
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
 
+    ui->action_About->setShortcuts(QKeySequence::HelpContents);
     ui->action_About->setStatusTip(tr("About FastenerPattern"));
     connect(ui->action_About, SIGNAL(triggered()), this, SLOT(about()));
 
+    ui->action_AboutQt->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F1));
     ui->action_AboutQt->setStatusTip(tr("About Qt"));
     connect(ui->action_AboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }

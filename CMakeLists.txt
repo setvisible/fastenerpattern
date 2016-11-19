@@ -5,7 +5,7 @@ message(STATUS "Tips: Building with all the CPU cores: > cmake --build . --targe
 ### Versioning
 set(APP_VERSION_MAJOR "0")
 set(APP_VERSION_MINOR "1")
-set(APP_VERSION_PATCH "0")
+set(APP_VERSION_PATCH "2")
 set(APP_VERSION "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 
 configure_file( ./src/config.h.cmake ./src/config.h )
@@ -45,6 +45,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 ### Sources
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/core/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/editor/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/CMakeLists.txt)
 

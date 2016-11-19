@@ -63,6 +63,8 @@
     <addaction name="action_Save"/>
     <addaction name="action_SaveAs"/>
     <addaction name="separator"/>
+    <addaction name="action_Properties"/>
+    <addaction name="separator"/>
     <addaction name="action_Exit"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -222,6 +224,11 @@
    </property>
    <property name="text">
     <string>Duplicate</string>
+   </property>
+  </action>
+  <action name="action_Properties">
+   <property name="text">
+    <string>&amp;Properties...</string>
    </property>
   </action>
  </widget>

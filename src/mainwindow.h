@@ -45,6 +45,7 @@ private Q_SLOTS:
     bool save();
     bool saveAs();
     void open();
+    void showFileProperties();
 
     void about();
 
