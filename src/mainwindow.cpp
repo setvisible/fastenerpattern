@@ -81,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     /* [3] */
     /* Internally, the Calculator updates the Splice, and
      * recalculates the results thanks to the Solvers.
-     * It emits the signal dataChanged() to inform the GUI.
+     * It emits the signal changed() to inform the GUI.
      */
 
 

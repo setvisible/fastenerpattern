@@ -55,7 +55,6 @@ private Q_SLOTS:
 
     void on_action_4BoltJoint_triggered();
     void on_action_PatternJoint_triggered();
-
     void on_action_RandomPattern_triggered();
 
 private:
@@ -65,6 +64,7 @@ private:
     bool m_dirty;
     bool m_physicalFile;
     QFileInfo m_currentFile;
+
     inline QString niceFileName() const;
     inline bool isExampleFile() const;
     inline bool isPhysicalFile() const;

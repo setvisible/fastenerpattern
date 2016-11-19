@@ -94,7 +94,7 @@
     ],
     "load": {
         "fx": -100,
-        "fy": -50,
+        "fy": -500,
         "mz": 10
     },
     "name": "Random Joint"
