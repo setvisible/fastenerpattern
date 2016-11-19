@@ -42,6 +42,7 @@ protected Q_SLOTS:
 private:
     Ui::TableWidget *ui;
     void resizeColumnToContents();
+    inline QString DOFToString(Fastener::DOF dof) const;
 };
 
 #endif // WIDGETS_TABLE_WIDGET_H

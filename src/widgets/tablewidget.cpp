@@ -46,20 +46,18 @@ void TableWidget::resizeColumnToContents()
         ui->treeWidget->resizeColumnToContents(i);
 }
 
-/***********************************************************************************
- ***********************************************************************************/
 void TableWidget::fastenersInserted(const int index, const Fastener &fastener)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem();
     ui->treeWidget->insertTopLevelItem(index, item);
     item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
 
-    item->setText(0, QString("%0").arg( fastener.positionX.value(), 0, 'f', 3));
-    item->setText(1, QString("%0").arg( fastener.positionY.value(), 0, 'f', 3));
-    item->setText(2, QString("%0").arg( fastener.diameter.value() , 0, 'f', 3));
-    item->setText(3, QString("%0").arg( fastener.thickness.value(), 0, 'f', 3));
-    item->setText(4, (fastener.DoF_X ? QStringLiteral("fixed") : QStringLiteral("free")));
-    item->setText(5, (fastener.DoF_Y ? QStringLiteral("fixed") : QStringLiteral("free")));
+    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
+    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
+    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
+    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
+    item->setText(4, DOFToString(fastener.DoF_X));
+    item->setText(5, DOFToString(fastener.DoF_Y));
 
     this->resizeColumnToContents();
 }
@@ -70,12 +68,12 @@ void TableWidget::fastenersChanged(const int index, const Fastener &fastener)
     if (!item)
         return;
 
-    item->setText(0, QString("%0").arg( fastener.positionX.value(), 0, 'f', 3));
-    item->setText(1, QString("%0").arg( fastener.positionY.value(), 0, 'f', 3));
-    item->setText(2, QString("%0").arg( fastener.diameter.value() , 0, 'f', 3));
-    item->setText(3, QString("%0").arg( fastener.thickness.value(), 0, 'f', 3));
-    item->setText(4, (fastener.DoF_X ? QStringLiteral("fixed") : QStringLiteral("free")));
-    item->setText(5, (fastener.DoF_Y ? QStringLiteral("fixed") : QStringLiteral("free")));
+    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
+    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
+    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
+    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
+    item->setText(4, DOFToString(fastener.DoF_X));
+    item->setText(5, DOFToString(fastener.DoF_Y));
 
     this->resizeColumnToContents();
 }
@@ -88,9 +86,6 @@ void TableWidget::fastenersRemoved(const int index)
     this->resizeColumnToContents();
 
 }
-
-/***********************************************************************************
- ***********************************************************************************/
 
 void TableWidget::onItemSelectionChanged()
 {
@@ -128,3 +123,7 @@ void TableWidget::selectionChanged()
     }
 }
 
+inline QString TableWidget::DOFToString(Fastener::DOF dof) const
+{
+    return (dof == Fastener::Fixed) ? tr("fixed") : tr("free");
+}
