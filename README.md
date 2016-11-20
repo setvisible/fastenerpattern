@@ -6,6 +6,14 @@
 
 Its core is developed in C++, based on the [Qt framework](https://www.qt.io/ "Qt framework"). It uses the [Boost::Units](http://www.boost.org/ "Boost") module.
 
+## Dimensional Analysis
+
+[Dimensional Analysis](https://en.wikipedia.org/wiki/Dimensional_analysis "https://en.wikipedia.org/wiki/Dimensional_analysis")  is the analysis of relationships between different physical quantities by identifying their fundamental dimensions.
+
+**FastenerPattern** uses the Dimensional Analysis abilities of the *Boost::Units module* to verify the dimensional homogeneity of the mechanical quantities and formulas used by the software.
+
+This enables a better Verification & Validation, since the code is more robust (less permissive) and more reliable.
+
 
 ## CP solver
 

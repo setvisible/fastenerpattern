@@ -11,6 +11,7 @@
 !/test
 !/user-manual
 !/.gitignore
+!/CHECKLIST-RELEASE.md
 !/CMakeLists.txt
 !/doxyfile
 !/LICENSE
