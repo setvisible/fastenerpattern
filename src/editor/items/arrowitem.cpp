@@ -20,7 +20,8 @@
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOptionGraphicsItem>
-#include <QtCore/QtMath>     /* M_PI */
+#include <QtCore/QtMath>      /* M_PI */
+#include <QtCore/qnumeric.h>  /* qIsFinite() */
 #include <QDebug>
 
 ArrowItem::ArrowItem(QGraphicsItem *parent) : QGraphicsLineItem(parent)

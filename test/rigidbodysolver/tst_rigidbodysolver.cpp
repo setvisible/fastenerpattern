@@ -110,8 +110,8 @@ void tst_RigidBodySolver::test_simple()
 
     // Then
     QCOMPARE( actual.count(), 2);
-    QCOMPARE( actual.at(0), Tensor(602.50*N, -60.25*N, 0.*N_m) );
-    QCOMPARE( actual.at(1), Tensor(602.50*N,  60.25*N, 0.*N_m) );
+    QCOMPARE( actual.at(0).around(), Tensor(602.50*N, -60.25*N, 0.*N_m) );
+    QCOMPARE( actual.at(1).around(), Tensor(602.50*N,  60.25*N, 0.*N_m) );
 }
 
 /*************************************************************************
@@ -149,9 +149,9 @@ void tst_RigidBodySolver::test_different_degrees_of_freedom()
 
     // Then
     QCOMPARE( actual.count(), 3);
-    QCOMPARE( actual.at(0), Tensor(   0.00*N, -228.69*N, 0.*N_m) );
-    QCOMPARE( actual.at(1), Tensor( 602.91*N,  228.69*N, 0.*N_m) );
-    QCOMPARE( actual.at(2), Tensor( 397.09*N,    0.00*N, 0.*N_m) );
+    QCOMPARE( actual.at(0).around(2), Tensor(   0.00*N, -228.69*N, 0.*N_m) );
+    QCOMPARE( actual.at(1).around(2), Tensor( 602.91*N,  228.69*N, 0.*N_m) );
+    QCOMPARE( actual.at(2).around(2), Tensor( 397.09*N,    0.00*N, 0.*N_m) );
 }
 
 /*************************************************************************
@@ -171,9 +171,9 @@ void tst_RigidBodySolver::test_isobearing()
 
     // Then
     QCOMPARE( actual.count(), 3);
-    QCOMPARE( actual.at(0), Tensor( 621.08*N, 612.93*N, 0.*N_m ) );
-    QCOMPARE( actual.at(1), Tensor( 310.06*N, 316.22*N, 0.*N_m ) );
-    QCOMPARE( actual.at(2), Tensor(  68.87*N,  70.85*N, 0.*N_m ) );
+    QCOMPARE( actual.at(0).around(2), Tensor( 621.08*N, 612.93*N, 0.*N_m ) );
+    QCOMPARE( actual.at(1).around(2), Tensor( 310.06*N, 316.22*N, 0.*N_m ) );
+    QCOMPARE( actual.at(2).around(2), Tensor(  68.87*N,  70.85*N, 0.*N_m ) );
 }
 
 /*************************************************************************
@@ -193,9 +193,9 @@ void tst_RigidBodySolver::test_isoshear()
 
     // Then
     QCOMPARE( actual.count(), 3);
-    QCOMPARE( actual.at(0), Tensor( 594.17*N, 611.14*N, 0.*N_m ) );
-    QCOMPARE( actual.at(1), Tensor( 333.19*N, 320.10*N, 0.*N_m ) );
-    QCOMPARE( actual.at(2), Tensor(  72.64*N,  68.76*N, 0.*N_m ) );
+    QCOMPARE( actual.at(0).around(2), Tensor( 594.17*N, 611.14*N, 0.*N_m ) );
+    QCOMPARE( actual.at(1).around(2), Tensor( 333.19*N, 320.10*N, 0.*N_m ) );
+    QCOMPARE( actual.at(2).around(2), Tensor(  72.64*N,  68.76*N, 0.*N_m ) );
 }
 
 QTEST_APPLESS_MAIN(tst_RigidBodySolver)

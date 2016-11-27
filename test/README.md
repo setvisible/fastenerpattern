@@ -8,3 +8,6 @@
 
  - `/splicecalculator`    
         Contains the automatic unit tests for the class `SpliceCalculator` (requires QtTest from the Qt framework).
+
+ - `/tensor`    
+        Contains the automatic unit tests for the class `Tensor` (requires QtTest from the Qt framework).

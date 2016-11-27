@@ -16,6 +16,9 @@
 
 #include "splicetoolbar.h"
 
+#include <QtGui/QIcon>
+#include <QtWidgets/QAction>
+
 SpliceToolbarPrivate::SpliceToolbarPrivate(QWidget *parent)
     : AbstractSpliceView(parent)
     , q_ptr((SpliceToolbar*)parent)

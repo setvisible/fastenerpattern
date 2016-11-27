@@ -37,6 +37,8 @@ public:
     bool operator==(const Tensor &other) const;
     bool operator!=(const Tensor &other) const;
 
+    Tensor around(const int precision = 3) const;
+
     Force force_x;
     Force force_y;
     Torque torque_z;

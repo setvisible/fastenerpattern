@@ -20,6 +20,7 @@
 #include <QtCore/QtGlobal>
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>
+#include <QtCore/QtMath>   /* qPow() */
 
 #ifdef QT_DEBUG
 #include <QtCore/QDebug>
@@ -59,6 +60,8 @@ bool Tensor::operator!=(const Tensor &other) const
 
 
 /* JSON Serialization */
+/*! \brief Assign the Tensor's members values from the given \a json object.
+ */
 void Tensor::read(const QJsonObject &json)
 {
     force_x  = json["fx"].toDouble() *N;
@@ -66,11 +69,31 @@ void Tensor::read(const QJsonObject &json)
     torque_z = json["mz"].toDouble() *N_m;
 }
 
+/*! \brief Assigns the values from the Tensor to the given \a json object.
+ */
 void Tensor::write(QJsonObject &json) const
 {
     json["fx"] = force_x.value();
     json["fy"] = force_y.value();
     json["mz"] = torque_z.value();
+}
+
+static qreal round(qreal f, int precision)
+{
+    if (precision < 0) precision = 0;
+    if (precision > 9) precision = 9;
+    qreal significantDigits = qPow(10, precision);
+    qreal round = qFloor((f * significantDigits) + 0.5) / significantDigits;
+    return round;
+}
+
+Tensor Tensor::around(const int precision) const
+{
+    Tensor t;
+    t.force_x = round(this->force_x.value(), precision) *N;
+    t.force_y = round(this->force_y.value(), precision) *N;
+    t.torque_z = round(this->torque_z.value(), precision) *N_m;
+    return t;
 }
 
 #ifdef QT_TESTLIB_LIB

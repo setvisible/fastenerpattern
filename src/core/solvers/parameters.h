@@ -29,7 +29,7 @@ enum class SolverParameters {
     RigidBodySolverWithIsoBearing,
     RigidBodySolverWithIsoShear,
     FiniteElementSolver,
-    OptimisationSolver,
+    OptimisationSolver
 };
 
 Q_DECLARE_METATYPE(SolverParameters)

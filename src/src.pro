@@ -6,10 +6,10 @@ TARGET   = FastenerPattern
 QT      += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-# TODO CONFIG += no_keyword
+CONFIG += no_keyword
 
 # QT += c++11
-#message($${CONFIG})
+QMAKE_CXXFLAGS += -std=c++11
 
 LANGUAGE = C++
 

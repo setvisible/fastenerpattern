@@ -110,8 +110,9 @@ bool BackgroundWidget::isAxesVisible() const
 
 void BackgroundWidget::setAxesVisible(bool visible)
 {
-    m_enabledFeatures.setFlag(Features::HorizontalAxis, visible);
-    m_enabledFeatures.setFlag(Features::VerticalAxis, visible);
+    Q_UNUSED(visible)
+    /// \todo m_enabledFeatures.setFlag(Features::HorizontalAxis, visible);
+    /// \todo m_enabledFeatures.setFlag(Features::VerticalAxis, visible);
     this->update();
 }
 
