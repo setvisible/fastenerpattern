@@ -28,6 +28,11 @@
 #include <QJsonObject>
 
 
+/*! \class SpliceCalculator
+ *  \brief The class SpliceCalculator is the main manager for a splice document.
+ *
+ */
+
 /*! \brief Constructor.
  */
 SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent)
@@ -125,6 +130,8 @@ void SpliceCalculator::setDescription(const QString &description)
 /**********************************************************************
  **********************************************************************/
 /* SERIALISATION JSON */
+/*! \brief Assign the SpliceCalculator's members values from the given \a json object.
+ */
 void SpliceCalculator::read(const QJsonObject &json)
 {
     clear();
@@ -138,6 +145,8 @@ void SpliceCalculator::read(const QJsonObject &json)
     emit resultsChanged();
 }
 
+/*! \brief Assigns the values from the SpliceCalculator to the given \a json object.
+ */
 void SpliceCalculator::write(QJsonObject &json) const
 {
     m_splice->write(json);

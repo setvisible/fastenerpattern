@@ -33,6 +33,8 @@ Splice::Splice(QObject *parent) : QObject(parent)
 }
 
 /* JSON Serialization */
+/*! \brief Assign the Splice's members values from the given \a json object.
+ */
 void Splice::read(const QJsonObject &json)
 {
     m_title = json["title"].toString();
@@ -63,6 +65,8 @@ void Splice::read(const QJsonObject &json)
     /// \todo  }
 }
 
+/*! \brief Assigns the values from the Splice to the given \a json object.
+ */
 void Splice::write(QJsonObject &json) const
 {
     json["title"] = m_title;

@@ -47,6 +47,8 @@ Fastener::Fastener(const Length& _position_x,
 }
 
 /* JSON Serialization */
+/*! \brief Assign the Fastener's members values from the given \a json object.
+ */
 void Fastener::read(const QJsonObject &json)
 {
     name = json["name"].toString();
@@ -58,6 +60,8 @@ void Fastener::read(const QJsonObject &json)
     DoF_Y = boolToDOF( json["DoF_Y"].toBool() );
 }
 
+/*! \brief Assigns the values from the Fastener to the given \a json object.
+ */
 void Fastener::write(QJsonObject &json) const
 {
     json["name"] = name;
