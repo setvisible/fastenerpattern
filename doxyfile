@@ -1,12 +1,16 @@
 # GENERAL
 PROJECT_NAME           = "FastenerPattern"
-OUTPUT_DIRECTORY       = "doc/"
+OUTPUT_DIRECTORY       = "../doxy/"
 OUTPUT_LANGUAGE        = English
 GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
 HTML_OUTPUT            = html
 
 # Input
-INPUT                  = "src/"
+INPUT                  = ./doxygenMain.cpp \
+                         ./LICENSE \
+                         ./README.md \
+                         ./src
 RECURSIVE              = YES
 
 # Build
