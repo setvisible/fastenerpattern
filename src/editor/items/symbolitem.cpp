@@ -63,7 +63,7 @@ QPainterPath SymbolItem::shape() const
     return path;
 }
 
-void SymbolItem::paint(QPainter *painter, const QStyleOptionGraphicsItem  */*option*/, QWidget *)
+void SymbolItem::paint(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget *)
 {
     /// \todo use the Level of Details aka option->levelOfDetail() ?
 
