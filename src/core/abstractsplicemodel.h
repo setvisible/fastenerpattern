@@ -22,6 +22,7 @@
 
 #include <Core/Tensor>
 #include <Core/Fastener>
+#include <Core/Solvers/Parameters>
 
 class AbstractSpliceModel : public QObject
 {
@@ -35,6 +36,7 @@ public:
     Q_INVOKABLE virtual Tensor appliedLoad() const = 0;
     Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
     Q_INVOKABLE virtual QSet<int> selectedIndexes() const = 0;
+    Q_INVOKABLE virtual SolverParameters solverParameters() const = 0;
 
 Q_SIGNALS:
     void appliedLoadChanged();
@@ -72,6 +74,10 @@ public Q_SLOTS:
         return false;
     }
 
+    Q_INVOKABLE virtual bool setSolverParameters(SolverParameters params) {
+        Q_UNUSED(params);
+        return false;
+    }
 
 };
 

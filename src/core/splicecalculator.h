@@ -19,7 +19,6 @@
 
 #include <Core/AbstractSpliceModel>
 #include <Core/Splice>
-#include <Core/Solvers/Parameters>
 
 #include <QObject>
 #include <QString>
@@ -63,6 +62,7 @@ public:
     virtual Tensor appliedLoad() const Q_DECL_OVERRIDE;
     virtual Tensor resultAt(const int index) const Q_DECL_OVERRIDE;
     virtual QSet<int> selectedIndexes() const Q_DECL_OVERRIDE;
+    virtual SolverParameters solverParameters() const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void changed();
@@ -73,9 +73,7 @@ public Q_SLOTS:
     virtual bool setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
     virtual bool setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
     virtual bool setSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
-
-    SolverParameters solverParameters() const;
-    void setSolverParameters(SolverParameters params);
+    virtual bool setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
 
 private:
     SolverParameters m_params;

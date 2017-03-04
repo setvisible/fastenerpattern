@@ -95,7 +95,6 @@ void SolverWidget::toGUI(SolverParameters params)
     case SolverParameters::FiniteElementSolver:
         ui->radioSolver_2->setChecked(true);
         break;
-    case SolverParameters::OptimisationSolver:
     default:
         break;
     }

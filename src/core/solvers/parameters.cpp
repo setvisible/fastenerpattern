@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,8 +16,7 @@
 
 #include "parameters.h"
 
-#ifdef QT_DEBUG
-QDebug operator<<(QDebug dbg, const SolverParameters &param)
+QString toString(const SolverParameters param)
 {
     QString str;
     switch (param) {
@@ -29,13 +28,18 @@ QDebug operator<<(QDebug dbg, const SolverParameters &param)
         str = QStringLiteral("Rigid Body Solver (IsoShear)");  break;
     case SolverParameters::FiniteElementSolver:
         str = QStringLiteral("Finite Element Solver");  break;
-    case SolverParameters::OptimisationSolver:
-        str = QStringLiteral("Optimisation Solver");  break;
-   default:
+    default:
         // Q_UNREACHABLE;
         break;
     }
-    dbg.nospace() << str;
+    return str;
+}
+
+
+#ifdef QT_DEBUG
+QDebug operator<<(QDebug dbg, const SolverParameters &param)
+{
+    dbg.nospace() << toString(param);
     return dbg.maybeSpace();
 }
 #endif

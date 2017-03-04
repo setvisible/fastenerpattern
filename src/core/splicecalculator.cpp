@@ -259,10 +259,10 @@ SolverParameters SpliceCalculator::solverParameters() const
     return m_params;
 }
 
-void SpliceCalculator::setSolverParameters(SolverParameters params)
+bool SpliceCalculator::setSolverParameters(SolverParameters params)
 {
     if (m_params == params)
-        return;
+        return false;
 
     if (m_solver) {
         delete m_solver;
@@ -286,15 +286,17 @@ void SpliceCalculator::setSolverParameters(SolverParameters params)
         break;
     }
 
-    case SolverParameters::NoSolver:
     case SolverParameters::FiniteElementSolver:
-    case SolverParameters::OptimisationSolver:
+        /* TO DO */
+        break;
+    case SolverParameters::NoSolver:
     default:
         break;
     }
     m_params = params;
     recalculate();
     emit resultsChanged();
+    return true;
 }
 
 void SpliceCalculator::recalculate()

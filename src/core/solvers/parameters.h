@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,21 +18,22 @@
 #define CORE_SOLVER_PARAMETERS_H
 
 #include <QtCore/QMetaType>
+#include <QtCore/QString>
 
 #ifdef QT_DEBUG
-#include <QtCore/QDebug>
+#  include <QtCore/QDebug>
 #endif
-
 
 enum class SolverParameters {
     NoSolver,
     RigidBodySolverWithIsoBearing,
     RigidBodySolverWithIsoShear,
-    FiniteElementSolver,
-    OptimisationSolver
+    FiniteElementSolver
 };
 
 Q_DECLARE_METATYPE(SolverParameters)
+
+QString toString(const SolverParameters param);
 
 #ifdef QT_DEBUG
 QDebug operator<<(QDebug dbg, const SolverParameters &param);
