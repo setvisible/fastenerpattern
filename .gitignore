@@ -4,8 +4,6 @@
 # ==============================================================================
 /.*
 /*
-!/3rd
-!/cpsolver
 !/include
 !/src
 !/test
@@ -16,9 +14,8 @@
 !/doxyfile
 !/doxygenMain.cpp
 !/LICENSE
-!/FastenerPattern.pro
 !/README.md
-!/version.pri
+!/version
 
 
 # =======================================

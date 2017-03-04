@@ -7,6 +7,7 @@ set(MY_SOURCES ${MY_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/mainwidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/solverwidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/resultwidget.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/optimisationwidget.cpp
     )
 
 # Rem: set here the headers related to the Qt MOC (i.e., with associated *.ui)
@@ -19,6 +20,7 @@ set(MY_HEADERS ${MY_HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/mainwidget.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/solverwidget.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/resultwidget.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/optimisationwidget.h
     )
 
 set(MY_FORMS ${MY_FORMS}
@@ -28,4 +30,5 @@ set(MY_FORMS ${MY_FORMS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/mainwidget.ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/solverwidget.ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/resultwidget.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/optimisationwidget.ui
     )

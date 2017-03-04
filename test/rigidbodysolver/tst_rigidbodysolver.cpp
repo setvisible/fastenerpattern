@@ -67,8 +67,8 @@ void tst_RigidBodySolver::test_undefined_load()
     // Given, When
     RigidBodySolver solver;
     Splice splice;
-    splice.addFastener( Fastener(  0.*mm, 1.*mm, 4.83*mm, 3.*mm ) );
-    splice.addFastener( Fastener( 20.*mm, 1.*mm, 4.83*mm, 3.*mm ) );
+    splice.addFastener( Fastener(  0.*_mm, 1.*_mm, 4.83*_mm, 3.*_mm ) );
+    splice.addFastener( Fastener( 20.*_mm, 1.*_mm, 4.83*_mm, 3.*_mm ) );
     QList<Tensor> actual = solver.calculate( &splice );
 
     // Then
@@ -100,8 +100,8 @@ void tst_RigidBodySolver::test_simple()
     RigidBodySolver solver;
     Splice splice;
     splice.setAppliedLoad( Tensor( 1205.*N, 0.*N, 0.*N_m ) );
-    splice.addFastener( Fastener(  0.*mm, 1.*mm, 4.83*mm, 3.*mm ) );
-    splice.addFastener( Fastener( 20.*mm, 1.*mm, 4.83*mm, 3.*mm ) );
+    splice.addFastener( Fastener(  0.*_mm, 1.*_mm, 4.83*_mm, 3.*_mm ) );
+    splice.addFastener( Fastener( 20.*_mm, 1.*_mm, 4.83*_mm, 3.*_mm ) );
 
     /* Rem: the mode doesn't matter here (same bolts = same load sharing) */
     solver.setParameters(SolverParameters::RigidBodySolverWithIsoBearing);
@@ -123,8 +123,8 @@ void tst_RigidBodySolver::test_moment()
     RigidBodySolver solver;
     Splice splice;
     splice.setAppliedLoad( Tensor( 1000.*N, 0.*N, 100000.*N_mm) );
-    splice.addFastener( Fastener(  0.*mm, 1.*mm, 4.83*mm, 3.*mm ) );
-    splice.addFastener( Fastener( 20.*mm, 1.*mm, 4.83*mm, 3.*mm ) );
+    splice.addFastener( Fastener(  0.*_mm, 1.*_mm, 4.83*_mm, 3.*_mm ) );
+    splice.addFastener( Fastener( 20.*_mm, 1.*_mm, 4.83*_mm, 3.*_mm ) );
     QList<Tensor> actual = solver.calculate( &splice );
 
     // Then
@@ -142,9 +142,9 @@ void tst_RigidBodySolver::test_different_degrees_of_freedom()
     RigidBodySolver solver;
     Splice splice;
     splice.setAppliedLoad( Tensor( 1000.*N, 0.*N, 0.*N_mm) );
-    splice.addFastener( Fastener(  0.*mm,  1.*mm, 4.83*mm, 3.*mm, Fastener::Free , Fastener::Fixed));
-    splice.addFastener( Fastener( 20.*mm,  1.*mm, 4.83*mm, 3.*mm, Fastener::Fixed, Fastener::Fixed));
-    splice.addFastener( Fastener( 10.*mm, 10.*mm, 4.83*mm, 3.*mm, Fastener::Fixed, Fastener::Free ));
+    splice.addFastener( Fastener(  0.*_mm,  1.*_mm, 4.83*_mm, 3.*_mm, Fastener::Free , Fastener::Fixed));
+    splice.addFastener( Fastener( 20.*_mm,  1.*_mm, 4.83*_mm, 3.*_mm, Fastener::Fixed, Fastener::Fixed));
+    splice.addFastener( Fastener( 10.*_mm, 10.*_mm, 4.83*_mm, 3.*_mm, Fastener::Fixed, Fastener::Free ));
     QList<Tensor> actual = solver.calculate( &splice );
 
     // Then
@@ -162,9 +162,9 @@ void tst_RigidBodySolver::test_isobearing()
     RigidBodySolver solver;
     Splice splice;
     splice.setAppliedLoad( Tensor( 1000.*N, 1000.*N, 1000.*N_mm) );
-    splice.addFastener( Fastener( -10.*mm, -5.*mm, 6.45*mm, 3.*mm ) );
-    splice.addFastener( Fastener(  10.*mm, -5.*mm, 4.83*mm, 2.*mm ) );
-    splice.addFastener( Fastener(   0.*mm, 10.*mm, 2.20*mm, 1.*mm ) );
+    splice.addFastener( Fastener( -10.*_mm, -5.*_mm, 6.45*_mm, 3.*_mm ) );
+    splice.addFastener( Fastener(  10.*_mm, -5.*_mm, 4.83*_mm, 2.*_mm ) );
+    splice.addFastener( Fastener(   0.*_mm, 10.*_mm, 2.20*_mm, 1.*_mm ) );
 
     solver.setParameters(SolverParameters::RigidBodySolverWithIsoBearing);/* IsoBearing */
     QList<Tensor> actual = solver.calculate( &splice );
@@ -184,9 +184,9 @@ void tst_RigidBodySolver::test_isoshear()
     RigidBodySolver solver;
     Splice splice;
     splice.setAppliedLoad( Tensor( 1000.*N, 1000.*N, 1000.*N_mm) );
-    splice.addFastener( Fastener( -10.*mm, -5.*mm, 6.45*mm, 3.*mm ) );
-    splice.addFastener( Fastener(  10.*mm, -5.*mm, 4.83*mm, 2.*mm ) );
-    splice.addFastener( Fastener(   0.*mm, 10.*mm, 2.20*mm, 1.*mm ) );
+    splice.addFastener( Fastener( -10.*_mm, -5.*_mm, 6.45*_mm, 3.*_mm ) );
+    splice.addFastener( Fastener(  10.*_mm, -5.*_mm, 4.83*_mm, 2.*_mm ) );
+    splice.addFastener( Fastener(   0.*_mm, 10.*_mm, 2.20*_mm, 1.*_mm ) );
 
     solver.setParameters(SolverParameters::RigidBodySolverWithIsoShear); /* IsoShear */
     QList<Tensor> actual = solver.calculate( &splice );

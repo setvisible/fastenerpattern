@@ -10,8 +10,7 @@
 
 ### Pre-Building
 
- - Change `APP_VERSION` in `version.pri`
- - Change `MAJOR.MINOR.PATCH` in `CMakeLists.txt`
+ - Change numbers in `version`
  - List the changes with `git log --pretty=oneline` and added them to `CHANGELOG`
  - Make sure `CHANGELOG` has a proper date set
  - Commit (use **Git GUI**)
@@ -41,10 +40,10 @@
 - Check the version in both targets  with `> FastenerPattern.exe --version`
 - Make sure you copy the relevant Qt DLLs and the Windows platform plugin (qwindows.dll):
 
-     platforms\qwindows.dll	The Qt Windows platform plugin  
-     Qt5Core.dll               The Qt Core module  
-     Qt5Gui.dll                The Qt GUI module  
-     Qt5Widgets.dll            The Qt Widgets module  
+     platforms\qwindows.dll    The Qt Windows platform plugin
+     Qt5Core.dll               The Qt Core module
+     Qt5Gui.dll                The Qt GUI module
+     Qt5Widgets.dll            The Qt Widgets module
      LIBWINPTHREAD-1.DLL       MinGW
      LIBGCC_S_DW2-1.DLL        MinGW
      LIBSTDC++-6.DLL           MinGW

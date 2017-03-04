@@ -22,12 +22,5 @@
 #  include "src/config.h"
 #endif
 
-/* Qt Project */
-#define STRINGIFY_INTERNAL(x) #x
-#define STRINGIFY(x) STRINGIFY_INTERNAL(x)
-#define APP_VERSION_STR STRINGIFY(APP_VERSION)
-
-const char * const APP_VERSION_LONG  = APP_VERSION_STR;
-
 
 #endif // VERSION_H
