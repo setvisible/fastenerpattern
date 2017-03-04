@@ -28,6 +28,7 @@
 
 #include <boost/units/systems/si/prefixes.hpp>  // kilo, milli,...
 
+
 /* We define here some additional aliases for mechanical units */
 BOOST_UNITS_STATIC_CONSTANT( N,   boost::units::si::force);
 BOOST_UNITS_STATIC_CONSTANT( m,   boost::units::si::length);
@@ -47,7 +48,11 @@ BOOST_UNITS_STATIC_CONSTANT( N_m, boost::units::si::torque);
 
 //typedef boost::units::si::meter_base_unit m;
 //#define m       boost::units::si::meters
-#define mm      0.001*m
+/* Namespace to avoid names collision */
+/* Ex : "mm" is millimeters and also the memory-manager of GeCode */
+// mm == memory-manager or millimeter --> collision !
+#define _mm      0.001*m
+// ? namespace fp_units { mm; }
 
 //#define N_m     boost::units::si::newton_meters
 #define N_mm    0.001*N_m
@@ -61,5 +66,8 @@ BOOST_UNITS_STATIC_CONSTANT( N_m, boost::units::si::torque);
 typedef boost::units::quantity<boost::units::si::force> Force;
 typedef boost::units::quantity<boost::units::si::length> Length;
 typedef boost::units::quantity<boost::units::si::torque> Torque;
+
+
+
 
 #endif // CORE_UNIT_SYSTEM_H

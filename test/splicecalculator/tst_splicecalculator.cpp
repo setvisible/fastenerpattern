@@ -59,8 +59,8 @@ void tst_SpliceCalculator::test_clear()
     // Given
     SpliceCalculator target;
     target.setAppliedLoad( Tensor( 100.*N, 0.*N, 0.*N_m ) );
-    target.insertFastener(0, Fastener(  1.*mm, 0.*mm, 4.83*mm, 3.*mm ));
-    target.insertFastener(1, Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm ));
+    target.insertFastener(0, Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
+    target.insertFastener(1, Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
     QSet<int> input = {0,1,5,9,10};
     target.setSelection( input );
 
@@ -98,14 +98,14 @@ void tst_SpliceCalculator::test_insertFastener()
     SpliceCalculator target;
 
     // When
-    target.insertFastener(0, Fastener(  1.*mm, 0.*mm, 4.83*mm, 3.*mm )); /* A */
-    target.insertFastener(0, Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm )); /* insert B before A */
+    target.insertFastener(0, Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm )); /* A */
+    target.insertFastener(0, Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm )); /* insert B before A */
 
     // Then
     QCOMPARE( target.fastenerCount(), 2);
     QCOMPARE( target.fastenerAt(-1), Fastener() );
-    QCOMPARE( target.fastenerAt(0), Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm ) ); /* B */
-    QCOMPARE( target.fastenerAt(1), Fastener(  1.*mm, 0.*mm, 4.83*mm, 3.*mm ) ); /* A */
+    QCOMPARE( target.fastenerAt(0), Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ) ); /* B */
+    QCOMPARE( target.fastenerAt(1), Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ) ); /* A */
     QCOMPARE( target.fastenerAt(2), Fastener() );
     QCOMPARE( target.fastenerAt(1000), Fastener() );
 }
@@ -118,15 +118,15 @@ void tst_SpliceCalculator::test_insertFastener_limit()
     SpliceCalculator target;
 
     // When
-    target.insertFastener(-10, Fastener(  1.*mm, 0.*mm, 4.83*mm, 3.*mm )); /* prepend */
-    target.insertFastener(1000, Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm )); /* append */
+    target.insertFastener(-10, Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm )); /* prepend */
+    target.insertFastener(1000, Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm )); /* append */
 
     // Then
     QCOMPARE( target.fastenerCount(), 2);
     QCOMPARE( target.fastenerAt(-10), Fastener() );
     QCOMPARE( target.fastenerAt(-1), Fastener() );
-    QCOMPARE( target.fastenerAt(0), Fastener(  1.*mm, 0.*mm, 4.83*mm, 3.*mm ) );
-    QCOMPARE( target.fastenerAt(1), Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm ) );
+    QCOMPARE( target.fastenerAt(0), Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ) );
+    QCOMPARE( target.fastenerAt(1), Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ) );
     QCOMPARE( target.fastenerAt(2), Fastener() );
     QCOMPARE( target.fastenerAt(999), Fastener() );
     QCOMPARE( target.fastenerAt(1000), Fastener() );
@@ -139,15 +139,15 @@ void tst_SpliceCalculator::test_setFastener()
 {
     // Given
     SpliceCalculator target;
-    target.insertFastener(0, Fastener(  1.*mm, 0.*mm, 4.83*mm, 3.*mm ));
-    target.insertFastener(1, Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm ));
+    target.insertFastener(0, Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
+    target.insertFastener(1, Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
 
     // When
-    target.setFastener(0, Fastener(  3.*mm, 0.*mm, 4.83*mm, 3.*mm ));
+    target.setFastener(0, Fastener(  3.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
 
     // Then
     QCOMPARE( target.fastenerCount(), 2);
-    QCOMPARE( target.fastenerAt(0), Fastener(  3.*mm, 0.*mm, 4.83*mm, 3.*mm ) );
+    QCOMPARE( target.fastenerAt(0), Fastener(  3.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ) );
 
 }
 
@@ -157,8 +157,8 @@ void tst_SpliceCalculator::test_removeFastener()
 {
     // Given, When
     SpliceCalculator target;
-    target.insertFastener(0, Fastener(  1.*mm, 0.*mm, 4.83*mm, 3.*mm ));
-    target.insertFastener(1, Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm ));
+    target.insertFastener(0, Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
+    target.insertFastener(1, Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
 
     // Then
     QCOMPARE( target.fastenerCount(), 2);
@@ -174,7 +174,7 @@ void tst_SpliceCalculator::test_removeFastener()
 
     target.removeFastener(0);
     QCOMPARE( target.fastenerCount(), 1);
-    QCOMPARE( target.fastenerAt(0), Fastener(  2.*mm, 0.*mm, 4.83*mm, 3.*mm ) );
+    QCOMPARE( target.fastenerAt(0), Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ) );
     QCOMPARE( target.fastenerAt(1), Fastener() );
 
     target.removeFastener(0);
@@ -206,7 +206,7 @@ void tst_SpliceCalculator::test_setAppliedLoad()
 /*************************************************************************
  *************************************************************************/
 void tst_SpliceCalculator::test_setSelection()
-{    
+{
     // Given
     SpliceCalculator target;
 

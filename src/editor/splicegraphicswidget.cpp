@@ -98,8 +98,8 @@ void SpliceGraphicsWidget::onFastenerPositionChanged()
 
     int index = m_fastenerItems.indexOf(item);
     Fastener fastener = model()->fastenerAt(index);
-    fastener.positionX = item->truePositionX() *mm;
-    fastener.positionY = item->truePositionY() *mm;
+    fastener.positionX = item->truePositionX() *_mm;
+    fastener.positionY = item->truePositionY() *_mm;
     model()->setFastener(index, fastener);
 }
 

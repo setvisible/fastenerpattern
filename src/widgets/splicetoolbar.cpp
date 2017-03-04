@@ -268,7 +268,7 @@ void SpliceToolbar::setSnapEnable(bool enable)
  ***********************************************************************************/
 void SpliceToolbar::add()
 {
-    Fastener f(0.0*mm, 0.0*mm, 4.78*mm, 3.*mm);
+    Fastener f(0.0*_mm, 0.0*_mm, 4.78*_mm, 3.*_mm);
     int count =  model()->fastenerCount();
     model()->insertFastener(count, f);
 }

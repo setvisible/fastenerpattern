@@ -102,10 +102,10 @@ Fastener FastenerWidget::fastener() const
 {
     Fastener fastener;
     fastener.name = ui->nameEdit->text();
-    fastener.positionX = ui->positionX->value() *mm;
-    fastener.positionY = ui->positionY->value() *mm;
-    fastener.thickness = ui->thickness->value() *mm;
-    fastener.diameter = ui->diameter->value() *mm;
+    fastener.positionX = ui->positionX->value() *_mm;
+    fastener.positionY = ui->positionY->value() *_mm;
+    fastener.thickness = ui->thickness->value() *_mm;
+    fastener.diameter = ui->diameter->value() *_mm;
     fastener.DoF_X = Fastener::boolToDOF( ui->dof_X->isChecked() );
     fastener.DoF_Y = Fastener::boolToDOF( ui->dof_Y->isChecked() );
     return fastener;
