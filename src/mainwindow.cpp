@@ -24,6 +24,7 @@
 #include <Widgets/AppliedLoadWidget>
 #include <Widgets/FastenerWidget>
 #include <Widgets/MainWidget>
+#include <Widgets/OptimisationWidget>
 #include <Widgets/ResultWidget>
 #include <Widgets/SolverWidget>
 #include <Widgets/TableWidget>
@@ -35,6 +36,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QDebug>
+#include <QtCore/QStandardPaths>
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -50,10 +52,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->splitter->setStretchFactor(0,0);
     ui->splitter->setStretchFactor(1,10);
 
+
     ui->spliceToolBar->setModel(m_calculator);
     ui->spliceGraphicsWidget->setModel(m_calculator);
     ui->mainWidget->fastenerWidget()->setModel(m_calculator);
     ui->mainWidget->appliedLoadWidget()->setModel(m_calculator);
+    ui->mainWidget->optimisationWidget()->setModel(m_calculator);
     ui->mainWidget->resultWidget()->setModel(m_calculator);
     ui->mainWidget->tableWidget()->setModel(m_calculator);
 
@@ -270,7 +274,8 @@ QString MainWindow::askSaveFileName(const QString &fileFilter, const QString &ti
     if ( isPhysicalFile() ) {
         suggestedPath = m_currentFile.canonicalFilePath();
     }else{
-        suggestedPath = QDir::currentPath() + QDir::separator() + m_currentFile.fileName();
+        const QString dir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        suggestedPath = dir + QDir::separator() + m_currentFile.fileName();
         suggestedPath = QDir::toNativeSeparators(suggestedPath);
     }
     return QFileDialog::getSaveFileName(this, title, suggestedPath, fileFilter);
@@ -278,7 +283,7 @@ QString MainWindow::askSaveFileName(const QString &fileFilter, const QString &ti
 
 QString MainWindow::askOpenFileName(const QString &fileFilter, const QString &title)
 {
-    QString currentDir = QDir::currentPath();
+    QString currentDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     if ( isPhysicalFile() ){
         currentDir = m_currentFile.absolutePath();
     }
