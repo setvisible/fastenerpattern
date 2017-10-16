@@ -1,0 +1,13 @@
+===========================================================
+                  Build Trouble Shooting
+===========================================================
+Q: Fatal error LNK2026: module unsafe for SAFESEH image.
+
+A: 
+In MS Visual Studio, go to
+Project properties -> Configuration Properties -> Linker -> Advanced
+
+Disable option "Image has Safe Exception Handlers"  
+--> No (/SAFESEH:NO)
+
+
