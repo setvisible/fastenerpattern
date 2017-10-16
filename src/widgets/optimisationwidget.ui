@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OptimisationWidget</class>
+ <widget class="QWidget" name="OptimisationWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>457</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Optimisation</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTreeWidget" name="treeWidget">
+     <column>
+      <property name="text">
+       <string>Analyses</string>
+      </property>
+     </column>
+     <item>
+      <property name="text">
+       <string>Pattern</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Solver: Rigid Body Solver (IsoBearing)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Results</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>MAX(ABS(Fxy)) = 1554.64 N</string>
+        </property>
+       </item>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Optimisation Analysis</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Design Space</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Design Variable</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Fastener 13</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fastener 14</string>
+         </property>
+        </item>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>Design Space 2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Design Space 3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Design Objective: minimize f() = MAX(ABS(Fxy))</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Solver: Rigid Body Solver (IsoBearing)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Results</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Run Solution!</string>
+        </property>
+       </item>
+      </item>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

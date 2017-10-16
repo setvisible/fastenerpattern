@@ -19,6 +19,7 @@
 
 #include <Widgets/AppliedLoadWidget>
 #include <Widgets/FastenerWidget>
+#include <Widgets/OptimisationWidget>
 #include <Widgets/ResultWidget>
 #include <Widgets/SolverWidget>
 #include <Widgets/TableWidget>
@@ -38,6 +39,11 @@ MainWidget::~MainWidget()
 AppliedLoadWidget* MainWidget::appliedLoadWidget() const
 {
     return ui->appliedLoadWidget;
+}
+
+OptimisationWidget* MainWidget::optimisationWidget() const
+{
+    return ui->optimisationWidget;
 }
 
 FastenerWidget* MainWidget::fastenerWidget() const

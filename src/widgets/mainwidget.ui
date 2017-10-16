@@ -48,6 +48,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_optimisation">
+      <attribute name="title">
+       <string>Optimisation</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="OptimisationWidget" name="optimisationWidget" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -81,6 +91,12 @@
    <class>ResultWidget</class>
    <extends>QWidget</extends>
    <header>Widgets/ResultWidget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>OptimisationWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/OptimisationWidget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

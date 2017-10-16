@@ -14,38 +14,21 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WIDGETS_MAIN_WIDGET_H
-#define WIDGETS_MAIN_WIDGET_H
+#ifndef DUMMY_SOLVER_H
+#define DUMMY_SOLVER_H
 
-#include <QtWidgets/QWidget>
+#include <Core/Solvers/ISolver>
 
-class AppliedLoadWidget;
-class FastenerWidget;
-class OptimisationWidget;
-class ResultWidget;
-class SolverWidget;
-class TableWidget;
+class QObject;
 
-namespace Ui {
-class MainWidget;
-}
-
-class MainWidget : public QWidget
+class DummySolver : public ISolver
 {
-    Q_OBJECT
 public:
-    explicit MainWidget(QWidget *parent = 0);
-    ~MainWidget();
+    explicit DummySolver(QObject *parent = Q_NULLPTR);
+    ~DummySolver();
 
-    AppliedLoadWidget* appliedLoadWidget() const;
-    FastenerWidget* fastenerWidget() const;
-    OptimisationWidget* optimisationWidget() const;
-    ResultWidget* resultWidget() const;
-    SolverWidget* solverWidget() const;
-    TableWidget* tableWidget() const;
+    virtual QList<Tensor> calculate(const Splice *splice) Q_DECL_OVERRIDE;
 
-private:
-    Ui::MainWidget *ui;
 };
 
-#endif // WIDGETS_MAIN_WIDGET_H
+#endif // DUMMY_SOLVER_H
