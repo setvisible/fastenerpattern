@@ -1,60 +1,15 @@
-#cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
+# CMakeLists.txt
+
+# Copyright (C) 2017 Sebastien Vavassori
+
+# This code is released under the LGPL license.
+# For conditions of distribution and use, see the disclaimer
+# and license in LICENSE
+
 cmake_minimum_required(VERSION 3.0)
-
-# if(COMMAND cmake_policy)
-#    if(POLICY CMP0054)
-#        cmake_policy(SET CMP0054 NEW)
-#    endif()
-#    # Mac RPATH policy
-#    if(POLICY CMP0042)
-#        cmake_policy(SET CMP0042 NEW)
-#    endif()
-# endif()
-
-# if(NOT CMAKE_BUILD_TYPE)
-#     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
-#             "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
-#             FORCE)
-# endif(NOT CMAKE_BUILD_TYPE)
-
-# let's use & require C++11 - note these are only functional with CMake 3.1
-# we do manual fallbacks for CMake 3.0 in the compilers section
-# set(CMAKE_CXX_STANDARD 11)
-# set(CMAKE_CXX_STANDARD_REQUIRED YES)
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
+#cmake_policy(VERSION 3.0)
 
 project(FastenerPattern)
-
-# We have some custom .cmake scripts not in the official distribution.
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules;${CMAKE_MODULE_PATH}")
-
-
-# message(STATUS "Tips: Building with all the CPU cores: > cmake --build . --target '' -j")
-
-
-##############################################################################
-# Rename the executable for DEBUG and RELEASE
-##############################################################################
-
-set(FastenerPattern_NAME "fastenerpattern")
-
-if(NOT ${CMAKE_BUILD_TYPE} MATCHES "Release")
-    set(FastenerPattern_NAME ${FastenerPattern_NAME}d)
-endif()
-
-if(NOT CMAKE_DEBUG_POSTFIX)
-    set(CMAKE_DEBUG_POSTFIX d)
-endif()
-
-
-##############################################################################
-# build options
-##############################################################################
-option(ENABLE_GECODE  "Set to ON to build FastenerPattern with GeCOde support (default)" ON)
-option(ENABLE_TESTS   "Set to ON to build test applications (default)" ON)
-
-
 
 ##############################################################################
 ## Versioning
@@ -77,6 +32,31 @@ set(APP_VERSION_PATCH ${CMAKE_MATCH_3})
 
 
 configure_file( ./src/config.h.cmake ./src/config.h )
+
+
+##############################################################################
+# Rename the executable for DEBUG and RELEASE
+##############################################################################
+
+set(FastenerPattern_NAME "fastenerpattern")
+
+# Change the default build type to Release
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING
+        "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
+# to distinguish between debug and release
+set(CMAKE_DEBUG_POSTFIX "d")
+
+
+
+##############################################################################
+# build options
+##############################################################################
+#TODO: enable_testing()
+option(ENABLE_TESTS   "Set to ON to build test applications (default)" ON)
+
 
 ##############################################################################
 ## Qt5
@@ -104,33 +84,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 add_definitions(-DBOOST_MATH_DISABLE_FLOAT128)
-
-##############################################################################
-# Gecode
-##############################################################################
-if(ENABLE_GECODE)
-    find_package(Gecode REQUIRED
-     #   COMPONENTS
-     #   kernel
-     #   support
-     #   int
-     #   set
-     #   driver
-     #   flatzinc
-     #   gist
-     #   minimodel
-     #   search
-        )
-    include_directories(${GECODE_INCLUDE_DIR})
-    add_definitions(-DWITH_GECODE)
-   # find_package(GeCode REQUIRED)
-   # add_definitions(-DWITH_GECODE)
-   # include_directories( ${GECODE_INCLUDE_DIR} )
-    message(STATUS "Gecode enabled")
-
-else()
-    message(WARNING "Gecode disabled")
-endif()
 
 
 ##############################################################################
@@ -164,6 +117,8 @@ add_library(configwin
 qt5_use_modules(configwin Widgets)
 
 
+
+
 ##############################################################################
 # Linking the executable
 ##############################################################################
@@ -178,16 +133,19 @@ add_executable(${FastenerPattern_NAME}
 # Qt5
 qt5_use_modules(${FastenerPattern_NAME} Core Gui Widgets )
 
-# Gecode
-target_link_libraries(${FastenerPattern_NAME} ${GECODE_LIBRARIES})
+
 
 
 ##############################################################################
 # Unit Tests
 ##############################################################################
+
+#TODO: add_test()
+
 if(ENABLE_TESTS)
 
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/boost/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/test/optimisationsolver/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/rigidbodysolver/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/splicecalculator/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/tensor/CMakeLists.txt)
@@ -222,31 +180,23 @@ install (
     COMPONENT release_examples
     )
 
-## Qt
-find_path( QT5CORE_DLL_DIR     Qt5Core.dll    DOC "Location of Qt5Core.dll")
-find_path( QT5GUI_DLL_DIR      Qt5Gui.dll     DOC "Location of Qt5Gui.dll")
-find_path( QT5WIDGETS_DLL_DIR  Qt5Widgets.dll DOC "Location of Qt5Widgets.dll")
 
-set(MY_QT_MSVC_DLLS
-    ${QT5CORE_DLL_DIR}/Qt5Core.dll
-    ${QT5GUI_DLL_DIR}/Qt5Gui.dll
-    ${QT5WIDGETS_DLL_DIR}/Qt5Widgets.dll
-    )
-install(
-    FILES ${MY_QT_MSVC_DLLS}
+## Qt Libraries
+get_target_property(QtCore_LOCATION Qt5::Core LOCATION)
+get_filename_component(QT_DLL_DIR ${QtCore_LOCATION} PATH)
+
+install(FILES
+    ${QT_DLL_DIR}/Qt5Core.dll
+    ${QT_DLL_DIR}/Qt5Gui.dll
+    ${QT_DLL_DIR}/Qt5Widgets.dll
     DESTINATION ${CMAKE_INSTALL_PREFIX}
-    COMPONENT qt_dependancies
-    )
+)
 
-set(MY_QT_MSVC_WINDOWS_DLLS
-    ${CMAKE_PREFIX_PATH}/plugins/platforms/qwindows.dll
-    )
-install(
-    FILES ${MY_QT_MSVC_WINDOWS_DLLS}
+## Qt Platform Plugin
+install(FILES
+    ${QT_DLL_DIR}/../plugins/platforms/qwindows.dll
     DESTINATION ${CMAKE_INSTALL_PREFIX}/platforms
-    COMPONENT qt_dependancies2
-    )
-
+)
 
 
 ##############################################################################
