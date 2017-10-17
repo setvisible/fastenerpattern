@@ -22,6 +22,7 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QGraphicsLineItem>
+#include <QGraphicsTextItem>
 
 /*! \class BackgroundWidget
  *  \brief The class BackgroundWidget manages the graphics scene.
@@ -32,9 +33,10 @@ BackgroundWidget::BackgroundWidget(QWidget *parent) : QWidget(parent)
   , m_scene(new QGraphicsScene(this))
   , m_view(Q_NULLPTR)
   , m_mainLayout(new QVBoxLayout(this))
-  , m_enabledFeatures(Features::None)
+  , m_enabledFeatures(Feature::None)
   , m_horizontalAxis(Q_NULLPTR)
   , m_verticalAxis(Q_NULLPTR)
+  , m_dragImageHereText(Q_NULLPTR)
 {
     /* Create Layout */
     m_view = new BackgroundView(m_scene, this);
@@ -50,33 +52,43 @@ BackgroundWidget::BackgroundWidget(QWidget *parent) : QWidget(parent)
     m_scene->addItem(m_horizontalAxis);
     m_scene->addItem(m_verticalAxis);
 
+    QFont font;
+    font.setWeight(QFont::Light);
+    m_dragImageHereText = m_scene->addText(tr("Drag an image here"), font);
+
+    /* Signals / Slots */
     QObject::connect(m_scene, SIGNAL(sceneRectChanged(QRectF)),
                      this, SLOT(onSceneRectChanged(QRectF)));
 
+    this->updateView();
+
 }
 
-void BackgroundWidget::enableFeatures(QFlags<Features> features)
+/******************************************************************************
+ ******************************************************************************/
+bool BackgroundWidget::testFlag(Feature feature) const
 {
-    if ( features.testFlag(Features::HorizontalAxis)
-         && !m_enabledFeatures.testFlag(Features::HorizontalAxis)) {
-        m_enabledFeatures |= Features::HorizontalAxis;
-    }
-
-    if ( features.testFlag(Features::VerticalAxis)
-         && !m_enabledFeatures.testFlag(Features::VerticalAxis)) {
-        m_enabledFeatures |= Features::VerticalAxis;
-    }
-
-    if ( features.testFlag(Features::DragImageHereText)
-         && !m_enabledFeatures.testFlag(Features::DragImageHereText)) {
-        QFont font;
-        font.setWeight(QFont::Light);
-        m_scene->addText(tr("Drag an image here"), font);
-        m_enabledFeatures |= Features::DragImageHereText;
-    }
+    return m_enabledFeatures.testFlag(feature);
 }
 
+void BackgroundWidget::setFlag(Feature feature, const bool enabled)
+{
+    m_enabledFeatures.setFlag(feature, enabled);
+    this->updateView();
+}
 
+void BackgroundWidget::setFlags(QFlags<Feature> features, const bool enabled)
+{
+    if (enabled) {
+        m_enabledFeatures |= features;
+    } else {
+        m_enabledFeatures ^= features;
+    }
+    this->updateView();
+}
+
+/******************************************************************************
+ ******************************************************************************/
 QGraphicsScene* BackgroundWidget::scene() const
 {
     return m_scene;
@@ -92,50 +104,28 @@ QGraphicsView* BackgroundWidget::view() const
     return (QGraphicsView*)(m_view);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void BackgroundWidget::onSceneRectChanged(const QRectF &rect)
 {
-    if (m_enabledFeatures.testFlag(Features::HorizontalAxis))
-        m_horizontalAxis->setLine(rect.left() + 1, 0, rect.right() - 1, 0);
-
-    if (m_enabledFeatures.testFlag(Features::VerticalAxis))
-        m_verticalAxis->setLine(0, rect.bottom() - 1, 0, rect.top() + 1);
+    m_horizontalAxis->setLine(rect.left() + 1, 0, rect.right() - 1, 0);
+    m_verticalAxis->setLine(0, rect.bottom() - 1, 0, rect.top() + 1);
+    this->updateView();
 }
 
-
-bool BackgroundWidget::isAxesVisible() const
+/******************************************************************************
+ ******************************************************************************/
+void BackgroundWidget::updateView()
 {
-    return m_enabledFeatures.testFlag(Features::HorizontalAxis)
-            && m_enabledFeatures.testFlag(Features::VerticalAxis);
+    m_horizontalAxis->setVisible(m_enabledFeatures.testFlag(Feature::HorizontalAxis));
+    m_verticalAxis->setVisible(m_enabledFeatures.testFlag(Feature::VerticalAxis));
+    m_view->setGridVisible(m_enabledFeatures.testFlag(Feature::Grid));
+    m_view->setImageVisible(m_enabledFeatures.testFlag(Feature::Image));
+    m_dragImageHereText->setVisible(m_enabledFeatures.testFlag(Feature::DragImageHereText));
 }
 
-void BackgroundWidget::setAxesVisible(bool visible)
-{
-    Q_UNUSED(visible)
-    /// \todo m_enabledFeatures.setFlag(Features::HorizontalAxis, visible);
-    /// \todo m_enabledFeatures.setFlag(Features::VerticalAxis, visible);
-    this->update();
-}
-
-bool BackgroundWidget::isGridVisible() const
-{
-    return m_view->isGridVisible();
-}
-
-void BackgroundWidget::setGridVisible(bool visible)
-{
-    m_view->setGridVisible(visible);
-}
-
-bool BackgroundWidget::isImageVisible() const
-{
-    return m_view->isImageVisible();
-}
-
-void BackgroundWidget::setImageVisible(bool visible)
-{
-    m_view->setImageVisible(visible);
-}
-
+/******************************************************************************
+ ******************************************************************************/
 qreal BackgroundWidget::pixelsPerUnit() const
 {
     return m_view->pixelsPerUnit();

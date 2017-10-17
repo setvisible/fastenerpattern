@@ -39,11 +39,12 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
   , m_labelVisible(false)
   , m_snapEnable(false)
 {
-    m_backgroundWidget->enableFeatures(
-                QFlags<BackgroundWidget::Features>(
+    m_backgroundWidget->setFlags(
+                QFlags<BackgroundWidget::Feature>(
                     BackgroundWidget::HorizontalAxis
                     | BackgroundWidget::VerticalAxis
-                    | BackgroundWidget::DragImageHereText));
+                    | BackgroundWidget::Grid
+                    | BackgroundWidget::DragImageHereText), true);
 
     QGroupBox* gb = new QGroupBox(tr("Splice"));
     QVBoxLayout* gbLayout = new QVBoxLayout();
@@ -74,8 +75,8 @@ void SpliceGraphicsWidget::update()
     m_backgroundWidget->scene()->update();
 }
 
-/***********************************************************************************
- ***********************************************************************************/
+/******************************************************************************
+ ******************************************************************************/
 void SpliceGraphicsWidget::onSelectionChanged()
 {
     QSet<int> set;
@@ -88,8 +89,8 @@ void SpliceGraphicsWidget::onSelectionChanged()
     model()->setSelection(set);
 }
 
-/***********************************************************************************
- ***********************************************************************************/
+/******************************************************************************
+ ******************************************************************************/
 void SpliceGraphicsWidget::onFastenerPositionChanged()
 {
     FastenerItem *item = static_cast<FastenerItem *>(sender());
@@ -164,36 +165,48 @@ void SpliceGraphicsWidget::resultsChanged()
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isAxesVisible() const
 {
-    return m_backgroundWidget->isAxesVisible();
+    return m_backgroundWidget->testFlag(BackgroundWidget::HorizontalAxis)
+            && m_backgroundWidget->testFlag(BackgroundWidget::VerticalAxis);
 }
 
 void SpliceGraphicsWidget::setAxesVisible(bool visible)
 {
-    m_backgroundWidget->setAxesVisible(visible);
+    QFlags<BackgroundWidget::Feature> flags =
+            BackgroundWidget::HorizontalAxis
+            | BackgroundWidget::VerticalAxis;
+    m_backgroundWidget->setFlags(flags, visible);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isGridVisible() const
 {
-    return m_backgroundWidget->isGridVisible();
+    return m_backgroundWidget->testFlag(BackgroundWidget::Grid);
 }
 
 void SpliceGraphicsWidget::setGridVisible(bool visible)
 {
-    m_backgroundWidget->setGridVisible(visible);
+    m_backgroundWidget->setFlag(BackgroundWidget::Grid, visible);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isImageVisible() const
 {
-    return m_backgroundWidget->isImageVisible();
+    return m_backgroundWidget->testFlag(BackgroundWidget::Image);
 }
 
 void SpliceGraphicsWidget::setImageVisible(bool visible)
 {
-    m_backgroundWidget->setImageVisible(visible);
+    m_backgroundWidget->setFlag(BackgroundWidget::Image, visible);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isComponentVisible() const
 {
     return m_componentVisible;
@@ -208,6 +221,8 @@ void SpliceGraphicsWidget::setComponentVisible(bool visible)
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isResultantVisible() const
 {
     return m_resultantVisible;
@@ -222,6 +237,8 @@ void SpliceGraphicsWidget::setResultantVisible(bool visible)
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isTorqueVisible() const
 {
     return m_torqueVisible;
@@ -236,6 +253,8 @@ void SpliceGraphicsWidget::setTorqueVisible(bool visible)
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isLabelVisible() const
 {
     return m_labelVisible;
@@ -250,6 +269,8 @@ void SpliceGraphicsWidget::setLabelVisible(bool visible)
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceGraphicsWidget::isSnapEnable() const
 {
     return m_snapEnable;
@@ -261,6 +282,8 @@ void SpliceGraphicsWidget::setSnapEnable(bool enable)
     m_snapEnable = enable;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 qreal SpliceGraphicsWidget::pixelsPerUnit() const
 {
     return m_backgroundWidget->pixelsPerUnit();
@@ -271,6 +294,8 @@ void SpliceGraphicsWidget::setPixelsPerUnit(qreal pxPerUnit)
     m_backgroundWidget->setPixelsPerUnit(pxPerUnit);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 QUrl SpliceGraphicsWidget::imageUrl() const
 {
     return m_backgroundWidget->imageUrl();
