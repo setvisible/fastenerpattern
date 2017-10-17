@@ -13,6 +13,7 @@
 !/CMakeLists.txt
 !/doxyfile
 !/doxygenMain.cpp
+!/FastenerPattern_Qt.pro
 !/LICENSE
 !/README.md
 !/TROUBLESHOOTING
