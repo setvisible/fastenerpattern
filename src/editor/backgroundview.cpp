@@ -128,7 +128,7 @@ void BackgroundView::setImageUrl(const QUrl &url)
     position.setHeight(position.height() * 0.9);
     position.translate(0, -position.height());
     m_imageItem->setUrl(url);
-    m_imageItem->setVisible(true);
+    m_imageItem->setVisible( !url.isEmpty() );
 }
 
 /* ***************************************************************************
