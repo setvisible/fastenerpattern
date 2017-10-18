@@ -26,6 +26,21 @@
 #include <QtGui/QDragMoveEvent>
 #include <QtWidgets/QApplication>
 
+/*!
+ * \class BackgroundView
+ * \brief The class BackgroundView inherits from QGraphicsView,
+ * and contains graphic elements that are permanent, i.e. that appear
+ * even if the QGraphicsScene is empty (ex: grid, background image)
+ *
+ * \remark Non-permanent elements are managed by the QGraphicsScene.
+ *
+ * \remark However Horizontal and Vertical Axes are not in the class
+ * BackgroundView, but they are managed by the class BackgroundWidget instead.
+ * That is because the Axes are QGraphicsItem, so they are managed by the QGraphicsScene.
+ * Moreover we don't want to call the QGraphicsScene from the class BackgroundView.
+ *
+ * \sa BackgroundWidget
+ */
 BackgroundView::BackgroundView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene, parent)
   , m_handScrolling(false)
   , m_gridVisible(true)

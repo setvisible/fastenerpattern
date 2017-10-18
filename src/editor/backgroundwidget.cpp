@@ -24,9 +24,9 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsTextItem>
 
-/*! \class BackgroundWidget
- *  \brief The class BackgroundWidget manages the graphics scene.
- *
+/*!
+ * \class BackgroundWidget
+ * \brief The class BackgroundWidget manages the graphics scene.
  */
 
 BackgroundWidget::BackgroundWidget(QWidget *parent) : QWidget(parent)

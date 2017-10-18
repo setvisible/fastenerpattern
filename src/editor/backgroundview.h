@@ -26,8 +26,6 @@
 
 class ScalableImageItem;
 
-/* affiche juste l'arriere fond, grille, etc.. qui ne ssont pas des donnees */
-
 class BackgroundView : public QGraphicsView
 {
     Q_PROPERTY(bool handScrolling READ handScrolling WRITE setHandScrolling)
