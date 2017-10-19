@@ -38,7 +38,7 @@ void ScalableImageObject::onCornerPositionChanged()
 }
 
 
-ScalableImageItem::ScalableImageItem( QGraphicsItem *parent) : QGraphicsObject(parent)
+ScalableImageItem::ScalableImageItem(QGraphicsItem *parent) : QGraphicsObject(parent)
   , m_object(new ScalableImageObject(this))
   , m_rect(QRect())
 {

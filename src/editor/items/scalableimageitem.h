@@ -17,10 +17,10 @@
 #ifndef EDITOR_ITEMS_SCALABLE_IMAGE_ITEM_H
 #define EDITOR_ITEMS_SCALABLE_IMAGE_ITEM_H
 
-#include <QGraphicsPixmapItem>
-#include <QGraphicsObject>
-#include <QObject>
-#include <QUrl>
+#include <QtCore/QObject>
+#include <QtCore/QUrl>
+#include <QtWidgets/QGraphicsPixmapItem>
+#include <QtWidgets/QGraphicsObject>
 
 class ScalablePointItem;
 class ScalableImageItem;
