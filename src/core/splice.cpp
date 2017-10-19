@@ -18,8 +18,8 @@
 
 #include <Core/Units/UnitSystem>
 
-#include <QJsonArray>
-#include <QJsonObject>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
 
 
 /*! \class Splice
@@ -54,15 +54,14 @@ void Splice::read(const QJsonObject &json)
         m_fasteners.append(fixation);
     }
 
-    /// \todo  m_frontier.clear();
-    /// \todo  QJsonArray frontierArray = json["frontier"].toArray();
-    /// \todo  for (int i = 0; i < frontierArray.size(); ++i) {
-    /// \todo      QJsonObject frontierObject = frontierArray[i].toVariant();
-    /// \todo      frontierObject.toVariant
-    /// \todo      Fixation vec;
-    /// \todo      vec.read(frontierObject);
-    /// \todo      m_frontier.append(vec);
-    /// \todo  }
+    m_designSpaces.clear();
+    QJsonArray spacesArray = json["design-spaces"].toArray();
+    for (int i = 0; i < spacesArray.size(); ++i) {
+        QJsonObject spaceObject = spacesArray[i].toObject();
+        DesignSpace space;
+        space.read(spaceObject);
+        m_designSpaces.append(space);
+    }
 }
 
 /*! \brief Assigns the values from the Splice to the given \a json object.
@@ -85,6 +84,14 @@ void Splice::write(QJsonObject &json) const
         fixationsArray.append(fixationObject);
     }
     json["fasteners"] = fixationsArray;
+
+    QJsonArray spacesArray;
+    foreach (const DesignSpace space, m_designSpaces) {
+        QJsonObject spaceObject;
+        space.write(spaceObject);
+        spacesArray.append(spaceObject);
+    }
+    json["design-spaces"] = spacesArray;
 
 }
 
@@ -187,5 +194,17 @@ void Splice::removeFastenerAt(const int index)
 void Splice::removeAllFasteners()
 {
     m_fasteners.clear();
+}
+
+/**********************************************************************
+ **********************************************************************/
+QList<DesignSpace> Splice::designSpaces() const
+{
+    return m_designSpaces;
+}
+
+void Splice::setDesignSpaces(const QList<DesignSpace> &spaces)
+{
+    m_designSpaces = spaces;
 }
 

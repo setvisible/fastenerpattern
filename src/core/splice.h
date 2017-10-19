@@ -17,12 +17,12 @@
 #ifndef CORE_SPLICE_H
 #define CORE_SPLICE_H
 
+#include <Core/DesignSpace>
 #include <Core/Fastener>
 #include <Core/Tensor>
 
-#include <QObject>
-#include <QString>
-/// \todo #include <QPolygonF>
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
 class QJsonObject;
 
@@ -33,6 +33,7 @@ class Splice : public QObject
     Q_PROPERTY(QString date READ date WRITE setDate)
     Q_PROPERTY(QString description READ description WRITE setDescription)
     Q_PROPERTY(Tensor appliedLoad READ appliedLoad WRITE setAppliedLoad)
+    Q_PROPERTY(QList<DesignSpace> designSpaces READ designSpaces WRITE setDesignSpaces)
 
     //friend class SpliceCalculator;
 
@@ -69,8 +70,10 @@ public:
     void removeFastenerAt(const int index);
     void removeAllFasteners();
 
+    QList<DesignSpace> designSpaces() const;
+    void setDesignSpaces(const QList<DesignSpace> &spaces);
+
 private:
-//protected:
     QString m_title;
     QString m_author;
     QString m_date;
@@ -78,10 +81,9 @@ private:
 
     Tensor m_appliedLoad;
     QList<Fastener> m_fasteners;
+    QList<DesignSpace> m_designSpaces;
 
     /// \todo Solver Options
-    /// \todo QPolygonF m_frontier;
-
 
 };
 

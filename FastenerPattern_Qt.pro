@@ -63,6 +63,7 @@ HEADERS  += \
     $$PWD/src/core/units/area_moment_of_inertia.h \
     $$PWD/src/core/units/unit_system.h \
     $$PWD/src/core/abstractsplicemodel.h \
+    $$PWD/src/core/designspace.h \
     $$PWD/src/core/fastener.h \
     $$PWD/src/core/global.h \
     $$PWD/src/core/splice.h \
@@ -101,6 +102,7 @@ SOURCES += \
     $$PWD/src/core/solvers/parameters.cpp \
     $$PWD/src/core/solvers/rigidbodysolver.cpp \
     $$PWD/src/core/abstractsplicemodel.cpp \
+    $$PWD/src/core/designspace.cpp \
     $$PWD/src/core/fastener.cpp \
     $$PWD/src/core/splice.cpp \
     $$PWD/src/core/splicecalculator.cpp \
