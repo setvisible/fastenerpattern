@@ -37,7 +37,6 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
   , m_resultantVisible(true)
   , m_torqueVisible(true)
   , m_labelVisible(false)
-  , m_snapEnable(false)
 {
     m_backgroundWidget->setFlags(
                 QFlags<BackgroundWidget::Feature>(
@@ -267,19 +266,6 @@ void SpliceGraphicsWidget::setLabelVisible(bool visible)
     foreach(auto &f, m_fastenerItems) {
         f->setLabelVisible(visible);
     }
-}
-
-/******************************************************************************
- ******************************************************************************/
-bool SpliceGraphicsWidget::isSnapEnable() const
-{
-    return m_snapEnable;
-}
-
-void SpliceGraphicsWidget::setSnapEnable(bool enable)
-{
-    /// \todo implement setSnapEnable
-    m_snapEnable = enable;
 }
 
 /******************************************************************************

@@ -39,7 +39,6 @@ class SpliceGraphicsWidget : public AbstractSpliceView
     Q_PROPERTY(bool resultantVisible READ isResultantVisible WRITE setResultantVisible)
     Q_PROPERTY(bool torqueVisible READ isTorqueVisible WRITE setTorqueVisible)
     Q_PROPERTY(bool labelVisible READ isLabelVisible WRITE setLabelVisible)
-    Q_PROPERTY(bool snapEnable READ isSnapEnable WRITE setSnapEnable)
     Q_PROPERTY(qreal pixelsPerUnit READ pixelsPerUnit WRITE setPixelsPerUnit)
     Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl)
 
@@ -77,9 +76,6 @@ public Q_SLOTS:
     bool isLabelVisible() const;
     void setLabelVisible(bool visible);
 
-    bool isSnapEnable() const;
-    void setSnapEnable(bool enable);
-
     qreal pixelsPerUnit() const;
     void setPixelsPerUnit(qreal pxPerUnit);
 
@@ -101,7 +97,6 @@ private:
     bool m_resultantVisible;
     bool m_torqueVisible;
     bool m_labelVisible;
-    bool m_snapEnable;
 
     /// \todo  InstantaneousCentreOfRotation ( = + )
     /// \todo  Parts (Undeformed)
