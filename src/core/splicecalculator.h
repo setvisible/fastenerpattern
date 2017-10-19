@@ -20,8 +20,8 @@
 #include <Core/AbstractSpliceModel>
 #include <Core/Splice>
 
-#include <QObject>
-#include <QString>
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
 class QJsonObject;
 
