@@ -26,7 +26,13 @@
 
 /*!
  * \class BackgroundWidget
- * \brief The class BackgroundWidget manages the graphics scene.
+ * \brief The class BackgroundWidget is a generic graphics widget with a background and axes.
+ *
+ * It contains a graphics view (BackgroundView) and a graphics scene, and manages the both.
+ *
+ * The BackgroundWidget provides an interface to modify the background rendering.
+ * Use setFlag() to modify the rendering of the background.
+ * The method testFlag() permits to know the rendering flags.
  */
 
 BackgroundWidget::BackgroundWidget(QWidget *parent) : QWidget(parent)
