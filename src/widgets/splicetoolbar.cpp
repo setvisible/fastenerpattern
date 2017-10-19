@@ -175,8 +175,6 @@ void SpliceToolbar::createActions()
         QObject::connect(m_buttonSnap, SIGNAL(toggled(bool)), SIGNAL(snapEnabled(bool)));
         this->addAction(m_buttonSnap);
 
-        /// \todo implement it
-        m_buttonSnap->setVisible(false);
     }
 }
 
