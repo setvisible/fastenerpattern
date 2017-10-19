@@ -72,6 +72,7 @@ HEADERS  += \
     $$PWD/src/editor/items/appliedloaditem.h \
     $$PWD/src/editor/items/arcarrowitem.h \
     $$PWD/src/editor/items/arrowitem.h \
+    $$PWD/src/editor/items/designspaceitem.h \
     $$PWD/src/editor/items/fasteneritem.h \
     $$PWD/src/editor/items/scalableimageitem.h \
     $$PWD/src/editor/items/scalablepointitem.h \
@@ -111,6 +112,7 @@ SOURCES += \
     $$PWD/src/editor/items/appliedloaditem.cpp \
     $$PWD/src/editor/items/arcarrowitem.cpp \
     $$PWD/src/editor/items/arrowitem.cpp \
+    $$PWD/src/editor/items/designspaceitem.cpp \
     $$PWD/src/editor/items/fasteneritem.cpp \
     $$PWD/src/editor/items/scalableimageitem.cpp \
     $$PWD/src/editor/items/scalablepointitem.cpp \

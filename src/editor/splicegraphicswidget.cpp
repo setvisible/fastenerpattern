@@ -38,6 +38,7 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
   , m_torqueVisible(true)
   , m_labelVisible(false)
   , m_snapEnable(false)
+  , m_designSpaceVisible(true)
 {
     m_backgroundWidget->setFlags(
                 QFlags<BackgroundWidget::Feature>(
@@ -216,7 +217,7 @@ void SpliceGraphicsWidget::setComponentVisible(bool visible)
 {
     m_componentVisible = visible;
     m_appliedLoadItem->setComponentVisible(visible);
-    foreach(auto &f, m_fastenerItems) {
+    foreach (auto &f, m_fastenerItems) {
         f->setComponentVisible(visible);
     }
 }
@@ -232,7 +233,7 @@ void SpliceGraphicsWidget::setResultantVisible(bool visible)
 {
     m_resultantVisible = visible;
     m_appliedLoadItem->setResultantVisible(visible);
-    foreach(auto &f, m_fastenerItems) {
+    foreach (auto &f, m_fastenerItems) {
         f->setResultantVisible(visible);
     }
 }
@@ -248,7 +249,7 @@ void SpliceGraphicsWidget::setTorqueVisible(bool visible)
 {
     m_torqueVisible = visible;
     m_appliedLoadItem->setTorqueVisible(visible);
-    foreach(auto &f, m_fastenerItems) {
+    foreach (auto &f, m_fastenerItems) {
         f->setTorqueVisible(visible);
     }
 }
@@ -264,7 +265,7 @@ void SpliceGraphicsWidget::setLabelVisible(bool visible)
 {
     m_labelVisible = visible;
     m_appliedLoadItem->setLabelVisible(visible);
-    foreach(auto &f, m_fastenerItems) {
+    foreach (auto &f, m_fastenerItems) {
         f->setLabelVisible(visible);
     }
 }
@@ -304,4 +305,19 @@ QUrl SpliceGraphicsWidget::imageUrl() const
 void SpliceGraphicsWidget::setImageUrl(const QUrl &url)
 {
     m_backgroundWidget->setImageUrl(url);
+}
+
+/******************************************************************************
+ ******************************************************************************/
+bool SpliceGraphicsWidget::isDesignSpaceVisible() const
+{
+    return m_designSpaceVisible;
+}
+
+void SpliceGraphicsWidget::setDesignSpaceVisible(bool visible)
+{
+    foreach (auto &item, m_designSpaceItems) {
+        item->setVisible(visible);
+    }
+    m_designSpaceVisible = visible;
 }

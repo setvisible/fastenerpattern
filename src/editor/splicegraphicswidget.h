@@ -23,12 +23,17 @@
 
 #include <QtCore/QUrl>
 
+QT_BEGIN_NAMESPACE
 class QWidget;
 class QVBoxLayout;
+QT_END_NAMESPACE
+
 class BackgroundWidget;
-class Splice;
+class DesignSpaceItem;
 class FastenerItem;
+class Splice;
 class TensorItem;
+
 class SpliceGraphicsWidget : public AbstractSpliceView
 {
     Q_OBJECT
@@ -42,6 +47,7 @@ class SpliceGraphicsWidget : public AbstractSpliceView
     Q_PROPERTY(bool snapEnable READ isSnapEnable WRITE setSnapEnable)
     Q_PROPERTY(qreal pixelsPerUnit READ pixelsPerUnit WRITE setPixelsPerUnit)
     Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl)
+    Q_PROPERTY(bool designSpaceVisible READ isDesignSpaceVisible WRITE setDesignSpaceVisible)
 
 public:
     explicit SpliceGraphicsWidget(QWidget *parent = 0);
@@ -86,6 +92,9 @@ public Q_SLOTS:
     QUrl imageUrl() const;
     void setImageUrl(const QUrl &url);
 
+    bool isDesignSpaceVisible() const;
+    void setDesignSpaceVisible(bool visible);
+
 private Q_SLOTS:
     void update();
     void onSelectionChanged();
@@ -97,11 +106,13 @@ private:
     BackgroundWidget *m_backgroundWidget;
     TensorItem *m_appliedLoadItem;
     QList<FastenerItem*> m_fastenerItems;
+    QList<DesignSpaceItem*> m_designSpaceItems;
     bool m_componentVisible;
     bool m_resultantVisible;
     bool m_torqueVisible;
     bool m_labelVisible;
     bool m_snapEnable; // magnetize objects to the grid
+    bool m_designSpaceVisible;
 
     /// \todo  InstantaneousCentreOfRotation ( = + )
     /// \todo  Parts (Undeformed)
