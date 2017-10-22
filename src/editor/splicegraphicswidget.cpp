@@ -317,7 +317,7 @@ bool SpliceGraphicsWidget::isDesignSpaceVisible() const
 void SpliceGraphicsWidget::setDesignSpaceVisible(bool visible)
 {
     foreach (auto &item, m_designSpaceItems) {
-        item->setVisible(visible);
+        //item->setVisible(visible);
     }
     m_designSpaceVisible = visible;
 }
