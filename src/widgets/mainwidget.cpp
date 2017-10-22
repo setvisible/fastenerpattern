@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,10 @@
 #include "ui_mainwidget.h"
 
 #include <Widgets/AppliedLoadWidget>
+#include <Widgets/DesignObjectiveWidget>
+#include <Widgets/DesignOptionWidget>
+#include <Widgets/DesignSpaceWidget>
+#include <Widgets/DesignVariableWidget>
 #include <Widgets/FastenerWidget>
 #include <Widgets/OptimisationWidget>
 #include <Widgets/ResultWidget>
@@ -39,6 +43,26 @@ MainWidget::~MainWidget()
 AppliedLoadWidget* MainWidget::appliedLoadWidget() const
 {
     return ui->appliedLoadWidget;
+}
+
+DesignObjectiveWidget* MainWidget::designObjectiveWidget() const
+{
+    return ui->designObjectiveWidget;
+}
+
+DesignOptionWidget* MainWidget::designOptionWidget() const
+{
+    return ui->designOptionWidget;
+}
+
+DesignSpaceWidget* MainWidget::designSpaceWidget() const
+{
+    return ui->designSpaceWidget;
+}
+
+DesignVariableWidget* MainWidget::designVariableWidget() const
+{
+    return ui->designVariableWidget;
 }
 
 OptimisationWidget* MainWidget::optimisationWidget() const

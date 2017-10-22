@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,10 @@
 #include <QtWidgets/QWidget>
 
 class AppliedLoadWidget;
+class DesignObjectiveWidget;
+class DesignOptionWidget;
+class DesignSpaceWidget;
+class DesignVariableWidget;
 class FastenerWidget;
 class OptimisationWidget;
 class ResultWidget;
@@ -38,6 +42,10 @@ public:
     ~MainWidget();
 
     AppliedLoadWidget* appliedLoadWidget() const;
+    DesignObjectiveWidget* designObjectiveWidget() const;
+    DesignOptionWidget* designOptionWidget() const;
+    DesignSpaceWidget* designSpaceWidget() const;
+    DesignVariableWidget* designVariableWidget() const;
     FastenerWidget* fastenerWidget() const;
     OptimisationWidget* optimisationWidget() const;
     ResultWidget* resultWidget() const;

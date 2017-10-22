@@ -22,6 +22,10 @@
 #include <Core/SpliceCalculator>
 #include <Dialogs/PropertiesDialog>
 #include <Widgets/AppliedLoadWidget>
+#include <Widgets/DesignObjectiveWidget>
+#include <Widgets/DesignOptionWidget>
+#include <Widgets/DesignSpaceWidget>
+#include <Widgets/DesignVariableWidget>
 #include <Widgets/FastenerWidget>
 #include <Widgets/MainWidget>
 #include <Widgets/OptimisationWidget>
@@ -57,6 +61,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->spliceGraphicsWidget->setModel(m_calculator);
     ui->mainWidget->fastenerWidget()->setModel(m_calculator);
     ui->mainWidget->appliedLoadWidget()->setModel(m_calculator);
+    ui->mainWidget->designObjectiveWidget()->setModel(m_calculator);
+    ui->mainWidget->designOptionWidget()->setModel(m_calculator);
+    ui->mainWidget->designSpaceWidget()->setModel(m_calculator);
+    ui->mainWidget->designVariableWidget()->setModel(m_calculator);
     ui->mainWidget->optimisationWidget()->setModel(m_calculator);
     ui->mainWidget->resultWidget()->setModel(m_calculator);
     ui->mainWidget->tableWidget()->setModel(m_calculator);

@@ -48,6 +48,63 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_design">
+      <attribute name="title">
+       <string>Design</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>235</width>
+            <height>292</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="DesignVariableWidget" name="designVariableWidget" native="true"/>
+             </item>
+             <item>
+              <widget class="DesignSpaceWidget" name="designSpaceWidget" native="true"/>
+             </item>
+             <item>
+              <widget class="DesignObjectiveWidget" name="designObjectiveWidget" native="true"/>
+             </item>
+             <item>
+              <widget class="DesignOptionWidget" name="designOptionWidget" native="true"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_optimisation">
       <attribute name="title">
        <string>Optimisation</string>
@@ -97,6 +154,30 @@
    <class>OptimisationWidget</class>
    <extends>QWidget</extends>
    <header>Widgets/OptimisationWidget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DesignObjectiveWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/DesignObjectiveWidget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DesignOptionWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/DesignOptionWidget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DesignSpaceWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/DesignSpaceWidget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DesignVariableWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/DesignVariableWidget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
