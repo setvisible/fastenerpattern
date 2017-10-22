@@ -4,6 +4,7 @@ HEADERS  += \
     $$PWD/items/arrowitem.h \
     $$PWD/items/designspaceitem.h \
     $$PWD/items/fasteneritem.h \
+    $$PWD/items/measureitem.h \
     $$PWD/items/scalableimageitem.h \
     $$PWD/items/scalablepointitem.h \
     $$PWD/items/symbolitem.h \
@@ -20,6 +21,7 @@ SOURCES += \
     $$PWD/items/arrowitem.cpp \
     $$PWD/items/designspaceitem.cpp \
     $$PWD/items/fasteneritem.cpp \
+    $$PWD/items/measureitem.cpp \
     $$PWD/items/scalableimageitem.cpp \
     $$PWD/items/scalablepointitem.cpp \
     $$PWD/items/symbolitem.cpp \
