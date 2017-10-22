@@ -1,5 +1,9 @@
 HEADERS  += \
     $$PWD/abstractspliceview.h \
+    $$PWD/designobjectivewidget.h \
+    $$PWD/designoptionwidget.h \
+    $$PWD/designspacewidget.h \
+    $$PWD/designvariablewidget.h \
     $$PWD/appliedloadwidget.h \
     $$PWD/fastenerwidget.h \
     $$PWD/mainwidget.h \
@@ -11,6 +15,10 @@ HEADERS  += \
 
 SOURCES += \
     $$PWD/abstractspliceview.cpp \
+    $$PWD/designobjectivewidget.cpp \
+    $$PWD/designoptionwidget.cpp \
+    $$PWD/designspacewidget.cpp \
+    $$PWD/designvariablewidget.cpp \
     $$PWD/appliedloadwidget.cpp \
     $$PWD/fastenerwidget.cpp \
     $$PWD/mainwidget.cpp \
@@ -22,6 +30,10 @@ SOURCES += \
 
 FORMS += \
     $$PWD/appliedloadwidget.ui \
+    $$PWD/designobjectivewidget.ui \
+    $$PWD/designoptionwidget.ui \
+    $$PWD/designspacewidget.ui \
+    $$PWD/designvariablewidget.ui \
     $$PWD/fastenerwidget.ui \
     $$PWD/mainwidget.ui \
     $$PWD/optimisationwidget.ui \
