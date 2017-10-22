@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,6 +46,7 @@ class SpliceToolbar : public QToolBar
     Q_PROPERTY(bool torqueVisible READ isTorqueVisible WRITE setTorqueVisible NOTIFY torqueVisibilityChanged)
     Q_PROPERTY(bool labelVisible READ isLabelVisible WRITE setLabelVisible NOTIFY labelVisibilityChanged)
     Q_PROPERTY(bool snapEnable READ isSnapEnable WRITE setSnapEnable NOTIFY snapEnabled)
+    Q_PROPERTY(bool distanceVisible READ isDistanceVisible WRITE setDistanceVisible NOTIFY distanceVisibilityChanged)
 
     friend class SpliceToolbarPrivate;
     SpliceToolbarPrivate *d_ptr;
@@ -67,6 +68,7 @@ Q_SIGNALS:
     void torqueVisibilityChanged(bool visible);
     void labelVisibilityChanged(bool visible);
     void snapEnabled(bool enabled);
+    void distanceVisibilityChanged(bool visible);
 
 public Q_SLOTS:
     void add();
@@ -98,6 +100,9 @@ public Q_SLOTS:
     bool isSnapEnable() const;
     void setSnapEnable(bool enable);
 
+    bool isDistanceVisible() const;
+    void setDistanceVisible(bool visible);
+
 protected:
     void _q_selectionChanged();
 
@@ -114,6 +119,7 @@ private:
     QAction *m_buttonShowTorque;
     QAction *m_buttonShowLabel;
     QAction *m_buttonSnap;
+    QAction *m_buttonDistance;
 
     void createActions();
 };

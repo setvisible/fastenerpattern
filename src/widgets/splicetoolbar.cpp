@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -176,6 +176,17 @@ void SpliceToolbar::createActions()
         this->addAction(m_buttonSnap);
 
     }
+    this->addSeparator();
+    {
+        m_buttonDistance = new QAction(
+                    QIcon(":/icons/menu/extra_distance_24x24.png"),
+                    tr("Show D&istances"), this);
+        m_buttonDistance->setCheckable(true);
+        m_buttonDistance->setStatusTip(tr("Show distances between the objects"));
+        QObject::connect(m_buttonDistance, SIGNAL(toggled(bool)), SIGNAL(distanceVisibilityChanged(bool)));
+        this->addAction(m_buttonDistance);
+
+    }
 }
 
 
@@ -260,6 +271,16 @@ bool SpliceToolbar::isSnapEnable() const
 void SpliceToolbar::setSnapEnable(bool enable)
 {
     m_buttonSnap->setChecked(enable);
+}
+
+bool SpliceToolbar::isDistanceVisible() const
+{
+    return m_buttonDistance->isChecked();
+}
+
+void SpliceToolbar::setDistanceVisible(bool visible)
+{
+    m_buttonDistance->setChecked(visible);
 }
 
 /***********************************************************************************
