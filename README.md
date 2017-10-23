@@ -32,6 +32,15 @@ to verify the dimensional homogeneity of the mechanical quantities and formulas 
 It makes the code of this software more robust (=less permissive) and more reliable.
 
 
+## Computational Geometry
+
+### Triangle (Delaunay triangulation)
+
+[Triangle](http://www.cs.cmu.edu/~quake/triangle.html "http://www.cs.cmu.edu/~quake/triangle.html"), by Jonathan Shewchuk, is an award-winning C language code that generates Delaunay triangulations, constrained Delaunay triangulations (forced to have certain edges), and quality-conforming Delaunay triangulations (which avoid small angles by inserting extra points). It has been widely used for finite element analysis and is fast and robust.
+
+It is available at [http://www.cs.cmu.edu/~quake/triangle.html](http://www.cs.cmu.edu/~quake/triangle.html "http://www.cs.cmu.edu/~quake/triangle.html").
+
+
 ## Constraint Programming
 
 **[Work In Progress]**
