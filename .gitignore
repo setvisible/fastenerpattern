@@ -14,6 +14,7 @@
 !/CMakeLists.txt
 !/doxyfile
 !/doxygenMain.cpp
+!/FastenerPattern_config.pri
 !/FastenerPattern_Qt.pro
 !/LICENSE
 !/README.md

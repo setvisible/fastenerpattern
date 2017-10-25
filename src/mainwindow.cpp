@@ -121,6 +121,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
                      ui->spliceGraphicsWidget, SLOT(setLabelVisible(bool)));
     QObject::connect(ui->spliceToolBar, SIGNAL(snapEnabled(bool)),
                      ui->spliceGraphicsWidget, SLOT(setSnapEnable(bool)));
+    QObject::connect(ui->spliceToolBar, SIGNAL(distanceVisibilityChanged(bool)),
+                     ui->spliceGraphicsWidget, SLOT(setDistanceVisible(bool)));
 
 
     createActions();

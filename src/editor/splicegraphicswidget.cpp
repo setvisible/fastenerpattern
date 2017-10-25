@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,9 @@
 #include "backgroundwidget.h"
 #include "items/appliedloaditem.h"
 #include "items/fasteneritem.h"
+#include "items/measureitem.h"
+
+#include <Maths/Delaunay>
 
 #include <QtCore/QSet>
 #include <QtWidgets/QVBoxLayout>
@@ -38,6 +41,7 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
   , m_torqueVisible(true)
   , m_labelVisible(false)
   , m_snapEnable(false)
+  , m_distanceVisible(false)
   , m_designSpaceVisible(true)
 {
     m_backgroundWidget->setFlags(
@@ -121,6 +125,8 @@ void SpliceGraphicsWidget::fastenersInserted(const int index, const Fastener &fa
     item->setComponentVisible(m_componentVisible);
     item->setTorqueVisible(m_torqueVisible);
     item->setLabelVisible(m_labelVisible);
+
+    this->updateDistanceItemPositions();
 }
 
 void SpliceGraphicsWidget::fastenersChanged(const int index, const Fastener &fastener)
@@ -130,6 +136,7 @@ void SpliceGraphicsWidget::fastenersChanged(const int index, const Fastener &fas
         item->setTruePosition(fastener.positionX.value() *1000, fastener.positionY.value() *1000);
         item->setTrueDiameter(fastener.diameter.value() *1000);
     }
+    this->updateDistanceItemPositions();
 }
 
 void SpliceGraphicsWidget::fastenersRemoved(const int index)
@@ -140,6 +147,7 @@ void SpliceGraphicsWidget::fastenersRemoved(const int index)
         QObject::disconnect(item, SIGNAL(yChanged()), this, SLOT(onFastenerPositionChanged()));
         m_backgroundWidget->scene()->removeItem(item);
     }
+    this->updateDistanceItemPositions();
 }
 
 void SpliceGraphicsWidget::appliedLoadChanged()
@@ -285,6 +293,41 @@ void SpliceGraphicsWidget::setSnapEnable(bool enable)
 
 /******************************************************************************
  ******************************************************************************/
+bool SpliceGraphicsWidget::isDistanceVisible() const
+{
+    return m_distanceVisible;
+}
+
+void SpliceGraphicsWidget::setDistanceVisible(bool visible)
+{
+    m_distanceVisible = visible;
+    this->updateDistanceItemPositions();
+}
+
+void SpliceGraphicsWidget::updateDistanceItemPositions()
+{
+    while (!m_distanceItems.isEmpty()) {
+        MeasureItem *item = m_distanceItems.takeLast();
+        m_backgroundWidget->scene()->removeItem(item);
+        delete item;
+    }
+    if (m_distanceVisible) {
+        QList<QPointF> points;
+        foreach (auto &f, m_fastenerItems) {
+            points << f->pos();
+        }
+        const QList<QLineF> lines = Maths::delaunayTriangulation( points );
+        foreach (auto &line, lines) {
+            MeasureItem *item = new MeasureItem();
+            item->setLine(line);
+            m_backgroundWidget->scene()->addItem(item);
+            m_distanceItems << item;
+        }
+    }
+}
+
+/******************************************************************************
+ ******************************************************************************/
 qreal SpliceGraphicsWidget::pixelsPerUnit() const
 {
     return m_backgroundWidget->pixelsPerUnit();
@@ -316,8 +359,8 @@ bool SpliceGraphicsWidget::isDesignSpaceVisible() const
 
 void SpliceGraphicsWidget::setDesignSpaceVisible(bool visible)
 {
-    foreach (auto &item, m_designSpaceItems) {
-        //item->setVisible(visible);
-    }
+    // foreach (auto &item, m_designSpaceItems) {
+    //item->setVisible(visible);
+    // }
     m_designSpaceVisible = visible;
 }

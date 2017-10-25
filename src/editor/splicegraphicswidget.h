@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,6 +31,7 @@ QT_END_NAMESPACE
 class BackgroundWidget;
 class DesignSpaceItem;
 class FastenerItem;
+class MeasureItem;
 class Splice;
 class TensorItem;
 
@@ -45,6 +46,7 @@ class SpliceGraphicsWidget : public AbstractSpliceView
     Q_PROPERTY(bool torqueVisible READ isTorqueVisible WRITE setTorqueVisible)
     Q_PROPERTY(bool labelVisible READ isLabelVisible WRITE setLabelVisible)
     Q_PROPERTY(bool snapEnable READ isSnapEnable WRITE setSnapEnable)
+    Q_PROPERTY(bool distanceVisible READ isDistanceVisible WRITE setDistanceVisible)
     Q_PROPERTY(qreal pixelsPerUnit READ pixelsPerUnit WRITE setPixelsPerUnit)
     Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl)
     Q_PROPERTY(bool designSpaceVisible READ isDesignSpaceVisible WRITE setDesignSpaceVisible)
@@ -86,6 +88,9 @@ public Q_SLOTS:
     bool isSnapEnable() const;
     void setSnapEnable(bool enable);
 
+    bool isDistanceVisible() const;
+    void setDistanceVisible(bool visible);
+
     qreal pixelsPerUnit() const;
     void setPixelsPerUnit(qreal pxPerUnit);
 
@@ -107,11 +112,14 @@ private:
     TensorItem *m_appliedLoadItem;
     QList<FastenerItem*> m_fastenerItems;
     QList<DesignSpaceItem*> m_designSpaceItems;
+    QList<MeasureItem*> m_distanceItems;
+
     bool m_componentVisible;
     bool m_resultantVisible;
     bool m_torqueVisible;
     bool m_labelVisible;
     bool m_snapEnable; // magnetize objects to the grid
+    bool m_distanceVisible;
     bool m_designSpaceVisible;
 
     /// \todo  InstantaneousCentreOfRotation ( = + )
@@ -121,6 +129,9 @@ private:
     /// \todo  FE Mesh
     /// \todo  Design Domain for Optimisation
     /// \todo  ...
+
+    void updateDistanceItemPositions();
+
 };
 
 #endif // EDITOR_SPLICE_GRAPHICS_WIDGET_H
