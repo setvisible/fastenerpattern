@@ -21,19 +21,12 @@ lessThan(QT_VERSION, 5.0) {
     warning("prefere to build it with Qt 5.0")
 }
 
+
 #-------------------------------------------------
-# Boost
+# Dependancies
 #-------------------------------------------------
-
-# INSTRUCTION: Replace the following path by your path:
-Boost_INCLUDE_DIR  = "C:/Qt/Boost/boost_1_61_0/"
-Boost_LIB_DIR      = "C:/Qt/Boost/boost_1_61_0/stage/lib/"
-#
-
-
-INCLUDEPATH += $$Boost_INCLUDE_DIR
-LIBS        += -L$$Boost_LIB_DIR
-DEFINES     += BOOST_MATH_DISABLE_FLOAT128
+include($$PWD/../FastenerPattern_config.pri)
+include($$PWD/../3rd/3rd.pri)
 
 
 #-------------------------------------------------
@@ -56,9 +49,10 @@ INCLUDEPATH += $$PWD/../include/
 include($$PWD/core/core.pri)
 include($$PWD/dialogs/dialogs.pri)
 include($$PWD/editor/editor.pri)
+include($$PWD/maths/maths.pri)
 include($$PWD/widgets/widgets.pri)
 
-HEADERS  += \
+HEADERS += \
     $$PWD/about.h \
     $$PWD/version.h \
     $$PWD/mainwindow.h
