@@ -78,22 +78,46 @@ void MeasureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
 {
     if (qIsFinite(line().length()) && line().length() > 0.0) {
 
-        painter->setPen(QPen(m_color, 2, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
+        // Draw the line itself
+        painter->setPen(QPen(m_color, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->setBrush(QBrush(m_color, Qt::SolidPattern));
-
         painter->drawLine(this->line());
 
+        // Draw the arrows
         double angle = line().angle() / 180 * M_PI;
 
-        const QPointF p0 = line().p2();
-        const QPointF p1 = p0 - QPointF(
-                    std::cos(-angle + (M_PI * 0.1)) * C_ARROW_SIZE,
-                    std::sin(-angle + (M_PI * 0.1)) * C_ARROW_SIZE);
-        const QPointF p2 = p0 - QPointF(
-                    std::cos(-angle - (M_PI * 0.1)) * C_ARROW_SIZE,
-                    std::sin(-angle - (M_PI * 0.1)) * C_ARROW_SIZE);
+        //static const double Pi = 3.14159265358979323846264338327950288419717;
+        //static double TwoPi = 2.0 * Pi;
+        // double angle = ::acos(line.dx() / line.length());
+        // if (line.dy() >= 0)
+        //     angle = TwoPi - angle;
 
-        painter->drawPolygon(QPolygonF() << p0 << p1 << p2);
+        {
+            const QPointF p0 = line().p1();
+            const QPointF p1 = p0 + QPointF(
+                        std::cos(-angle + (M_PI * 0.1)) * C_ARROW_SIZE,
+                        std::sin(-angle + (M_PI * 0.1)) * C_ARROW_SIZE);
+            const QPointF p2 = p0 + QPointF(
+                        std::cos(-angle - (M_PI * 0.1)) * C_ARROW_SIZE,
+                        std::sin(-angle - (M_PI * 0.1)) * C_ARROW_SIZE);
+
+            painter->drawPolygon(QPolygonF() << p0 << p1 << p2);
+        }
+        {
+            const QPointF p0 = line().p2();
+            const QPointF p1 = p0 - QPointF(
+                        std::cos(-angle + (M_PI * 0.1)) * C_ARROW_SIZE,
+                        std::sin(-angle + (M_PI * 0.1)) * C_ARROW_SIZE);
+            const QPointF p2 = p0 - QPointF(
+                        std::cos(-angle - (M_PI * 0.1)) * C_ARROW_SIZE,
+                        std::sin(-angle - (M_PI * 0.1)) * C_ARROW_SIZE);
+
+            painter->drawPolygon(QPolygonF() << p0 << p1 << p2);
+        }
     }
+
+
+
+
 }
 
