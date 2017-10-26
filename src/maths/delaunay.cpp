@@ -102,7 +102,18 @@ static void _q_freeTriangulateIO(triangulateio &io)
 
 QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
 {
-    // Remove duplicate points
+    /***************************************\
+    * Steps for Delaunay Triangulation:     *
+    *                                       *
+    *    - Sanitize the input               *
+    *       - Remove duplicate points       *
+    *       - Verify trivial results        *
+    *    - Define input points              *
+    *    - Triangulate the points           *
+    *    - Convert the output points        *
+    *    - Free the memory                  *
+    *                                       *
+    \***************************************/
     QList<QPointF> newpoints = points;
     for (int i = 0; i < newpoints.count()-1; ++i) {
         for (int j = i+1; j < newpoints.count(); ++j) {
@@ -111,16 +122,15 @@ QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
             }
         }
     }
-    qDebug() << Q_FUNC_INFO << newpoints;
 
-    if (newpoints.count() == 2) { // trivial
+    if (newpoints.count() == 2) { /* trivial */
         QList<QLineF> res;
         res << QLineF(newpoints.at(0), newpoints.at(1));
         return res;
     }
 
-    if (newpoints.count() < 3) {  // Triangle needs at least 3 points
-        QList<QLineF> empty;
+    if (newpoints.count() < 3) {  /* Triangle needs at least 3 points */
+        const QList<QLineF> empty;
         return empty;
     }
 
@@ -137,33 +147,24 @@ QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
         in.pointlist[ i * 2 + 1 ] = newpoints.at(i).y();
     }
 
-    /* Triangle Switches */
-    QString option("pczeBP");
-    QLatin1String quiet("Q");
-    /*  p = Read and write a Planar Straight Line Graph
+    /* triangulate()
+     *  p = Read and write a Planar Straight Line Graph
      *  c = Preserve the convex hull
      *  z = Number everything from zero (rather than one)
      *  e = Produce an edge list
      *  B = No boundary markers in the output
-     *  P = No output .poly file. Saves disk space
-     *  Q = Quiet. Suppresses all Triangle messages except when error occurs
+     *  P = No output .poly file (saves disk space)
+     *  Q = Quiet, suppresses all messages except when error occurs
      */
-
-    /* Triangulate the points. */
-#ifdef QT_DEBUG
-    Q_UNUSED(quiet);
+    const QString option("pczeBPQ");
     triangulate(option.toLatin1().data(), &in, &out, Q_NULLPTR);
-#else
-    option.append(quiet);
-    triangulate(option.toLatin1().data(), &in, &out, Q_NULLPTR);
-#endif
 
     QList<QLineF> res;
     for (int i = 0; i < out.numberofedges; ++i) {
         const int indexA = out.edgelist[ i * 2 ];
         const int indexB = out.edgelist[ i * 2 + 1 ];
-        QPointF pointA = newpoints.at(indexA);
-        QPointF pointB = newpoints.at(indexB);
+        const QPointF pointA = newpoints.at(indexA);
+        const QPointF pointB = newpoints.at(indexB);
         res << QLineF(pointA, pointB);
     }
     _q_freeTriangulateIO( in );
