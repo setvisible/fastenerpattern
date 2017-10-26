@@ -44,7 +44,7 @@ OptimisationWidget::~OptimisationWidget()
 
 void OptimisationWidget::fastenersInserted(const int index, const Fastener &fastener)
 {
-    qDebug() << Q_FUNC_INFO;
+  //  qDebug() << Q_FUNC_INFO;
     /*  QTreeWidgetItem* item = new QTreeWidgetItem();
     ui->treeWidget->insertTopLevelItem(index, item);
     item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
@@ -61,7 +61,7 @@ void OptimisationWidget::fastenersInserted(const int index, const Fastener &fast
 
 void OptimisationWidget::fastenersChanged(const int index, const Fastener &fastener)
 {
-    qDebug() << Q_FUNC_INFO;
+   // qDebug() << Q_FUNC_INFO;
     /*  QTreeWidgetItem* item = ui->treeWidget->topLevelItem(index);
     if (!item)
         return;
@@ -78,7 +78,7 @@ void OptimisationWidget::fastenersChanged(const int index, const Fastener &faste
 
 void OptimisationWidget::fastenersRemoved(const int index)
 {
-    qDebug() << Q_FUNC_INFO;
+  //  qDebug() << Q_FUNC_INFO;
     /* QTreeWidgetItem* item = ui->treeWidget->takeTopLevelItem(index);
     if (item)
         delete item;
@@ -88,7 +88,7 @@ void OptimisationWidget::fastenersRemoved(const int index)
 
 void OptimisationWidget::onItemSelectionChanged()
 {
-    qDebug() << Q_FUNC_INFO;
+  //  qDebug() << Q_FUNC_INFO;
     /*  QSet<int> set;
     QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
 
@@ -108,7 +108,7 @@ void OptimisationWidget::onItemSelectionChanged()
 
 void OptimisationWidget::selectionChanged()
 {
-    qDebug() << Q_FUNC_INFO;
+  //  qDebug() << Q_FUNC_INFO;
     /* QSet<int> set = model()->selectedIndexes();
     QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
 
@@ -126,7 +126,7 @@ void OptimisationWidget::selectionChanged()
 
 void OptimisationWidget::resultsChanged()
 {
-    qDebug() << Q_FUNC_INFO;
+ //   qDebug() << Q_FUNC_INFO;
 
     Force maxAbs = 0.0*N;
     const int count = model()->fastenerCount();
