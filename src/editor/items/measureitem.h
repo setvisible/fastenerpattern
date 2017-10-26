@@ -17,26 +17,31 @@
 #ifndef EDITOR_ITEMS_MEASUREITEM_H
 #define EDITOR_ITEMS_MEASUREITEM_H
 
-#include <QGraphicsLineItem>
+#include <QtWidgets/QGraphicsLineItem>
 
+class QGraphicsSimpleTextItem;
 class MeasureItem : public QGraphicsLineItem
 {
-    Q_PROPERTY(QColor color READ color WRITE setColor)
-
 public:
     explicit MeasureItem(QGraphicsItem *parent = Q_NULLPTR);
 
+    int endSpace() const;
+    void setEndSpace(int space);
+
     QColor color() const;
     void setColor(const QColor &color);
+
+    QString text() const;
+    void setText(const QString &text);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
 
 private:
+    int m_endSpace;
     QColor m_color;
-    int m_boundOffset;
-
+    QGraphicsSimpleTextItem *m_label;
 };
 
 

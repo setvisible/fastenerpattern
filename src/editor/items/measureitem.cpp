@@ -17,12 +17,13 @@
 #include "measureitem.h"
 #include "utils_scale.h"
 
-#include <QPainter>
-#include <QStyle>
-#include <QStyleOptionGraphicsItem>
-#include <QtCore/QtMath>      /* M_PI */
+#include <QtCore/QDebug>
 #include <QtCore/qnumeric.h>  /* qIsFinite() */
-#include <QDebug>
+#include <QtCore/QtMath>      /* M_PI */
+#include <QtGui/QPainter>
+#include <QtWidgets/QGraphicsSimpleTextItem>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOptionGraphicsItem>
 
 /*!
  * \class MeasureItem
@@ -36,15 +37,20 @@
  * \endcode
  *
  * Use \a setLine() to set the position of the two end points.
- * To get the position of the point A (or B), use \a line().p1() (or \a line().p2()).
+ * To get the position of the point A (or B), use \a line().p1()
+ * (or \a line().p2()). Use \a setText() and \a text() to set/get the text.
  *
  * \sa ArrowItem, ArcArrowItem
  */
 MeasureItem::MeasureItem(QGraphicsItem *parent) : QGraphicsLineItem(parent)
+  , m_endSpace(0)
   , m_color(Qt::black)
+  , m_label(new QGraphicsSimpleTextItem(this))
 {
 }
 
+/******************************************************************************
+ ******************************************************************************/
 QColor MeasureItem::color() const
 {
     return m_color;
@@ -53,9 +59,38 @@ QColor MeasureItem::color() const
 void MeasureItem::setColor(const QColor &color)
 {
     m_color = color;
+    m_label->setBrush( QBrush(m_color) );
     QGraphicsItem::update();
 }
 
+/******************************************************************************
+ ******************************************************************************/
+int MeasureItem::endSpace() const
+{
+    return m_endSpace;
+}
+
+void MeasureItem::setEndSpace(int space)
+{
+    m_endSpace = space;
+    QGraphicsItem::update();
+}
+
+/******************************************************************************
+ ******************************************************************************/
+QString MeasureItem::text() const
+{
+    return m_label->text();
+}
+
+void MeasureItem::setText(const QString &text)
+{
+    m_label->setText(text);
+    QGraphicsItem::update();
+}
+
+/******************************************************************************
+ ******************************************************************************/
 QRectF MeasureItem::boundingRect() const
 {
     return shape().boundingRect();
@@ -78,22 +113,55 @@ void MeasureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
 {
     if (qIsFinite(line().length()) && line().length() > 0.0) {
 
-        // Draw the line itself
+        /*****************************************************\
+        *              --> unitVector()                       *
+        *     .A   |<----------- text ---------->|    .B       *
+        *     <--->             <---->           <--->        *
+        *   endspace             width          endspace      *
+        \*****************************************************/
+
+        /* Draw the line */
         painter->setPen(QPen(m_color, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->setBrush(QBrush(m_color, Qt::SolidPattern));
-        painter->drawLine(this->line());
 
-        // Draw the arrows
-        double angle = line().angle() / 180 * M_PI;
 
-        //static const double Pi = 3.14159265358979323846264338327950288419717;
-        //static double TwoPi = 2.0 * Pi;
-        // double angle = ::acos(line.dx() / line.length());
-        // if (line.dy() >= 0)
-        //     angle = TwoPi - angle;
+        QLineF modline = this->line();
+        QLineF space = modline.unitVector();
 
+        if (modline.length() > 2 * m_endSpace ) {
+            space.setLength( m_endSpace );
+            QPointF offset = space.p2() - space.p1();
+            modline.setP1(modline.p1() + offset);
+            modline.setP2(modline.p2() - offset);
+        }
+
+        if (modline.length() > 2 * m_endSpace && !m_label->text().isEmpty()) {
+
+            qreal width = m_label->boundingRect().width();
+            qreal height = m_label->boundingRect().height();
+
+            QLineF line1 = modline;
+            QLineF line2 = modline;
+            QPointF center = 0.5 * ( modline.p1() + modline.p2() );
+
+
+            space.setLength( 0.5 * qMax(height, width) + 2.0 );
+            QPointF offset = space.p2() - space.p1();
+
+            line1.setP2(center - offset);
+            line2.setP1(center + offset);
+
+            painter->drawLine(line1);
+            painter->drawLine(line2);
+
+        } else {
+            painter->drawLine(modline);
+        }
+
+        /* Draw the arrows */
+        const qreal angle = this->line().angle() / 180 * M_PI;
         {
-            const QPointF p0 = line().p1();
+            const QPointF p0 = modline.p1();
             const QPointF p1 = p0 + QPointF(
                         std::cos(-angle + (M_PI * 0.1)) * C_ARROW_SIZE,
                         std::sin(-angle + (M_PI * 0.1)) * C_ARROW_SIZE);
@@ -104,7 +172,7 @@ void MeasureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
             painter->drawPolygon(QPolygonF() << p0 << p1 << p2);
         }
         {
-            const QPointF p0 = line().p2();
+            const QPointF p0 = modline.p2();
             const QPointF p1 = p0 - QPointF(
                         std::cos(-angle + (M_PI * 0.1)) * C_ARROW_SIZE,
                         std::sin(-angle + (M_PI * 0.1)) * C_ARROW_SIZE);
@@ -114,10 +182,28 @@ void MeasureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
 
             painter->drawPolygon(QPolygonF() << p0 << p1 << p2);
         }
+
+        /* Draw the text */
+        if (m_label->text().isEmpty()) {
+            m_label->setVisible(false);
+        } else {
+            m_label->setVisible(true);
+            QPointF center = this->boundingRect().center();
+            QPointF offset = m_label->boundingRect().center();
+            QPointF pos = center - offset;
+
+            //QRectF textRect
+            //    painter->save();
+            //    painter->setPen(Qt::NoPen);
+            //    painter->setBrush(Qt::NoBrush);
+            //    //       painter->drawRect(m_label->boundingRect() + pos);
+            //    painter->restore();
+
+            m_label->setPos(pos);
+
+        }
+
     }
-
-
-
 
 }
 
