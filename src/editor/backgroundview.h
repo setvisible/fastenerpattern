@@ -21,8 +21,8 @@
  * Inspired by Tiled (Tile Editor) in /src/tiled/mapview.cpp
  */
 
-#include <QGraphicsView>
-#include <QUrl>
+#include <QtCore/QUrl>
+#include <QtWidgets/QGraphicsView>
 
 class ScalableImageItem;
 

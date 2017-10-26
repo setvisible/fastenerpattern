@@ -19,7 +19,7 @@
 
 #include <Core/Fastener>
 #include <Core/Tensor>
-#include <QGraphicsObject>
+#include <QtWidgets/QGraphicsObject>
 
 class TensorItem;
 class SymbolItem;

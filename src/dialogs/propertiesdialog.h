@@ -17,7 +17,7 @@
 #ifndef DIALOGS_PROPERTIES_DIALOG_H
 #define DIALOGS_PROPERTIES_DIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 class SpliceCalculator;
 

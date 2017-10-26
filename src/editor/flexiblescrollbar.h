@@ -21,7 +21,7 @@
  * Inspired by Tiled (Tile Editor) in /src/tiled/flexiblescrollbar.cpp
  */
 
-#include <QScrollBar>
+#include <QtWidgets/QScrollBar>
 
 class FlexibleScrollBar : public QScrollBar
 {

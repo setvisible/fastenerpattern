@@ -23,9 +23,9 @@
 #include "fastener.h"
 #include "tensor.h"
 
-#include <QDebug>
-#include <QJsonArray>
-#include <QJsonObject>
+#include <QtCore/QDebug>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
 
 
 /*! \class SpliceCalculator

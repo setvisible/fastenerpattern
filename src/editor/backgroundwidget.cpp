@@ -18,11 +18,11 @@
 
 #include "backgroundview.h"
 
-#include <QLayout>
-#include <QGraphicsScene>
-#include <QDebug>
-#include <QGraphicsLineItem>
-#include <QGraphicsSimpleTextItem>
+#include <QtCore/QDebug>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QGraphicsScene>
+#include <QtWidgets/QGraphicsLineItem>
+#include <QtWidgets/QGraphicsSimpleTextItem>
 
 /*!
  * \class BackgroundWidget

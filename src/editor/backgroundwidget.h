@@ -17,10 +17,10 @@
 #ifndef EDITOR_BACKGROUND_WIDGET_H
 #define EDITOR_BACKGROUND_WIDGET_H
 
-#include <QWidget>
 #include <memory>
-#include <QFlags>
-#include <QUrl>
+#include <QtCore/QFlags>
+#include <QtCore/QUrl>
+#include <QtWidgets/QWidget>
 
 class BackgroundView;
 class QGraphicsScene;

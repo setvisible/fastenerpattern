@@ -17,7 +17,7 @@
 #ifndef ABOUT_H
 #define ABOUT_H
 
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 #include "version.h"
 
 QString buildAbout(QString paragraphDelimiter)

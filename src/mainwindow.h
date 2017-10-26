@@ -17,8 +17,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QFileInfo>
+#include <QtCore/QFileInfo>
+#include <QtWidgets/QMainWindow>
 
 class SpliceCalculator;
 

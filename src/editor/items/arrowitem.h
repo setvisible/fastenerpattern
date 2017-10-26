@@ -17,7 +17,7 @@
 #ifndef EDITOR_ITEMS_ARROWITEM_H
 #define EDITOR_ITEMS_ARROWITEM_H
 
-#include <QGraphicsLineItem>
+#include <QtWidgets/QGraphicsLineItem>
 
 class ArrowItem : public QGraphicsLineItem
 {

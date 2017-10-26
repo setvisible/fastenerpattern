@@ -17,7 +17,7 @@
 #ifndef EDITOR_ITEMS_ARCARROWITEM_H
 #define EDITOR_ITEMS_ARCARROWITEM_H
 
-#include <QGraphicsEllipseItem>
+#include <QtWidgets/QGraphicsEllipseItem>
 
 class ArcArrowItem : public QGraphicsEllipseItem
 {

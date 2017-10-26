@@ -17,12 +17,12 @@
 #include "arrowitem.h"
 #include "utils_scale.h"
 
-#include <QPainter>
-#include <QStyle>
-#include <QStyleOptionGraphicsItem>
-#include <QtCore/QtMath>      /* M_PI */
+#include <QtCore/QDebug>
 #include <QtCore/qnumeric.h>  /* qIsFinite() */
-#include <QDebug>
+#include <QtCore/QtMath>      /* M_PI */
+#include <QtGui/QPainter>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOptionGraphicsItem>
 
 ArrowItem::ArrowItem(QGraphicsItem *parent) : QGraphicsLineItem(parent)
   , m_color(Qt::black)

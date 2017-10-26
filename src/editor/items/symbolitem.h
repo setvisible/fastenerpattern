@@ -17,7 +17,7 @@
 #ifndef EDITOR_ITEMS_SYMBOL_ITEM_H
 #define EDITOR_ITEMS_SYMBOL_ITEM_H
 
-#include <QGraphicsItem>
+#include <QtWidgets/QGraphicsItem>
 
 class SymbolItem : public QGraphicsItem
 {
