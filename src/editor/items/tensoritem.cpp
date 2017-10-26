@@ -24,7 +24,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QtMath>
 #include <QtGui/QPainter>
-#include <QtWidgets/QGraphicsTextItem>
+#include <QtWidgets/QGraphicsSimpleTextItem>
 
 
 TensorItem::TensorItem(QGraphicsItem *parent) : QGraphicsItemGroup(parent)
@@ -32,10 +32,10 @@ TensorItem::TensorItem(QGraphicsItem *parent) : QGraphicsItemGroup(parent)
   , m_arrowX(new ArrowItem(this))
   , m_arrowY(new ArrowItem(this))
   , m_arcArrowZ(new ArcArrowItem(this))
-  , m_labelXY(new QGraphicsTextItem(this))
-  , m_labelX(new QGraphicsTextItem(this))
-  , m_labelY(new QGraphicsTextItem(this))
-  , m_labelZ(new QGraphicsTextItem(this))
+  , m_labelXY(new QGraphicsSimpleTextItem(this))
+  , m_labelX(new QGraphicsSimpleTextItem(this))
+  , m_labelY(new QGraphicsSimpleTextItem(this))
+  , m_labelZ(new QGraphicsSimpleTextItem(this))
   , m_arrowInverted(false)
   , m_componantVisible(false)
   , m_resultantVisible(true)
@@ -55,10 +55,10 @@ TensorItem::TensorItem(QGraphicsItem *parent) : QGraphicsItemGroup(parent)
     m_arrowY->setColor(    QColor( 34,177, 76));   // green
     m_arcArrowZ->setColor( QColor(  0,162,232));   // blue
 
-    m_labelXY->setDefaultTextColor(QColor(255,127, 39));   // orange
-    m_labelX->setDefaultTextColor( QColor(237, 28, 36));   // red
-    m_labelY->setDefaultTextColor( QColor( 34,177, 76));   // green
-    m_labelZ->setDefaultTextColor( QColor(  0,162,232));   // blue
+    m_labelXY->setBrush(QBrush(QColor(255,127, 39)));   // orange
+    m_labelX->setBrush(QBrush( QColor(237, 28, 36)));   // red
+    m_labelY->setBrush(QBrush( QColor( 34,177, 76)));   // green
+    m_labelZ->setBrush(QBrush( QColor(  0,162,232)));   // blue
 
     m_labelXY->setVisible(m_labelVisible);
     m_labelX->setVisible( m_labelVisible);
@@ -196,10 +196,10 @@ void TensorItem::updateArrows()
     m_labelZ->setVisible( m_torqueVisible    && m_labelVisible);
 
     qreal fxy = qSqrt( qPow(m_fx, 2) + qPow(m_fy, 2));
-    m_labelXY->setPlainText(QString("Fxy=%0N").arg(fxy, 0, 'f', 1));
-    m_labelX->setPlainText(QString("Fx=%0N").arg(m_fx, 0, 'f', 1));
-    m_labelY->setPlainText(QString("Fy=%0N").arg(m_fy, 0, 'f', 1));
-    m_labelZ->setPlainText(QString("Tz=%0N.m").arg(m_tz, 0, 'f', 1));
+    m_labelXY->setText(QString("Fxy=%0N").arg(fxy, 0, 'f', 1));
+    m_labelX->setText(QString("Fx=%0N").arg(m_fx, 0, 'f', 1));
+    m_labelY->setText(QString("Fy=%0N").arg(m_fy, 0, 'f', 1));
+    m_labelZ->setText(QString("Tz=%0N.m").arg(m_tz, 0, 'f', 1));
 
     qreal w = m_labelXY->boundingRect().height() ;
     QPointF offset(C_ARROW_SIZE / 2, -w);

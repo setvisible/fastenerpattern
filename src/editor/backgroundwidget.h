@@ -27,7 +27,7 @@ class QGraphicsScene;
 class QVBoxLayout;
 class QGraphicsItem;
 class QGraphicsLineItem;
-class QGraphicsTextItem;
+class QGraphicsSimpleTextItem;
 class QGraphicsView;
 
 class BackgroundWidget : public QWidget
@@ -75,7 +75,7 @@ private:
     QFlags<Feature> m_enabledFeatures;
     QGraphicsLineItem* m_horizontalAxis;
     QGraphicsLineItem* m_verticalAxis;
-    QGraphicsTextItem* m_dragImageHereText;
+    QGraphicsSimpleTextItem* m_dragImageHereText;
 
     void updateView();
 

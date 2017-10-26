@@ -22,7 +22,7 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QGraphicsLineItem>
-#include <QGraphicsTextItem>
+#include <QGraphicsSimpleTextItem>
 
 /*!
  * \class BackgroundWidget
@@ -60,7 +60,7 @@ BackgroundWidget::BackgroundWidget(QWidget *parent) : QWidget(parent)
 
     QFont font;
     font.setWeight(QFont::Light);
-    m_dragImageHereText = m_scene->addText(tr("Drag an image here"), font);
+    m_dragImageHereText = m_scene->addSimpleText(tr("Drag an image here"), font);
 
     /* Signals / Slots */
     QObject::connect(m_scene, SIGNAL(sceneRectChanged(QRectF)),

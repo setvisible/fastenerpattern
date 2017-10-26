@@ -17,12 +17,12 @@
 #ifndef EDITOR_ITEMS_TENSOR_ITEM_H
 #define EDITOR_ITEMS_TENSOR_ITEM_H
 
-#include <QGraphicsItemGroup>
+#include <QtWidgets/QGraphicsItemGroup>
 
 class Tensor;
 class ArrowItem;
 class ArcArrowItem;
-class QGraphicsTextItem;
+class QGraphicsSimpleTextItem;
 class TensorItem : public QGraphicsItemGroup
 {
     Q_PROPERTY(bool arrowInverted READ isArrowInverted WRITE setInvertedArrow)
@@ -67,10 +67,10 @@ protected:
     ArrowItem *m_arrowX;
     ArrowItem *m_arrowY;
     ArcArrowItem *m_arcArrowZ;
-    QGraphicsTextItem *m_labelXY;
-    QGraphicsTextItem *m_labelX;
-    QGraphicsTextItem *m_labelY;
-    QGraphicsTextItem *m_labelZ;
+    QGraphicsSimpleTextItem *m_labelXY;
+    QGraphicsSimpleTextItem *m_labelX;
+    QGraphicsSimpleTextItem *m_labelY;
+    QGraphicsSimpleTextItem *m_labelZ;
 
 private:
     bool m_arrowInverted;

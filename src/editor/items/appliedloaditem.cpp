@@ -19,6 +19,8 @@
 #include "arcarrowitem.h"
 #include "arrowitem.h"
 
+#include <QtGui/QBrush>
+
 AppliedLoadItem::AppliedLoadItem(QGraphicsItem *parent) : TensorItem(parent)
 {
     setInvertedArrow(true);
@@ -28,9 +30,9 @@ AppliedLoadItem::AppliedLoadItem(QGraphicsItem *parent) : TensorItem(parent)
     m_arrowX->setColor( magenta );
     m_arrowY->setColor( magenta );
     m_arcArrowZ->setColor( magenta );
-    m_labelXY->setDefaultTextColor( magenta );
-    m_labelX->setDefaultTextColor( magenta );
-    m_labelY->setDefaultTextColor( magenta );
-    m_labelZ->setDefaultTextColor( magenta );
+    m_labelXY->setBrush(QBrush( magenta ));
+    m_labelX->setBrush(QBrush( magenta ));
+    m_labelY->setBrush(QBrush( magenta ));
+    m_labelZ->setBrush(QBrush( magenta ));
 }
 
