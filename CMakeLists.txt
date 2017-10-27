@@ -146,6 +146,7 @@ qt5_use_modules(${FastenerPattern_NAME} Core Gui Widgets )
 if(ENABLE_TESTS)
 
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/boost/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/test/delaunay/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/optimisationsolver/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/rigidbodysolver/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/splicecalculator/CMakeLists.txt)
