@@ -190,20 +190,8 @@ void MeasureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
             m_label->setVisible(true);
             QPointF center = this->boundingRect().center();
             QPointF offset = m_label->boundingRect().center();
-            QPointF pos = center - offset;
-
-            //QRectF textRect
-            //    painter->save();
-            //    painter->setPen(Qt::NoPen);
-            //    painter->setBrush(Qt::NoBrush);
-            //    //       painter->drawRect(m_label->boundingRect() + pos);
-            //    painter->restore();
-
-            m_label->setPos(pos);
-
+            m_label->setPos(center - offset);
         }
-
     }
-
 }
 

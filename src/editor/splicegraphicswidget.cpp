@@ -322,7 +322,7 @@ void SpliceGraphicsWidget::updateDistanceItemPositions()
             item->setLine(line);
             item->setEndSpace( 10*2.5 ); // mm
             item->setColor( QColor(136, 0, 21) ); // brown
-            item->setText(QString("%0mm").arg(line.length(), 0, 'f', 1));
+            item->setText(QString("%0mm").arg(line.length()/10.0, 0, 'f', 1));
             m_backgroundWidget->scene()->addItem(item);
             m_distanceItems << item;
         }
