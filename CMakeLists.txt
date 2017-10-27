@@ -79,11 +79,9 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
 ##############################################################################
-## Boost
+## 3RD-PARTY DEPENDENCIES
 ##############################################################################
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-add_definitions(-DBOOST_MATH_DISABLE_FLOAT128)
+include(${CMAKE_CURRENT_SOURCE_DIR}/3rd/CMakeLists.txt)
 
 
 ##############################################################################
