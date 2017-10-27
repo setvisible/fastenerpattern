@@ -108,6 +108,7 @@ QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
     *    - Sanitize the input               *
     *       - Remove duplicate points       *
     *       - Verify trivial results        *
+    *       - Verify collinear points       *
     *    - Define input points              *
     *    - Triangulate the points           *
     *    - Convert the output points        *
@@ -119,6 +120,7 @@ QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
         for (int j = i+1; j < newpoints.count(); ++j) {
             if (newpoints.at(i) == newpoints.at(j)) {
                 newpoints.removeAt(j);
+                --j;
             }
         }
     }
@@ -134,6 +136,82 @@ QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
         return empty;
     }
 
+
+    {
+        /**********************************************************\
+        *        How to verify that 3 points are collinear?        *
+        *                                                          *
+        *   "*" = cross product, also called matrix determinant    *
+        *                                                          *
+        *   v1*v2 = det( [x1 x2] ) = x1*y2 − x2*y1                 *
+        *              ( [y1 y2] )                                 *
+        *                                                          *
+        *   => v1*v2=0 implies v1 and v2 are collinear             *
+        *                                                          *
+        *   With 3 points:                                         *
+        *                                                          *
+        *   (p1−p0)*(p2−p0) = (x1−x0)*(y2−y0)−(x2−x0)*(y1−y0)      *
+        *                   = 0 means p0, p1 and p2 are aligned    *
+        *                                                          *
+        \**********************************************************/
+        Q_ASSERT(newpoints.count() > 2);
+
+        const QPointF origin = newpoints.first();
+        const QPointF v1 = newpoints.at(1) - origin;
+
+        bool useX = (v1.x()!=0); /* otherwise use y */
+        bool collinear = true;
+
+        QList<qreal> sortedPointsPosition;
+        QList<QPointF> sortedPoints;
+        sortedPointsPosition << 0.;
+        sortedPoints << newpoints.first();
+        {
+            qreal pos = (useX ? v1.x() : v1.y());
+            if (pos > 0) {
+                sortedPointsPosition << pos;
+                sortedPoints << newpoints.at(1);
+            } else {
+                sortedPointsPosition.prepend(pos);
+                sortedPoints.prepend(newpoints.at(1));
+            }
+        }
+
+        QPointF v2;
+        for (int i = 2; i < newpoints.count(); ++i) {
+            v2 = newpoints.at(i) - origin;
+            qreal det = v1.x()*v2.y() - v1.y()*v2.x();
+            if (qFuzzyCompare(det, 0.0)) {
+                bool inserted = false;
+                qreal position = (useX ? v2.x() : v2.y());
+                for (int j = 0; j < sortedPointsPosition.count(); ++j) {
+                    Q_ASSERT(position != sortedPointsPosition.at(j));
+                    if (position < sortedPointsPosition.at(j)) {
+                        sortedPointsPosition.insert(j, position);
+                        sortedPoints.insert(j, newpoints.at(i));
+                        inserted = true;
+                        break;
+                    }
+                }
+                if (!inserted) {
+                    sortedPointsPosition << position;
+                    sortedPoints << newpoints.at(i);
+                }
+            } else {
+                collinear = false;
+                break;
+            }
+        }
+        if (collinear) {
+            QList<QLineF> res;
+            for (int i = 1; i < sortedPoints.count(); ++i) {
+                res << QLineF(sortedPoints.at(i-1), sortedPoints.at(i));
+            }
+            return res;
+        }
+    }
+
+
     struct triangulateio in, out;
     _q_initTriangulateIO( in );
     _q_initTriangulateIO( out );
@@ -147,15 +225,18 @@ QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
         in.pointlist[ i * 2 + 1 ] = newpoints.at(i).y();
     }
 
-    /* triangulate()
-     *  p = Read and write a Planar Straight Line Graph
-     *  c = Preserve the convex hull
-     *  z = Number everything from zero (rather than one)
-     *  e = Produce an edge list
-     *  B = No boundary markers in the output
-     *  P = No output .poly file (saves disk space)
-     *  Q = Quiet, suppresses all messages except when error occurs
-     */
+    /******************************************************************\
+    * triangulate()                                                    *
+    *                                                                  *
+    *  p = Read and write a Planar Straight Line Graph                 *
+    *  c = Preserve the convex hull                                    *
+    *  z = Number everything from zero (rather than one)               *
+    *  e = Produce an edge list                                        *
+    *  B = No boundary markers in the output                           *
+    *  P = No output .poly file (saves disk space)                     *
+    *  Q = Quiet, suppresses all messages except when error occurs     *
+    *                                                                  *
+    \******************************************************************/
     const QString option("pczeBPQ");
     triangulate(option.toLatin1().data(), &in, &out, Q_NULLPTR);
 
