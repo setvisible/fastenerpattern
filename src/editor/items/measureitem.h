@@ -25,8 +25,8 @@ class MeasureItem : public QGraphicsLineItem
 public:
     explicit MeasureItem(QGraphicsItem *parent = Q_NULLPTR);
 
-    int endSpace() const;
-    void setEndSpace(int space);
+    qreal endSpace() const;
+    void setEndSpace(qreal space);
 
     QColor color() const;
     void setColor(const QColor &color);
@@ -39,7 +39,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
 
 private:
-    int m_endSpace;
+    qreal m_endSpace;
     QColor m_color;
     QGraphicsSimpleTextItem *m_label;
 };

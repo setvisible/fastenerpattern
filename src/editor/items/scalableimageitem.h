@@ -22,8 +22,11 @@
 #include <QtWidgets/QGraphicsPixmapItem>
 #include <QtWidgets/QGraphicsObject>
 
-class ScalablePointItem;
+class HandleItem;
 class ScalableImageItem;
+
+/******************************************************************************
+ ******************************************************************************/
 class ScalableImageObject : public QObject
 {
     Q_OBJECT
@@ -32,10 +35,13 @@ public:
 
 public Q_SLOTS:
     void onCornerPositionChanged();
+
 private:
     ScalableImageItem *m_parent;
 };
 
+/******************************************************************************
+ ******************************************************************************/
 class ScalableImageItem : public QGraphicsObject
 {
 public:
@@ -52,12 +58,12 @@ public:
     QRect rect() const;
     void setRect(const QRect &rect);
 
-    void setCorner(const ScalablePointItem *item);
+    void setCorner(const HandleItem *item);
 
 
 private:
     ScalableImageObject *m_object;
-    ScalablePointItem *m_scalePoints[4];
+    HandleItem *m_handles[4];
     QPixmap m_pixmap;
     QRect m_rect;
     QUrl m_url;

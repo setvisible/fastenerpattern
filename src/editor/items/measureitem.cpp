@@ -65,14 +65,14 @@ void MeasureItem::setColor(const QColor &color)
 
 /******************************************************************************
  ******************************************************************************/
-int MeasureItem::endSpace() const
+qreal MeasureItem::endSpace() const /* in millimeters */
 {
-    return m_endSpace;
+    return m_endSpace / C_DEFAULT_SCREEN_DPI;
 }
 
-void MeasureItem::setEndSpace(int space)
+void MeasureItem::setEndSpace(qreal space) /* in millimeters */
 {
-    m_endSpace = space;
+    m_endSpace = space * C_DEFAULT_SCREEN_DPI;
     QGraphicsItem::update();
 }
 

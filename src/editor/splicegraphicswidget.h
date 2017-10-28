@@ -112,13 +112,13 @@ private:
     TensorItem *m_appliedLoadItem;
     QList<FastenerItem*> m_fastenerItems;
     QList<DesignSpaceItem*> m_designSpaceItems;
-    QList<MeasureItem*> m_distanceItems;
+    QList<MeasureItem*> m_measureItems;
 
     bool m_componentVisible;
     bool m_resultantVisible;
     bool m_torqueVisible;
     bool m_labelVisible;
-    bool m_snapEnable; // magnetize objects to the grid
+    bool m_snapEnable;           /* Magnetize objects onto the grid */
     bool m_distanceVisible;
     bool m_designSpaceVisible;
 

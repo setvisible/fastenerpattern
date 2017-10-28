@@ -18,8 +18,10 @@
 
 #include "backgroundwidget.h"
 #include "items/appliedloaditem.h"
+#include "items/designspaceitem.h"
 #include "items/fasteneritem.h"
 #include "items/measureitem.h"
+#include "items/utils_scale.h"
 
 #include <Maths/Delaunay>
 
@@ -66,8 +68,19 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
     m_appliedLoadItem = new AppliedLoadItem();
     m_backgroundWidget->scene()->addItem(m_appliedLoadItem);
 
-    /// TODO : Auto resize instead ?
+    /// \todo Auto resize instead ?
     m_backgroundWidget->scene()->setSceneRect(-1000, -1000, 2000, 2000);
+
+
+    // test
+    DesignSpaceItem *item = new DesignSpaceItem();
+    QPolygonF polygon;
+    polygon << QPointF(100.4, 200.5) << QPointF(200.2, 300.2) << QPointF(150.2, 290.4) ;
+    item->setPolygon(polygon);
+
+    m_backgroundWidget->scene()->addItem(item);
+    m_designSpaceItems.insert(0, item);
+
 }
 
 SpliceGraphicsWidget::~SpliceGraphicsWidget()
@@ -118,7 +131,8 @@ void SpliceGraphicsWidget::fastenersInserted(const int index, const Fastener &fa
     m_backgroundWidget->scene()->addItem(item);
     m_fastenerItems.insert(index, item);
 
-    item->setTruePosition(fastener.positionX.value() *1000, fastener.positionY.value() *1000);
+    item->setTruePosition(fastener.positionX.value() *1000,
+                          fastener.positionY.value() *1000);
     item->setTrueDiameter(fastener.diameter.value() *1000);
 
     item->setResultantVisible(m_resultantVisible);
@@ -133,7 +147,8 @@ void SpliceGraphicsWidget::fastenersChanged(const int index, const Fastener &fas
 {
     if (index >= 0 && index < m_fastenerItems.count()) {
         FastenerItem *item = m_fastenerItems[index];
-        item->setTruePosition(fastener.positionX.value() *1000, fastener.positionY.value() *1000);
+        item->setTruePosition(fastener.positionX.value() *1000,
+                              fastener.positionY.value() *1000);
         item->setTrueDiameter(fastener.diameter.value() *1000);
     }
     this->updateDistanceItemPositions();
@@ -166,8 +181,9 @@ void SpliceGraphicsWidget::selectionChanged()
 void SpliceGraphicsWidget::resultsChanged()
 {
     const int count = model()->fastenerCount();
-    if (count != m_fastenerItems.count())
+    if (count != m_fastenerItems.count()) {
         return;
+    }
     for (int index = 0; index < count; ++index) {
         FastenerItem *item = m_fastenerItems[index];
         item->setResult(model()->resultAt(index));
@@ -184,8 +200,8 @@ bool SpliceGraphicsWidget::isAxesVisible() const
 
 void SpliceGraphicsWidget::setAxesVisible(bool visible)
 {
-    QFlags<BackgroundWidget::Feature> flags =
-            BackgroundWidget::HorizontalAxis
+    QFlags<BackgroundWidget::Feature> flags
+            = BackgroundWidget::HorizontalAxis
             | BackgroundWidget::VerticalAxis;
     m_backgroundWidget->setFlags(flags, visible);
 }
@@ -306,8 +322,8 @@ void SpliceGraphicsWidget::setDistanceVisible(bool visible)
 
 void SpliceGraphicsWidget::updateDistanceItemPositions()
 {
-    while (!m_distanceItems.isEmpty()) {
-        MeasureItem *item = m_distanceItems.takeLast();
+    while (!m_measureItems.isEmpty()) {
+        MeasureItem *item = m_measureItems.takeLast();
         m_backgroundWidget->scene()->removeItem(item);
         delete item;
     }
@@ -319,12 +335,13 @@ void SpliceGraphicsWidget::updateDistanceItemPositions()
         const QList<QLineF> lines = Maths::delaunayTriangulation( points );
         foreach (auto &line, lines) {
             MeasureItem *item = new MeasureItem();
+            qreal trueLength = line.length() / C_DEFAULT_SCREEN_DPI;
             item->setLine(line);
-            item->setEndSpace( 10*2.5 ); // mm
-            item->setColor( QColor(136, 0, 21) ); // brown
-            item->setText(QString("%0mm").arg(line.length()/10.0, 0, 'f', 1));
+            item->setEndSpace( 2.5 );
+            item->setColor( QColor(136, 0, 21) ); /* Brown */
+            item->setText(QString("%0mm").arg(trueLength, 0, 'f', 1));
             m_backgroundWidget->scene()->addItem(item);
-            m_distanceItems << item;
+            m_measureItems << item;
         }
     }
 }

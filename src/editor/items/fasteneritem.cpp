@@ -20,6 +20,7 @@
 #include "utils_scale.h"
 
 #include <QtCore/QDebug>
+#include <QtGui/QCursor>
 #include <QtGui/QPainter>
 
 FastenerItem::FastenerItem(QGraphicsItem *parent) : QGraphicsObject(parent)
@@ -28,12 +29,10 @@ FastenerItem::FastenerItem(QGraphicsItem *parent) : QGraphicsObject(parent)
 {
     this->setFlag(QGraphicsItem::ItemIsMovable);
     this->setFlag(QGraphicsItem::ItemIsSelectable);
-
     this->setCacheMode(QGraphicsItem::DeviceCoordinateCache);
-    this->setZValue(-1);
+    this->setCursor(Qt::SizeAllCursor);
 
-    m_tensorItem->setZValue(20);
-    m_symbolItem->setZValue(10);
+    m_symbolItem->setZValue(100);
 }
 
 QRectF FastenerItem::boundingRect() const

@@ -48,7 +48,7 @@ TensorItem::TensorItem(QGraphicsItem *parent) : QGraphicsItemGroup(parent)
   , m_tz(0.0)
 {
     this->setCacheMode(QGraphicsItem::DeviceCoordinateCache);
-    this->setZValue(100);
+    this->setZValue(900);
 
     m_arrowXY->setColor(   QColor(255,127, 39));   // orange
     m_arrowX->setColor(    QColor(237, 28, 36));   // red
