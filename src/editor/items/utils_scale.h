@@ -17,9 +17,9 @@
 #ifndef EDITOR_ITEMS_SCALE_H
 #define EDITOR_ITEMS_SCALE_H
 
-/* ************************************************************** */
-/* Here, we define some common constants for consistant graphics  */
-/* ************************************************************** */
+/* ************************************************************************** */
+/* Here, we define some common constants for consistant graphics              */
+/* ************************************************************************** */
 
 /* Define the default DPI for the screen. */
 #define C_DEFAULT_SCREEN_DPI  10.0      /* --> 1 mm = 10 pixels */
