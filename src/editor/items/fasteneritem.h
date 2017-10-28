@@ -66,9 +66,6 @@ public:
 private:
     TensorItem *m_tensorItem;
     SymbolItem *m_symbolItem;
-    QPointF m_position;
-    QPointF m_forceVector;
-    QPointF m_originToCenter;
 
 };
 
