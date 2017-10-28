@@ -4,16 +4,16 @@ HEADERS  += \
     $$PWD/items/arrowitem.h \
     $$PWD/items/designspaceitem.h \
     $$PWD/items/fasteneritem.h \
+    $$PWD/items/handleitem.h \
     $$PWD/items/measureitem.h \
     $$PWD/items/scalableimageitem.h \
-    $$PWD/items/scalablepointitem.h \
     $$PWD/items/symbolitem.h \
     $$PWD/items/tensoritem.h \
     $$PWD/items/utils_scale.h \
     $$PWD/backgroundview.h \
     $$PWD/backgroundwidget.h \
     $$PWD/flexiblescrollbar.h \
-    $$PWD/splicegraphicswidget.h \
+    $$PWD/splicegraphicswidget.h
 
 SOURCES += \
     $$PWD/items/appliedloaditem.cpp \
@@ -21,12 +21,12 @@ SOURCES += \
     $$PWD/items/arrowitem.cpp \
     $$PWD/items/designspaceitem.cpp \
     $$PWD/items/fasteneritem.cpp \
+    $$PWD/items/handleitem.cpp \
     $$PWD/items/measureitem.cpp \
     $$PWD/items/scalableimageitem.cpp \
-    $$PWD/items/scalablepointitem.cpp \
     $$PWD/items/symbolitem.cpp \
     $$PWD/items/tensoritem.cpp \
     $$PWD/backgroundview.cpp \
     $$PWD/backgroundwidget.cpp \
     $$PWD/flexiblescrollbar.cpp \
-    $$PWD/splicegraphicswidget.cpp \
+    $$PWD/splicegraphicswidget.cpp

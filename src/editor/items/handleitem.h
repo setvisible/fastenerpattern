@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,15 +14,15 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EDITOR_ITEMS_SCALE_POINT_ITEM_H
-#define EDITOR_ITEMS_SCALE_POINT_ITEM_H
+#ifndef EDITOR_ITEMS_HANDLE_ITEM_H
+#define EDITOR_ITEMS_HANDLE_ITEM_H
 
 #include <QGraphicsObject>
 
-class ScalablePointItem : public QGraphicsObject
+class HandleItem : public QGraphicsObject
 {
 public:
-    explicit ScalablePointItem(QGraphicsItem *parent = Q_NULLPTR);
+    explicit HandleItem(QGraphicsItem *parent = Q_NULLPTR);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
@@ -31,4 +31,4 @@ public:
 };
 
 
-#endif // EDITOR_ITEMS_SCALE_POINT_ITEM_H
+#endif // EDITOR_ITEMS_HANDLE_ITEM_H

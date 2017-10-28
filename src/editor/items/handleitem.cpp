@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,38 +14,39 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "scalablepointitem.h"
+#include "handleitem.h"
 
 #include <QtCore/QDebug>
+#include <QtGui/QCursor>
 #include <QtGui/QPainter>
 
-/// \todo #include <QtGui/QCursor>
-/// \todo derive that from #include <QGraphicsRectItem> ?
+/*! \class HandleItem
+ *  \brief The class HandleItem is a graphics item representing
+ *         a movable handle.
+ */
 
-ScalablePointItem::ScalablePointItem(QGraphicsItem *parent) : QGraphicsObject(parent)
+HandleItem::HandleItem(QGraphicsItem *parent) : QGraphicsObject(parent)
 {
-    /// \todo this->setRect(-3, -3, 7, 7);
-    /// \todo this->setPen(QPen(Qt::black, 1));
-    /// \todo this->setBrush(QBrush(QColor(255,127,39), Qt::SolidPattern)); // orange
-
     this->setFlag(QGraphicsItem::ItemIsMovable);
     this->setFlag(QGraphicsItem::ItemIsSelectable);
+    this->setCursor(Qt::SizeVerCursor);
+    this->setZValue(500);
 }
 
-QRectF ScalablePointItem::boundingRect() const
+QRectF HandleItem::boundingRect() const
 {
     return shape().boundingRect();
 }
-QPainterPath ScalablePointItem::shape() const
+QPainterPath HandleItem::shape() const
 {
     QPainterPath path;
-    path.addRect(QRectF(-3, -3, 7, 7));
+    path.addRect(QRectF(-6, -6, 14, 14)); /* two times bigger than the drawn rect */
     return path;
 }
-void ScalablePointItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void HandleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->setPen(QPen(Qt::black, 1));
-    painter->setBrush(QBrush(QColor(255,127,39), Qt::SolidPattern)); // orange
+    painter->setBrush(QBrush(QColor(255,127,39), Qt::SolidPattern)); /* orange */
     painter->drawRect(QRect(-3, -3, 7, 7));
 }
 

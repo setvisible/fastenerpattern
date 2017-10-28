@@ -4,9 +4,9 @@ set(MY_SOURCES ${MY_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/arrowitem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/designspaceitem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/fasteneritem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/handleitem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/measureitem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/scalableimageitem.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/scalablepointitem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/symbolitem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/items/tensoritem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/backgroundwidget.cpp
