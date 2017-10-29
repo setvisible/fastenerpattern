@@ -55,7 +55,7 @@ void Splice::read(const QJsonObject &json)
     }
 
     m_designSpaces.clear();
-    QJsonArray spacesArray = json["design-spaces"].toArray();
+    QJsonArray spacesArray = json["designspaces"].toArray();
     for (int i = 0; i < spacesArray.size(); ++i) {
         QJsonObject spaceObject = spacesArray[i].toObject();
         DesignSpace space;
@@ -91,7 +91,7 @@ void Splice::write(QJsonObject &json) const
         space.write(spaceObject);
         spacesArray.append(spaceObject);
     }
-    json["design-spaces"] = spacesArray;
+    json["designspaces"] = spacesArray;
 
 }
 
