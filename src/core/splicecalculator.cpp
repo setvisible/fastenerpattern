@@ -185,6 +185,11 @@ QSet<int> SpliceCalculator::selectedFastenerIndexes() const
     return m_selectedFastenerIndexes;
 }
 
+QSet<int> SpliceCalculator::selectedDesignSpaceIndexes() const
+{
+    return m_selectedDesignSpaceIndexes;
+}
+
 /******************************************************************************
  ******************************************************************************/
 bool SpliceCalculator::insertFastener(const int index, const Fastener &fastener)
@@ -251,6 +256,15 @@ bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
         return false;
     m_selectedFastenerIndexes = indexes;
     emit selectionFastenerChanged();
+    return true;
+}
+
+bool SpliceCalculator::setDesignSpaceSelection(const QSet<int> indexes)
+{
+    if (m_selectedDesignSpaceIndexes == indexes)
+        return false;
+    m_selectedDesignSpaceIndexes = indexes;
+    emit selectionDesignSpaceChanged();
     return true;
 }
 

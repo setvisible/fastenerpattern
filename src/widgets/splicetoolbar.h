@@ -20,6 +20,7 @@
 #include <QtWidgets/QToolBar>
 #include <Widgets/AbstractSpliceView>
 
+
 /******************************************************************************
  ******************************************************************************/
 class SpliceToolbar;
@@ -42,7 +43,6 @@ public Q_SLOTS:
 class SpliceToolbar : public QToolBar
 {
     Q_OBJECT
-
     friend class SpliceToolbarPrivate;
     SpliceToolbarPrivate *d_ptr;
 
@@ -66,10 +66,13 @@ Q_SIGNALS:
     void distanceVisibilityChanged(bool visible);
 
 public Q_SLOTS:
-    void add();
-    void duplicate();
-    void selectAll();
-    void remove();
+    void fastenerAdd();
+    void fastenerDuplicate();
+    void fastenerSelectAll();
+    void fastenerRemove();
+
+    void designSpaceAdd();
+    void designSpaceRemove();
 
     bool isAxesVisible() const;
     void setAxesVisible(bool visible);
@@ -102,10 +105,13 @@ protected:
     void _q_selectionChanged();
 
 private:
-    QAction *m_buttonAdd;
-    QAction *m_buttonCopy;
-    QAction *m_buttonSelectAll;
-    QAction *m_buttonRemove;
+    QAction *m_buttonFastenerAdd;
+    QAction *m_buttonFastenerDuplicate;
+    QAction *m_buttonFastenerSelectAll;
+    QAction *m_buttonFastenerRemove;
+    // --
+    QAction *m_buttonDesignSpaceAdd;
+    QAction *m_buttonDesignSpaceRemove;
     // --
     QAction *m_buttonShowAxes;
     QAction *m_buttonShowGrid;

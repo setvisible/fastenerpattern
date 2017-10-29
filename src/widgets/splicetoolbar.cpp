@@ -67,39 +67,63 @@ void SpliceToolbar::setModel(AbstractSpliceModel *model)
 void SpliceToolbar::createActions()
 {
     {
-        m_buttonAdd = new QAction(
+        m_buttonFastenerAdd = new QAction(
                     QIcon(":/icons/menu/bolt_add_24x24.png"),
                     tr("&New Fastener"), this);
-        m_buttonAdd->setStatusTip(tr("Add a new fastener"));
-        QObject::connect(m_buttonAdd, SIGNAL(triggered(bool)), this, SLOT(add()));
-        this->addAction(m_buttonAdd);
+        m_buttonFastenerAdd->setStatusTip(tr("Add a new fastener"));
+        QObject::connect(m_buttonFastenerAdd, SIGNAL(triggered(bool)),
+                         this, SLOT(fastenerAdd()));
+        this->addAction(m_buttonFastenerAdd);
     }
     {
-        m_buttonCopy = new QAction(
+        m_buttonFastenerDuplicate = new QAction(
                     QIcon(":/icons/menu/bolt_duplicate_24x24.png"),
                     tr("&Duplicate"), this);
-        m_buttonCopy->setStatusTip(tr("Duplicate the selection"));
-        m_buttonCopy->setShortcuts(QKeySequence::Copy);
-        QObject::connect(m_buttonCopy, SIGNAL(triggered(bool)), this, SLOT(duplicate()));
-        this->addAction(m_buttonCopy);
+        m_buttonFastenerDuplicate->setStatusTip(tr("Duplicate the selection"));
+        m_buttonFastenerDuplicate->setShortcuts(QKeySequence::Copy);
+        QObject::connect(m_buttonFastenerDuplicate, SIGNAL(triggered(bool)),
+                         this, SLOT(fastenerDuplicate()));
+        this->addAction(m_buttonFastenerDuplicate);
     }
     {
-        m_buttonSelectAll = new QAction(
+        m_buttonFastenerSelectAll = new QAction(
                     QIcon(":/icons/menu/bolt_select_all_24x24.png"),
                     tr("&Select All"), this);
-        m_buttonSelectAll->setStatusTip(tr("Select all the fasteners"));
-        m_buttonSelectAll->setShortcuts(QKeySequence::SelectAll);
-        QObject::connect(m_buttonSelectAll, SIGNAL(triggered(bool)), this, SLOT(selectAll()));
-        this->addAction(m_buttonSelectAll);
+        m_buttonFastenerSelectAll->setStatusTip(tr("Select all the fasteners"));
+        m_buttonFastenerSelectAll->setShortcuts(QKeySequence::SelectAll);
+        QObject::connect(m_buttonFastenerSelectAll, SIGNAL(triggered(bool)),
+                         this, SLOT(fastenerSelectAll()));
+        this->addAction(m_buttonFastenerSelectAll);
     }
     {
-        m_buttonRemove = new QAction(
+        m_buttonFastenerRemove = new QAction(
                     QIcon(":/icons/menu/bolt_delete_24x24.png"),
                     tr("&Delete"), this);
-        m_buttonRemove->setStatusTip(tr("Delete the selection"));
-        m_buttonRemove->setShortcuts(QKeySequence::Delete);
-        QObject::connect(m_buttonRemove, SIGNAL(triggered(bool)), this, SLOT(remove()));
-        this->addAction(m_buttonRemove);
+        m_buttonFastenerRemove->setStatusTip(tr("Delete the selection"));
+        m_buttonFastenerRemove->setShortcuts(QKeySequence::Delete);
+        QObject::connect(m_buttonFastenerRemove, SIGNAL(triggered(bool)),
+                         this, SLOT(fastenerRemove()));
+        this->addAction(m_buttonFastenerRemove);
+    }
+    this->addSeparator();
+    {
+        m_buttonDesignSpaceAdd = new QAction(
+                    QIcon(":/icons/menu/edit_design_space_add_24x24.png"),
+                    tr("&Add Design Space"), this);
+        m_buttonDesignSpaceAdd->setStatusTip(tr("Add a new Design Space"));
+        QObject::connect(m_buttonDesignSpaceAdd, SIGNAL(triggered(bool)),
+                         this, SLOT(designSpaceAdd()));
+        this->addAction(m_buttonDesignSpaceAdd);
+    }
+    {
+        m_buttonDesignSpaceRemove = new QAction(
+                    QIcon(":/icons/menu/edit_design_space_remove_24x24.png"),
+                    tr("&Remove Design Space"), this);
+        m_buttonDesignSpaceRemove->setStatusTip(tr("Remove the Design Space"));
+        m_buttonDesignSpaceRemove->setShortcuts(QKeySequence::Delete);
+        QObject::connect(m_buttonDesignSpaceRemove, SIGNAL(triggered(bool)),
+                         this, SLOT(designSpaceRemove()));
+        this->addAction(m_buttonDesignSpaceRemove);
     }
     this->addSeparator();
     {
@@ -108,7 +132,8 @@ void SpliceToolbar::createActions()
                     tr("Show &Axes"), this);
         m_buttonShowAxes->setCheckable(true);
         m_buttonShowAxes->setStatusTip(tr("Show the axes"));
-        QObject::connect(m_buttonShowAxes, SIGNAL(toggled(bool)), SIGNAL(axesVisibilityChanged(bool)));
+        QObject::connect(m_buttonShowAxes, SIGNAL(toggled(bool)),
+                         SIGNAL(axesVisibilityChanged(bool)));
         this->addAction(m_buttonShowAxes);
     }
     {
@@ -117,7 +142,8 @@ void SpliceToolbar::createActions()
                     tr("Show &Grid"), this);
         m_buttonShowGrid->setCheckable(true);
         m_buttonShowGrid->setStatusTip(tr("Show the grid"));
-        QObject::connect(m_buttonShowGrid, SIGNAL(toggled(bool)), SIGNAL(gridVisibilityChanged(bool)));
+        QObject::connect(m_buttonShowGrid, SIGNAL(toggled(bool)),
+                         SIGNAL(gridVisibilityChanged(bool)));
         this->addAction(m_buttonShowGrid);
     }
     {
@@ -126,7 +152,8 @@ void SpliceToolbar::createActions()
                     tr("Show &Background Image"), this);
         m_buttonShowBG->setCheckable(true);
         m_buttonShowBG->setStatusTip(tr("Show the background image"));
-        QObject::connect(m_buttonShowBG, SIGNAL(toggled(bool)), SIGNAL(imageVisibilityChanged(bool)));
+        QObject::connect(m_buttonShowBG,  SIGNAL(toggled(bool)),
+                         SIGNAL(imageVisibilityChanged(bool)));
         this->addAction(m_buttonShowBG);
     }
     this->addSeparator();
@@ -136,7 +163,8 @@ void SpliceToolbar::createActions()
                     tr("Show &Component"), this);
         m_buttonShowComponent->setCheckable(true);
         m_buttonShowComponent->setStatusTip(tr("Show the load component"));
-        QObject::connect(m_buttonShowComponent, SIGNAL(toggled(bool)), SIGNAL(componentVisibilityChanged(bool)));
+        QObject::connect(m_buttonShowComponent, SIGNAL(toggled(bool)),
+                         SIGNAL(componentVisibilityChanged(bool)));
         this->addAction(m_buttonShowComponent);
     }
     {
@@ -145,7 +173,8 @@ void SpliceToolbar::createActions()
                     tr("Show &Resultant"), this);
         m_buttonShowResultant->setCheckable(true);
         m_buttonShowResultant->setStatusTip(tr("Show the load resultant"));
-        QObject::connect(m_buttonShowResultant, SIGNAL(toggled(bool)), SIGNAL(resultantVisibilityChanged(bool)));
+        QObject::connect(m_buttonShowResultant, SIGNAL(toggled(bool)),
+                         SIGNAL(resultantVisibilityChanged(bool)));
         this->addAction(m_buttonShowResultant);
     }
     {
@@ -154,7 +183,8 @@ void SpliceToolbar::createActions()
                     tr("Show &Torque"), this);
         m_buttonShowTorque->setCheckable(true);
         m_buttonShowTorque->setStatusTip(tr("Show the load torque"));
-        QObject::connect(m_buttonShowTorque, SIGNAL(toggled(bool)), SIGNAL(torqueVisibilityChanged(bool)));
+        QObject::connect(m_buttonShowTorque, SIGNAL(toggled(bool)),
+                         SIGNAL(torqueVisibilityChanged(bool)));
         this->addAction(m_buttonShowTorque);
     }
     {
@@ -163,7 +193,8 @@ void SpliceToolbar::createActions()
                     tr("Show Lab&els"), this);
         m_buttonShowLabel->setCheckable(true);
         m_buttonShowLabel->setStatusTip(tr("Show the labels"));
-        QObject::connect(m_buttonShowLabel, SIGNAL(toggled(bool)), SIGNAL(labelVisibilityChanged(bool)));
+        QObject::connect(m_buttonShowLabel, SIGNAL(toggled(bool)),
+                         SIGNAL(labelVisibilityChanged(bool)));
         this->addAction(m_buttonShowLabel);
 
     }
@@ -174,18 +205,19 @@ void SpliceToolbar::createActions()
                     tr("S&nap Objects"), this);
         m_buttonSnap->setCheckable(true);
         m_buttonSnap->setStatusTip(tr("Snap the objects to the grid"));
-        QObject::connect(m_buttonSnap, SIGNAL(toggled(bool)), SIGNAL(snapEnabled(bool)));
+        QObject::connect(m_buttonSnap, SIGNAL(toggled(bool)),
+                         SIGNAL(snapEnabled(bool)));
         this->addAction(m_buttonSnap);
 
     }
-    this->addSeparator();
     {
         m_buttonDistance = new QAction(
                     QIcon(":/icons/menu/extra_distance_24x24.png"),
                     tr("Show D&istances"), this);
         m_buttonDistance->setCheckable(true);
         m_buttonDistance->setStatusTip(tr("Show distances between the objects"));
-        QObject::connect(m_buttonDistance, SIGNAL(toggled(bool)), SIGNAL(distanceVisibilityChanged(bool)));
+        QObject::connect(m_buttonDistance, SIGNAL(toggled(bool)),
+                         SIGNAL(distanceVisibilityChanged(bool)));
         this->addAction(m_buttonDistance);
 
     }
@@ -286,17 +318,17 @@ void SpliceToolbar::setDistanceVisible(bool visible)
 
 /******************************************************************************
  ******************************************************************************/
-void SpliceToolbar::add()
+void SpliceToolbar::fastenerAdd()
 {
     Fastener f(0.0*_mm, 0.0*_mm, 4.78*_mm, 3.*_mm);
     int count =  model()->fastenerCount();
     model()->insertFastener(count, f);
 }
 
-void SpliceToolbar::duplicate()
+void SpliceToolbar::fastenerDuplicate()
 {
     QSet<int> newSet;
-    QSet<int> set = model()->selectedIndexes();
+    QSet<int> set = model()->selectedFastenerIndexes();
     QSetIterator<int> it(set);
     while (it.hasNext()) {
         int index = it.next();
@@ -305,10 +337,10 @@ void SpliceToolbar::duplicate()
         model()->insertFastener(newIndex, newFastener);
         newSet << newIndex;
     }
-    model()->setSelection(newSet);
+    model()->setFastenerSelection(newSet);
 }
 
-void SpliceToolbar::selectAll()
+void SpliceToolbar::fastenerSelectAll()
 {
     QSet<int> set;
     int count =  model()->fastenerCount();
@@ -316,10 +348,36 @@ void SpliceToolbar::selectAll()
         count--;
         set << count;
     }
-    model()->setSelection(set);
+    model()->setFastenerSelection(set);
 }
 
-void SpliceToolbar::remove()
+void SpliceToolbar::fastenerRemove()
+{
+    /*
+     * REMARK: Here the selection changes during the removal, thus
+     * we need to remove the indexes from the highest to the lowest.
+     */
+    QSet<int> set = model()->selectedFastenerIndexes();
+    QList<int> list = set.toList();
+    qSort(list);
+    while (!list.isEmpty()) {
+        int index = list.last();
+        list.removeLast();
+        model()->removeFastener(index);
+    }
+}
+
+
+/******************************************************************************
+ ******************************************************************************/
+void SpliceToolbar::designSpaceAdd()
+{
+    Fastener f(0.0*_mm, 0.0*_mm, 4.78*_mm, 3.*_mm);
+    int count =  model()->fastenerCount();
+    model()->insertFastener(count, f);
+}
+
+void SpliceToolbar::designSpaceRemove()
 {
     /*
      * REMARK: Here the selection changes during the removal, thus
@@ -340,8 +398,6 @@ void SpliceToolbar::remove()
 void SpliceToolbar::_q_selectionChanged()
 {
     bool selected = (!model()->selectedFastenerIndexes().isEmpty());
-    m_buttonCopy->setEnabled(selected);
-    m_buttonRemove->setEnabled(selected);
+    m_buttonFastenerDuplicate->setEnabled(selected);
+    m_buttonFastenerRemove->setEnabled(selected);
 }
-
-

@@ -72,13 +72,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     /* [1] */
     /* Connect the GUI to the Calculator. */
     QObject::connect(ui->action_Add, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(add()));
+                     ui->spliceToolBar, SLOT(fastenerAdd()));
     QObject::connect(ui->action_Duplicate, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(duplicate()));
+                     ui->spliceToolBar, SLOT(fastenerDuplicate()));
     QObject::connect(ui->action_Remove, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(remove()));
+                     ui->spliceToolBar, SLOT(fastenerRemove()));
     QObject::connect(ui->action_SelectAll, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(selectAll()));
+                     ui->spliceToolBar, SLOT(fastenerSelectAll()));
 
     QObject::connect(ui->mainWidget->solverWidget(), SIGNAL(paramsChanged(SolverParameters)),
                      m_calculator, SLOT(setSolverParameters(SolverParameters)));
