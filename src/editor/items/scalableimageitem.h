@@ -55,8 +55,8 @@ public:
 
     QUrl url() const;
     void setUrl(const QUrl &url);
-    QRect rect() const;
-    void setRect(const QRect &rect);
+    QRectF rect() const;
+    void setRect(const QRectF &rect);
 
     void setCorner(const HandleItem *item);
 
@@ -65,7 +65,7 @@ private:
     ScalableImageObject *m_object;
     HandleItem *m_handles[4];
     QPixmap m_pixmap;
-    QRect m_rect;
+    QRectF m_rect;
     QUrl m_url;
 
 

@@ -45,19 +45,21 @@ void ScalableImageObject::onCornerPositionChanged()
  ******************************************************************************/
 ScalableImageItem::ScalableImageItem(QGraphicsItem *parent) : QGraphicsObject(parent)
   , m_object(new ScalableImageObject(this))
-  , m_rect(QRect())
+  , m_rect(QRectF())
 {
     this->setFlag(QGraphicsItem::ItemIsMovable);
     this->setFlag(QGraphicsItem::ItemIsSelectable);
     this->setCursor(Qt::SizeAllCursor);
     this->setZValue(-100); /* Behind the grid and axes */
 
-    /*  [0]      [1]
-     *   +-------+
-     *   |       |
-     *   +-------+
-     *  [2]      [3]
-     */
+    /****************************\
+     * Handles number convention  *
+     *        [0]       [1]       *
+     *          +-------+         *
+     *          |       |         *
+     *          +-------+         *
+     *        [2]       [3]       *
+     \****************************/
     for (int i = 0 ; i < 4 ; ++i) {
         HandleItem *item = new HandleItem(this);
         m_handles[i] = item;
@@ -96,51 +98,51 @@ void ScalableImageItem::setUrl(const QUrl &url)
     m_pixmap = image;
     if (!m_pixmap.isNull()) {
         m_rect = m_pixmap.rect();
-        m_handles[0]->setPos(QPointF(m_rect.topLeft()));
-        m_handles[1]->setPos(QPointF(m_rect.topRight()));
-        m_handles[2]->setPos(QPointF(m_rect.bottomLeft()));
-        m_handles[3]->setPos(QPointF(m_rect.bottomRight()));
+        m_handles[0]->setPos(m_rect.topLeft());
+        m_handles[1]->setPos(m_rect.topRight());
+        m_handles[2]->setPos(m_rect.bottomLeft());
+        m_handles[3]->setPos(m_rect.bottomRight());
     }
-    scene()->update();
+    this->scene()->update();
 }
 
-QRect ScalableImageItem::rect() const
+QRectF ScalableImageItem::rect() const
 {
     return m_rect;
 }
-void ScalableImageItem::setRect(const QRect &rect)
+void ScalableImageItem::setRect(const QRectF &rect)
 {
     if (m_pixmap.height() == 0 || m_pixmap.width() == 0){
         qWarning("ScalableImage::setRect() warning: current pixmap has 0-dimension!");
         return;
     }
-    if (rect.width() == 0){
+    if (rect.width() == 0.0){
         qWarning("ScalableImage::setRect() warning: given rect has 0-dimension!");
         return;
     }
     qreal imageAR = (qreal)m_pixmap.height() / (qreal)m_pixmap.width();
-    qreal rectAR = (qreal)rect.height() / (qreal)rect.width();
+    qreal rectAR = rect.height() / rect.width();
     m_rect = rect;
     if (imageAR > rectAR) {
         m_rect.setWidth(rect.height() / imageAR);
     } else {
         m_rect.setHeight(rect.width() * imageAR);
     }
-    m_handles[0]->setPos(QPointF(m_rect.topLeft()));
-    m_handles[1]->setPos(QPointF(m_rect.topRight()));
-    m_handles[2]->setPos(QPointF(m_rect.bottomLeft()));
-    m_handles[3]->setPos(QPointF(m_rect.bottomRight()));
+    m_handles[0]->setPos(m_rect.topLeft());
+    m_handles[1]->setPos(m_rect.topRight());
+    m_handles[2]->setPos(m_rect.bottomLeft());
+    m_handles[3]->setPos(m_rect.bottomRight());
 
-    scene()->update();
+    this->scene()->update();
 }
 
 
 void ScalableImageItem::setCorner(const HandleItem *item)
 {
-    if (        item == m_handles[0]) { m_rect.setTopLeft(item->pos().toPoint());
-    } else if ( item == m_handles[1]) { m_rect.setTopRight(item->pos().toPoint());
-    } else if ( item == m_handles[2]) { m_rect.setBottomLeft(item->pos().toPoint());
-    } else if ( item == m_handles[3]) { m_rect.setBottomRight(item->pos().toPoint());
+    if (        item == m_handles[0]) { m_rect.setTopLeft(item->pos());
+    } else if ( item == m_handles[1]) { m_rect.setTopRight(item->pos());
+    } else if ( item == m_handles[2]) { m_rect.setBottomLeft(item->pos());
+    } else if ( item == m_handles[3]) { m_rect.setBottomRight(item->pos());
     }
 
     /// \todo Restrict on diagonal to preserve the scale ratio ?
@@ -152,17 +154,17 @@ void ScalableImageItem::setCorner(const HandleItem *item)
     /// \todo       m_rect.setHeight(m_rect.width() * imageAR);
     /// \todo   }
 
-    m_handles[0]->setPos(QPointF(m_rect.topLeft()));
-    m_handles[1]->setPos(QPointF(m_rect.topRight()));
-    m_handles[2]->setPos(QPointF(m_rect.bottomLeft()));
-    m_handles[3]->setPos(QPointF(m_rect.bottomRight()));
+    m_handles[0]->setPos(m_rect.topLeft());
+    m_handles[1]->setPos(m_rect.topRight());
+    m_handles[2]->setPos(m_rect.bottomLeft());
+    m_handles[3]->setPos(m_rect.bottomRight());
 
     this->scene()->update();
 }
 
 QRectF ScalableImageItem::boundingRect() const
 {
-    return QRectF(m_rect)
+    return m_rect
             | m_handles[0]->boundingRect() | m_handles[1]->boundingRect()
             | m_handles[2]->boundingRect() | m_handles[3]->boundingRect();
 }
@@ -171,7 +173,7 @@ void ScalableImageItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 {
     const bool _isSelected = !m_pixmap.isNull() && isSelected();
     if (!m_pixmap.isNull()) {
-        painter->drawPixmap(m_rect, m_pixmap);
+        painter->drawPixmap(m_rect.toRect(), m_pixmap);
         if (_isSelected) {
             painter->setPen(QPen(Qt::blue, 1));
             painter->setBrush(Qt::NoBrush);
