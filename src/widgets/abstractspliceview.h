@@ -36,7 +36,7 @@ public Q_SLOTS:
     virtual void fastenersInserted(const int index, const Fastener &fastener);
     virtual void fastenersChanged(const int index, const Fastener &fastener);
     virtual void fastenersRemoved(const int index);
-    virtual void selectionChanged();
+    virtual void selectionFastenerChanged();
     virtual void resultsChanged();
 
 private:

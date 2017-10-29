@@ -42,7 +42,7 @@ public:
 
 public Q_SLOTS:
     virtual void fastenersChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void selectionChanged() Q_DECL_OVERRIDE;
+    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void onTextChanged(QString);

@@ -104,7 +104,7 @@ void SpliceGraphicsWidget::onSelectionChanged()
             set << i;
         }
     }
-    model()->setSelection(set);
+    model()->setFastenerSelection(set);
 }
 
 /******************************************************************************
@@ -170,9 +170,9 @@ void SpliceGraphicsWidget::appliedLoadChanged()
     m_appliedLoadItem->setTensor( model()->appliedLoad() );
 }
 
-void SpliceGraphicsWidget::selectionChanged()
+void SpliceGraphicsWidget::selectionFastenerChanged()
 {
-    QSet<int> set = model()->selectedIndexes();
+    QSet<int> set = model()->selectedFastenerIndexes();
     for( int i = 0; i < m_fastenerItems.count(); ++i) {
         m_fastenerItems.at(i)->setSelected(set.contains(i));
     }

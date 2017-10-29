@@ -25,7 +25,7 @@ SpliceToolbarPrivate::SpliceToolbarPrivate(QWidget *parent)
 {
 }
 
-void SpliceToolbarPrivate::selectionChanged()
+void SpliceToolbarPrivate::selectionFastenerChanged()
 {
     q_ptr->_q_selectionChanged();
 }
@@ -323,7 +323,7 @@ void SpliceToolbar::remove()
      * REMARK: Here the selection changes during the removal, thus
      * we need to remove the indexes from the highest to the lowest.
      */
-    QSet<int> set = model()->selectedIndexes();
+    QSet<int> set = model()->selectedFastenerIndexes();
     QList<int> list = set.toList();
     qSort(list);
     while (!list.isEmpty()) {
@@ -335,7 +335,7 @@ void SpliceToolbar::remove()
 
 void SpliceToolbar::_q_selectionChanged()
 {
-    bool selected = (!model()->selectedIndexes().isEmpty());
+    bool selected = (!model()->selectedFastenerIndexes().isEmpty());
     m_buttonCopy->setEnabled(selected);
     m_buttonRemove->setEnabled(selected);
 }

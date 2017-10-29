@@ -56,7 +56,7 @@ void SpliceCalculator::clear()
     m_splice->setDescription(QString());
 
     QSet<int> emptySet;
-    setSelection(emptySet);
+    setFastenerSelection(emptySet);
 
     setAppliedLoad(Tensor(0*N, 0*N, 0*N_m));
 
@@ -180,9 +180,9 @@ Tensor SpliceCalculator::resultAt(const int index) const
     return Tensor();
 }
 
-QSet<int> SpliceCalculator::selectedIndexes() const
+QSet<int> SpliceCalculator::selectedFastenerIndexes() const
 {
-    return m_selectedIndexes;
+    return m_selectedFastenerIndexes;
 }
 
 /******************************************************************************
@@ -199,8 +199,8 @@ bool SpliceCalculator::insertFastener(const int index, const Fastener &fastener)
 
 bool SpliceCalculator::removeFastener(const int index)
 {
-    if (m_selectedIndexes.remove( index )) {
-        emit selectionChanged();
+    if (m_selectedFastenerIndexes.remove( index )) {
+        emit selectionFastenerChanged();
     }
     if (index >= 0 && index < m_splice->fastenerCount()) {
         m_splice->removeFastenerAt(index);
@@ -243,12 +243,12 @@ bool SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
     return true;
 }
 
-bool SpliceCalculator::setSelection(const QSet<int> indexes)
+bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
 {
-    if (m_selectedIndexes == indexes)
+    if (m_selectedFastenerIndexes == indexes)
         return false;
-    m_selectedIndexes = indexes;
-    emit selectionChanged();
+    m_selectedFastenerIndexes = indexes;
+    emit selectionFastenerChanged();
     return true;
 }
 

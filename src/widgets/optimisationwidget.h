@@ -34,7 +34,7 @@ public Q_SLOTS:
     virtual void fastenersInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
     virtual void fastenersChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
     virtual void fastenersRemoved(const int index) Q_DECL_OVERRIDE;
-    virtual void selectionChanged() Q_DECL_OVERRIDE;
+    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
     virtual void resultsChanged() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:

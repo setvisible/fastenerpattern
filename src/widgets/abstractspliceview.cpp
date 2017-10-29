@@ -50,8 +50,8 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
         QObject::disconnect(m_model, SIGNAL(fastenersRemoved(int)),
                             this, SLOT(fastenersRemoved(int)));
 
-        QObject::disconnect(m_model, SIGNAL(selectionChanged()),
-                            this, SLOT(selectionChanged()));
+        QObject::disconnect(m_model, SIGNAL(selectionFastenerChanged()),
+                            this, SLOT(selectionFastenerChanged()));
 
         QObject::disconnect(m_model, SIGNAL(resultsChanged()),
                             this, SLOT(resultsChanged()));
@@ -70,8 +70,8 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
         QObject::connect(m_model, SIGNAL(fastenersRemoved(int)),
                          this, SLOT(fastenersRemoved(int)));
 
-        QObject::connect(m_model, SIGNAL(selectionChanged()),
-                         this, SLOT(selectionChanged()));
+        QObject::connect(m_model, SIGNAL(selectionFastenerChanged()),
+                         this, SLOT(selectionFastenerChanged()));
 
         QObject::connect(m_model, SIGNAL(resultsChanged()),
                          this, SLOT(resultsChanged()));
@@ -95,7 +95,7 @@ void AbstractSpliceView::fastenersRemoved(const int /*index*/)
 {
 }
 
-void AbstractSpliceView::selectionChanged()
+void AbstractSpliceView::selectionFastenerChanged()
 {
 }
 

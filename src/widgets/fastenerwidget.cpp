@@ -84,9 +84,9 @@ void FastenerWidget::fastenersChanged(const int index, const Fastener &fastener)
     }
 }
 
-void FastenerWidget::selectionChanged()
+void FastenerWidget::selectionFastenerChanged()
 {
-    QSet<int> set = model()->selectedIndexes();
+    QSet<int> set = model()->selectedFastenerIndexes();
     if (set.count() == 1) {
         QSetIterator<int> it(set);
         m_currentIndex = it.next();

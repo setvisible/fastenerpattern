@@ -31,7 +31,7 @@ public:
     explicit SpliceToolbarPrivate(QWidget *parent = 0);
 
 public Q_SLOTS:
-    virtual void selectionChanged() Q_DECL_OVERRIDE;
+    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
 
 };
 

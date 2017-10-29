@@ -66,7 +66,7 @@ void DesignVariableWidget::onItemSelectionChanged()
         if ( ui->tableWidget->item(row,0)->isSelected() )
             set << row;
     }
-    model()->setSelection(set);
+    model()->setFastenerSelection(set);
 }
 
 
@@ -91,9 +91,9 @@ void DesignVariableWidget::fastenersRemoved(const int index)
 }
 
 
-void DesignVariableWidget::selectionChanged()
+void DesignVariableWidget::selectionFastenerChanged()
 {
-    QSet<int> set = model()->selectedIndexes();
+    QSet<int> set = model()->selectedFastenerIndexes();
     int row = ui->tableWidget->rowCount();
     while (row>0) {
         row--;

@@ -106,7 +106,7 @@ void OptimisationWidget::onItemSelectionChanged()
 }
 
 
-void OptimisationWidget::selectionChanged()
+void OptimisationWidget::selectionFastenerChanged()
 {
   //  qDebug() << Q_FUNC_INFO;
     /* QSet<int> set = model()->selectedIndexes();

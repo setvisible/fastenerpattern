@@ -102,13 +102,13 @@ void TableWidget::onItemSelectionChanged()
         if (item->isSelected())
             set << i;
     }
-    model()->setSelection(set);
+    model()->setFastenerSelection(set);
 }
 
 
-void TableWidget::selectionChanged()
+void TableWidget::selectionFastenerChanged()
 {
-    QSet<int> set = model()->selectedIndexes();
+    QSet<int> set = model()->selectedFastenerIndexes();
     QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
 
     if (!rootItem)

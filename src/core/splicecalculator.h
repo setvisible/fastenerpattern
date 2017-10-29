@@ -61,7 +61,7 @@ public:
     virtual Fastener fastenerAt(const int index) const Q_DECL_OVERRIDE;
     virtual Tensor appliedLoad() const Q_DECL_OVERRIDE;
     virtual Tensor resultAt(const int index) const Q_DECL_OVERRIDE;
-    virtual QSet<int> selectedIndexes() const Q_DECL_OVERRIDE;
+    virtual QSet<int> selectedFastenerIndexes() const Q_DECL_OVERRIDE;
     virtual SolverParameters solverParameters() const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
@@ -72,14 +72,14 @@ public Q_SLOTS:
     virtual bool removeFastener(const int index) Q_DECL_OVERRIDE;
     virtual bool setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
     virtual bool setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
-    virtual bool setSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
+    virtual bool setFastenerSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
     virtual bool setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
 
 private:
     SolverParameters m_params;
     ISolver *m_solver;
     Splice* m_splice;
-    QSet<int> m_selectedIndexes;
+    QSet<int> m_selectedFastenerIndexes;
     QList<Tensor> m_results;
 
     void recalculate();

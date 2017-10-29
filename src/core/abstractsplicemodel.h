@@ -35,7 +35,7 @@ public:
     Q_INVOKABLE virtual Fastener fastenerAt(const int index) const = 0;
     Q_INVOKABLE virtual Tensor appliedLoad() const = 0;
     Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
-    Q_INVOKABLE virtual QSet<int> selectedIndexes() const = 0;
+    Q_INVOKABLE virtual QSet<int> selectedFastenerIndexes() const = 0;
     Q_INVOKABLE virtual SolverParameters solverParameters() const = 0;
 
 Q_SIGNALS:
@@ -43,7 +43,7 @@ Q_SIGNALS:
     void fastenersInserted(const int index, const Fastener &fastener);
     void fastenersChanged(const int index, const Fastener &fastener);
     void fastenersRemoved(const int index);
-    void selectionChanged();
+    void selectionFastenerChanged();
     void resultsChanged();
 
 public Q_SLOTS:
@@ -69,7 +69,7 @@ public Q_SLOTS:
         return false;
     }
 
-    Q_INVOKABLE virtual bool setSelection(const QSet<int> indexes) {
+    Q_INVOKABLE virtual bool setFastenerSelection(const QSet<int> indexes) {
         Q_UNUSED(indexes);
         return false;
     }
