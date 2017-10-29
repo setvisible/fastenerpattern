@@ -19,6 +19,8 @@
 #include <QtGui/QIcon>
 #include <QtWidgets/QAction>
 
+/******************************************************************************
+ ******************************************************************************/
 SpliceToolbarPrivate::SpliceToolbarPrivate(QWidget *parent)
     : AbstractSpliceView(parent)
     , q_ptr((SpliceToolbar*)parent)
@@ -333,6 +335,8 @@ void SpliceToolbar::remove()
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void SpliceToolbar::_q_selectionChanged()
 {
     bool selected = (!model()->selectedFastenerIndexes().isEmpty());

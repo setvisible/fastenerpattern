@@ -35,10 +35,8 @@ class Splice : public QObject
     Q_PROPERTY(Tensor appliedLoad READ appliedLoad WRITE setAppliedLoad)
     Q_PROPERTY(QList<DesignSpace> designSpaces READ designSpaces WRITE setDesignSpaces)
 
-    //friend class SpliceCalculator;
-
 public:
-    explicit Splice(QObject *parent = 0);
+    explicit Splice(QObject *parent = Q_NULLPTR);
 
     /* JSON Serialization */
     void read(const QJsonObject &json);
@@ -82,8 +80,6 @@ private:
     Tensor m_appliedLoad;
     QList<Fastener> m_fasteners;
     QList<DesignSpace> m_designSpaces;
-
-    /// \todo Solver Options
 
 };
 

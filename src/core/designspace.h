@@ -1,4 +1,4 @@
-/* - DesignSpacePattern - Copyright (C) 2016 Sebastien Vavassori
+/* - DesignSpacePattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,8 +14,8 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_DESIGNSPACE_H
-#define CORE_DESIGNSPACE_H
+#ifndef CORE_DESIGN_SPACE_H
+#define CORE_DESIGN_SPACE_H
 
 #include <QtCore/QString>
 #include <QtGui/QPolygonF>
@@ -34,8 +34,9 @@ public:
     bool operator==(const DesignSpace &other) const;
     bool operator!=(const DesignSpace &other) const;
 
+    QString name;
     QPolygonF polygon;
 
 };
 
-#endif // CORE_DESIGNSPACE_H
+#endif // CORE_DESIGN_SPACE_H

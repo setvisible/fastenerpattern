@@ -28,7 +28,7 @@ class AbstractSpliceModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractSpliceModel(QObject *parent = 0) : QObject(parent) {}
+    explicit AbstractSpliceModel(QObject *parent = Q_NULLPTR) : QObject(parent) {}
     ~AbstractSpliceModel() {}
 
     Q_INVOKABLE virtual int fastenerCount() const = 0;

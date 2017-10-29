@@ -72,14 +72,20 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
     m_backgroundWidget->scene()->setSceneRect(-1000, -1000, 2000, 2000);
 
 
-    // test
+    /* ************ test  ****************** */
+    /* ************ test  ****************** */
     DesignSpaceItem *item = new DesignSpaceItem();
     QPolygonF polygon;
-    polygon << QPointF(100.4, 200.5) << QPointF(200.2, 300.2) << QPointF(150.2, 290.4) ;
+    polygon << QPointF(   0.4,   0.5)
+            << QPointF( 100.2,   0.2)
+            << QPointF( 120.3, 200.4)
+            << QPointF(   0.2, 290.4) ;
     item->setPolygon(polygon);
 
     m_backgroundWidget->scene()->addItem(item);
     m_designSpaceItems.insert(0, item);
+    /* ************ test  ****************** */
+    /* ************ test  ****************** */
 
 }
 

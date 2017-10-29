@@ -1,4 +1,4 @@
-/* - DesignSpacePattern - Copyright (C) 2016 Sebastien Vavassori
+/* - DesignSpacePattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,12 +21,14 @@
 #include <QtCore/QJsonObject>
 
 DesignSpace::DesignSpace()
+    : name(QStringLiteral("New Design Space"))
 {
 }
 
 /* JSON Serialization */
 void DesignSpace::read(const QJsonObject &json)
 {
+    name = json["name"].toString();
     polygon.clear();
     QJsonArray pointsArray = json["points"].toArray();
     for (int i = 0; i < pointsArray.size(); ++i) {
@@ -37,6 +39,7 @@ void DesignSpace::read(const QJsonObject &json)
 
 void DesignSpace::write(QJsonObject &json) const
 {
+    json["name"] = name;
     QJsonArray pointsArray;
     foreach (const QPointF point, polygon) {
         QJsonArray coords;
@@ -49,7 +52,8 @@ void DesignSpace::write(QJsonObject &json) const
 bool DesignSpace::operator==(const DesignSpace &other) const
 {
 
-    return (*this).polygon == other.polygon;
+    return (*this).name == other.name
+            && (*this).polygon == other.polygon;
 }
 
 bool DesignSpace::operator!=(const DesignSpace &other) const

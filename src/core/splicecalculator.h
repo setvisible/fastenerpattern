@@ -37,7 +37,7 @@ class SpliceCalculator : public AbstractSpliceModel
     Q_PROPERTY(SolverParameters solverParameters READ solverParameters WRITE setSolverParameters)
 
 public:
-    explicit SpliceCalculator(QObject *parent = 0);
+    explicit SpliceCalculator(QObject *parent = Q_NULLPTR);
 
     /* JSON Serialization */
     void read(const QJsonObject &json);

@@ -20,6 +20,8 @@
 #include <QtWidgets/QToolBar>
 #include <Widgets/AbstractSpliceView>
 
+/******************************************************************************
+ ******************************************************************************/
 class SpliceToolbar;
 class SpliceToolbarPrivate :  public AbstractSpliceView
 {
@@ -35,18 +37,11 @@ public Q_SLOTS:
 
 };
 
+/******************************************************************************
+ ******************************************************************************/
 class SpliceToolbar : public QToolBar
 {
     Q_OBJECT
-    Q_PROPERTY(bool axesVisible READ isAxesVisible WRITE setAxesVisible NOTIFY axesVisibilityChanged)
-    Q_PROPERTY(bool gridVisible READ isGridVisible WRITE setGridVisible NOTIFY gridVisibilityChanged)
-    Q_PROPERTY(bool imageVisible READ isImageVisible WRITE setImageVisible NOTIFY imageVisibilityChanged)
-    Q_PROPERTY(bool componentVisible READ isComponentVisible WRITE setComponentVisible NOTIFY componentVisibilityChanged)
-    Q_PROPERTY(bool resultantVisible READ isResultantVisible WRITE setResultantVisible NOTIFY resultantVisibilityChanged)
-    Q_PROPERTY(bool torqueVisible READ isTorqueVisible WRITE setTorqueVisible NOTIFY torqueVisibilityChanged)
-    Q_PROPERTY(bool labelVisible READ isLabelVisible WRITE setLabelVisible NOTIFY labelVisibilityChanged)
-    Q_PROPERTY(bool snapEnable READ isSnapEnable WRITE setSnapEnable NOTIFY snapEnabled)
-    Q_PROPERTY(bool distanceVisible READ isDistanceVisible WRITE setDistanceVisible NOTIFY distanceVisibilityChanged)
 
     friend class SpliceToolbarPrivate;
     SpliceToolbarPrivate *d_ptr;
@@ -111,6 +106,7 @@ private:
     QAction *m_buttonCopy;
     QAction *m_buttonSelectAll;
     QAction *m_buttonRemove;
+    // --
     QAction *m_buttonShowAxes;
     QAction *m_buttonShowGrid;
     QAction *m_buttonShowBG;    /* BG = Background */
@@ -118,6 +114,7 @@ private:
     QAction *m_buttonShowResultant;
     QAction *m_buttonShowTorque;
     QAction *m_buttonShowLabel;
+    // --
     QAction *m_buttonSnap;
     QAction *m_buttonDistance;
 

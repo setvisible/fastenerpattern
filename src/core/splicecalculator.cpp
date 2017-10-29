@@ -243,6 +243,8 @@ bool SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
     return true;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
 {
     if (m_selectedFastenerIndexes == indexes)
@@ -252,6 +254,8 @@ bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
     return true;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 SolverParameters SpliceCalculator::solverParameters() const
 {
     return m_params;
