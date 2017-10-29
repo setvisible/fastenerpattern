@@ -31,7 +31,7 @@ public:
     ~DesignSpaceWidget();
 
 public Q_SLOTS:
-    virtual void selectionChanged() Q_DECL_OVERRIDE;
+    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
     virtual void resultsChanged() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
