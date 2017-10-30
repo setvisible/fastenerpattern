@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,13 +28,6 @@ class QJsonObject;
 
 class Splice : public QObject
 {
-    Q_PROPERTY(QString title READ title WRITE setTitle)
-    Q_PROPERTY(QString author READ author WRITE setAuthor)
-    Q_PROPERTY(QString date READ date WRITE setDate)
-    Q_PROPERTY(QString description READ description WRITE setDescription)
-    Q_PROPERTY(Tensor appliedLoad READ appliedLoad WRITE setAppliedLoad)
-    Q_PROPERTY(QList<DesignSpace> designSpaces READ designSpaces WRITE setDesignSpaces)
-
 public:
     explicit Splice(QObject *parent = Q_NULLPTR);
 
@@ -57,10 +50,8 @@ public:
     Tensor appliedLoad() const;
     void setAppliedLoad(const Tensor &appliedLoad);
 
-
     int fastenerCount() const;
     const Fastener& fastenerAt(const int index) const;
-
     void insertFastener(const int index, const Fastener &fastener);
     void addFastener(const Fastener &fastener);
     void addFastener(const QList<Fastener> &fasteners);
@@ -68,15 +59,20 @@ public:
     void removeFastenerAt(const int index);
     void removeAllFasteners();
 
-    QList<DesignSpace> designSpaces() const;
-    void setDesignSpaces(const QList<DesignSpace> &spaces);
+    int designSpaceCount() const;
+    const DesignSpace& designSpaceAt(const int index) const;
+    void insertDesignSpace(const int index, const DesignSpace &designSpace);
+    void addDesignSpace(const DesignSpace &designSpace);
+    void addDesignSpace(const QList<DesignSpace> &designSpaces);
+    void setDesignSpaceAt(const int index, const DesignSpace &designSpace);
+    void removeDesignSpaceAt(const int index);
+    void removeAllDesignSpaces();
 
 private:
     QString m_title;
     QString m_author;
     QString m_date;
     QString m_description;
-
     Tensor m_appliedLoad;
     QList<Fastener> m_fasteners;
     QList<DesignSpace> m_designSpaces;

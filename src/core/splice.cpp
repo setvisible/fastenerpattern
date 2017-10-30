@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,6 +29,11 @@
  */
 
 Splice::Splice(QObject *parent) : QObject(parent)
+  , m_title(QString())
+  , m_author(QString())
+  , m_date(QString())
+  , m_description(QString())
+  , m_appliedLoad(Tensor())
 {
 }
 
@@ -198,13 +203,43 @@ void Splice::removeAllFasteners()
 
 /******************************************************************************
  ******************************************************************************/
-QList<DesignSpace> Splice::designSpaces() const
+int Splice::designSpaceCount() const
 {
-    return m_designSpaces;
+    return m_designSpaces.count();
 }
 
-void Splice::setDesignSpaces(const QList<DesignSpace> &spaces)
+const DesignSpace &Splice::designSpaceAt(const int index) const
 {
-    m_designSpaces = spaces;
+    return m_designSpaces.at(index);
+}
+
+void Splice::insertDesignSpace(const int index, const DesignSpace &designSpace)
+{
+    m_designSpaces.insert(index, designSpace);
+}
+
+void Splice::addDesignSpace(const DesignSpace &designSpace)
+{
+    m_designSpaces.append(designSpace);
+}
+
+void Splice::addDesignSpace(const QList<DesignSpace> &designSpaces)
+{
+    m_designSpaces.append(designSpaces);
+}
+
+void Splice::setDesignSpaceAt(const int index, const DesignSpace &designSpace)
+{
+    m_designSpaces[index] = designSpace;
+}
+
+void Splice::removeDesignSpaceAt(const int index)
+{
+    m_designSpaces.removeAt(index);
+}
+
+void Splice::removeAllDesignSpaces()
+{
+    m_designSpaces.clear();
 }
 
