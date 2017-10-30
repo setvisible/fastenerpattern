@@ -50,7 +50,7 @@ ScalableImageItem::ScalableImageItem(QGraphicsItem *parent) : QGraphicsObject(pa
     this->setFlag(QGraphicsItem::ItemIsMovable);
     this->setFlag(QGraphicsItem::ItemIsSelectable);
     this->setCursor(Qt::SizeAllCursor);
-    this->setZValue(-100); /* Behind the grid and axes */
+    this->setZValue(-100); /* Below the axes (Z=0), above the grid (background) */
 
     /****************************\
      * Handles number convention  *
