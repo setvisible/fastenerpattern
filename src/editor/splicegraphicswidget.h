@@ -38,31 +38,11 @@ class TensorItem;
 class SpliceGraphicsWidget : public AbstractSpliceView
 {
     Q_OBJECT
-    Q_PROPERTY(bool axesVisible READ isAxesVisible WRITE setAxesVisible)
-    Q_PROPERTY(bool gridVisible READ isGridVisible WRITE setGridVisible)
-    Q_PROPERTY(bool imageVisible READ isImageVisible WRITE setImageVisible)
-    Q_PROPERTY(bool componentVisible READ isComponentVisible WRITE setComponentVisible)
-    Q_PROPERTY(bool resultantVisible READ isResultantVisible WRITE setResultantVisible)
-    Q_PROPERTY(bool torqueVisible READ isTorqueVisible WRITE setTorqueVisible)
-    Q_PROPERTY(bool labelVisible READ isLabelVisible WRITE setLabelVisible)
-    Q_PROPERTY(bool snapEnable READ isSnapEnable WRITE setSnapEnable)
-    Q_PROPERTY(bool distanceVisible READ isDistanceVisible WRITE setDistanceVisible)
-    Q_PROPERTY(qreal pixelsPerUnit READ pixelsPerUnit WRITE setPixelsPerUnit)
-    Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl)
-    Q_PROPERTY(bool designSpaceVisible READ isDesignSpaceVisible WRITE setDesignSpaceVisible)
-
 public:
     explicit SpliceGraphicsWidget(QWidget *parent = 0);
     virtual ~SpliceGraphicsWidget();
 
 public Q_SLOTS:
-    virtual void appliedLoadChanged() Q_DECL_OVERRIDE;
-    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
-    virtual void resultsChanged() Q_DECL_OVERRIDE;
-    virtual void fastenersInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void fastenersChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void fastenersRemoved(const int index) Q_DECL_OVERRIDE;
-
     /* Graphics Options */
     bool isAxesVisible() const;
     void setAxesVisible(bool visible);
@@ -99,6 +79,23 @@ public Q_SLOTS:
 
     bool isDesignSpaceVisible() const;
     void setDesignSpaceVisible(bool visible);
+
+
+public Q_SLOTS:
+    virtual void onFastenerInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void onFastenerChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void onFastenerRemoved(const int index) Q_DECL_OVERRIDE;
+
+    virtual void onDesignSpaceInserted(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void onDesignSpaceChanged(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void onDesignSpaceRemoved(const int index) Q_DECL_OVERRIDE;
+
+    virtual void onAppliedLoadChanged() Q_DECL_OVERRIDE;
+    virtual void onResultsChanged() Q_DECL_OVERRIDE;
+
+    virtual void onSelectionFastenerChanged() Q_DECL_OVERRIDE;
+    virtual void onSelectionDesignSpaceChanged() Q_DECL_OVERRIDE;
+
 
 private Q_SLOTS:
     void update();

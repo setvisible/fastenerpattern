@@ -71,22 +71,6 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
     /// \todo Auto resize instead ?
     m_backgroundWidget->scene()->setSceneRect(-1000, -1000, 2000, 2000);
 
-
-    /* ************ test  ****************** */
-    /* ************ test  ****************** */
-    DesignSpaceItem *item = new DesignSpaceItem();
-    QPolygonF polygon;
-    polygon << QPointF(   0.4,   0.5)
-            << QPointF( 100.2,   0.2)
-            << QPointF( 120.3, 200.4)
-            << QPointF(   0.2, 290.4) ;
-    item->setPolygon(polygon);
-
-    m_backgroundWidget->scene()->addItem(item);
-    m_designSpaceItems.insert(0, item);
-    /* ************ test  ****************** */
-    /* ************ test  ****************** */
-
 }
 
 SpliceGraphicsWidget::~SpliceGraphicsWidget()
@@ -103,18 +87,30 @@ void SpliceGraphicsWidget::update()
  ******************************************************************************/
 void SpliceGraphicsWidget::onSelectionChanged()
 {
-    QSet<int> set;
-    for (int i = 0; i < m_fastenerItems.count(); ++i) {
-        FastenerItem* item = m_fastenerItems.at(i);
-        if (item->isSelected()) {
-            set << i;
+    {
+        /* fastener items */
+        QSet<int> set;
+        for (int i = 0; i < m_fastenerItems.count(); ++i) {
+            FastenerItem* item = m_fastenerItems.at(i);
+            if (item->isSelected()) {
+                set << i;
+            }
         }
+        model()->setFastenerSelection(set);
     }
-    model()->setFastenerSelection(set);
+    {
+        /* design space items */
+        QSet<int> set;
+        for (int i = 0; i < m_designSpaceItems.count(); ++i) {
+            DesignSpaceItem* item = m_designSpaceItems.at(i);
+            if (item->isSelected()) {
+                set << i;
+            }
+        }
+        model()->setDesignSpaceSelection(set);
+    }
 }
 
-/******************************************************************************
- ******************************************************************************/
 void SpliceGraphicsWidget::onFastenerPositionChanged()
 {
     FastenerItem *item = static_cast<FastenerItem *>(sender());
@@ -128,7 +124,9 @@ void SpliceGraphicsWidget::onFastenerPositionChanged()
     model()->setFastener(index, fastener);
 }
 
-void SpliceGraphicsWidget::fastenersInserted(const int index, const Fastener &fastener)
+/******************************************************************************
+ ******************************************************************************/
+void SpliceGraphicsWidget::onFastenerInserted(const int index, const Fastener &fastener)
 {
     FastenerItem *item = new FastenerItem();
     QObject::connect(item, SIGNAL(xChanged()), this, SLOT(onFastenerPositionChanged()));
@@ -149,7 +147,7 @@ void SpliceGraphicsWidget::fastenersInserted(const int index, const Fastener &fa
     this->updateDistanceItemPositions();
 }
 
-void SpliceGraphicsWidget::fastenersChanged(const int index, const Fastener &fastener)
+void SpliceGraphicsWidget::onFastenerChanged(const int index, const Fastener &fastener)
 {
     if (index >= 0 && index < m_fastenerItems.count()) {
         FastenerItem *item = m_fastenerItems[index];
@@ -160,7 +158,7 @@ void SpliceGraphicsWidget::fastenersChanged(const int index, const Fastener &fas
     this->updateDistanceItemPositions();
 }
 
-void SpliceGraphicsWidget::fastenersRemoved(const int index)
+void SpliceGraphicsWidget::onFastenerRemoved(const int index)
 {
     if (index >= 0 && index < m_fastenerItems.count()) {
         FastenerItem* item = m_fastenerItems.takeAt(index);
@@ -171,20 +169,45 @@ void SpliceGraphicsWidget::fastenersRemoved(const int index)
     this->updateDistanceItemPositions();
 }
 
-void SpliceGraphicsWidget::appliedLoadChanged()
+/******************************************************************************
+ ******************************************************************************/
+void SpliceGraphicsWidget::onDesignSpaceInserted(const int index, const DesignSpace &designSpace)
+{
+    DesignSpaceItem *item = new DesignSpaceItem();
+    // QObject::connect(item, SIGNAL(xChanged()), this, SLOT(onFastenerPositionChanged()));
+    // QObject::connect(item, SIGNAL(yChanged()), this, SLOT(onFastenerPositionChanged()));
+
+    m_backgroundWidget->scene()->addItem(item);
+    m_designSpaceItems.insert(index, item);
+
+    item->setPolygon( designSpace.polygon );
+}
+
+void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
+{
+
+}
+
+void SpliceGraphicsWidget::onDesignSpaceRemoved(const int index)
+{
+    if (index >= 0 && index < m_designSpaceItems.count()) {
+        DesignSpaceItem* item = m_designSpaceItems.takeAt(index);
+        // QObject::disconnect(item, SIGNAL(xChanged()), this, SLOT(onFastenerPositionChanged()));
+        // QObject::disconnect(item, SIGNAL(yChanged()), this, SLOT(onFastenerPositionChanged()));
+        m_backgroundWidget->scene()->removeItem(item);
+
+    }
+
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void SpliceGraphicsWidget::onAppliedLoadChanged()
 {
     m_appliedLoadItem->setTensor( model()->appliedLoad() );
 }
 
-void SpliceGraphicsWidget::selectionFastenerChanged()
-{
-    QSet<int> set = model()->selectedFastenerIndexes();
-    for( int i = 0; i < m_fastenerItems.count(); ++i) {
-        m_fastenerItems.at(i)->setSelected(set.contains(i));
-    }
-}
-
-void SpliceGraphicsWidget::resultsChanged()
+void SpliceGraphicsWidget::onResultsChanged()
 {
     const int count = model()->fastenerCount();
     if (count != m_fastenerItems.count()) {
@@ -193,6 +216,24 @@ void SpliceGraphicsWidget::resultsChanged()
     for (int index = 0; index < count; ++index) {
         FastenerItem *item = m_fastenerItems[index];
         item->setResult(model()->resultAt(index));
+    }
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void SpliceGraphicsWidget::onSelectionFastenerChanged()
+{
+    QSet<int> set = model()->selectedFastenerIndexes();
+    for( int i = 0; i < m_fastenerItems.count(); ++i) {
+        m_fastenerItems.at(i)->setSelected(set.contains(i));
+    }
+}
+
+void SpliceGraphicsWidget::onSelectionDesignSpaceChanged()
+{
+    QSet<int> set = model()->selectedDesignSpaceIndexes();
+    for( int i = 0; i < m_designSpaceItems.count(); ++i) {
+        m_designSpaceItems.at(i)->setSelected(set.contains(i));
     }
 }
 
@@ -385,8 +426,11 @@ bool SpliceGraphicsWidget::isDesignSpaceVisible() const
 
 void SpliceGraphicsWidget::setDesignSpaceVisible(bool visible)
 {
-    // foreach (auto &item, m_designSpaceItems) {
-    //item->setVisible(visible);
-    // }
+    foreach (auto &item, m_designSpaceItems) {
+        if (!visible) {
+            item->setSelected(false);
+        }
+        item->setVisible(visible);
+    }
     m_designSpaceVisible = visible;
 }
