@@ -19,11 +19,13 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtGui/QBrush>
 #include <QtWidgets/QGraphicsObject>
 
 class HandleItem;
 class QGraphicsPolygonItem;
 class DesignSpaceItem;
+class BorderItem;
 
 /******************************************************************************
  ******************************************************************************/
@@ -35,6 +37,8 @@ public:
 
 public Q_SLOTS:
     void onCornerPositionChanged();
+    void addHandle();
+    void removeHandle();
 
 private:
     DesignSpaceItem *m_parent;
@@ -44,8 +48,6 @@ private:
  ******************************************************************************/
 class DesignSpaceItem : public QGraphicsObject
 {
-   // friend class DesignSpaceObject;
-
 public:
     explicit DesignSpaceItem(QGraphicsItem *parent = Q_NULLPTR);
     ~DesignSpaceItem();
@@ -57,15 +59,23 @@ public:
     QPolygonF polygon() const;
     void setPolygon(const QPolygonF &polygon);
 
-//protected:
     void setCorner(const HandleItem *item);
+
+protected:
+  //  bool sceneEventFilter(QGraphicsItem *watched, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
+ //   void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) Q_DECL_OVERRIDE;
+
 
 private:
     DesignSpaceObject *m_object;
     QGraphicsPolygonItem *m_polygonItem;
     QList<HandleItem*> m_corners;
 
+    BorderItem *m_borderItem;
 
+    QBrush m_brush;
+    QBrush m_brushSelected;
 };
 
 #endif // EDITOR_ITEMS_DESIGN_SPACE_ITEM_H

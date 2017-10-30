@@ -19,13 +19,17 @@
 #include "handleitem.h"
 #include "utils_scale.h"
 
+#include <QtCore/QObject>
 #include <QtCore/QDebug>
 #include <QtGui/QCursor>
 #include <QtGui/QPainter>
-//#include <QtGui/QPen>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QGraphicsPolygonItem>
+#include <QtWidgets/QGraphicsSceneContextMenuEvent>
+#include <QtGui/QContextMenuEvent>
 
-#include <QtWidgets/QGraphicsScene>
+
 
 /******************************************************************************
  ******************************************************************************/
@@ -44,17 +48,94 @@ void DesignSpaceObject::onCornerPositionChanged()
     m_parent->setCorner(item);
 }
 
+void DesignSpaceObject::addHandle()
+{
+    const QAction *action = qobject_cast<const QAction *>(this->sender());
+    const uint item = action->data().toUInt();
+    qDebug() << Q_FUNC_INFO << item;
+}
+
+void DesignSpaceObject::removeHandle()
+{
+    const QAction *action = qobject_cast<const QAction *>(this->sender());
+    const uint handlePointer = action->data().toUInt();
+
+
+    qDebug() << Q_FUNC_INFO << handlePointer;
+
+}
+
+/******************************************************************************
+ ******************************************************************************/
+class BorderItem : public QGraphicsObject
+{
+public:
+    explicit BorderItem(QGraphicsPolygonItem *polygon, QGraphicsItem *parent = Q_NULLPTR)
+        : QGraphicsObject(parent)
+        , m_polygonItem(polygon)
+    {
+    }
+
+    QRectF boundingRect() const Q_DECL_OVERRIDE
+    {
+        return shape().boundingRect();
+    }
+    QPainterPath shape() const Q_DECL_OVERRIDE
+    {
+        QPainterPath path;
+        path.addPolygon(m_polygonItem->polygon());
+        path.closeSubpath();
+        QPainterPathStroker stroker;
+        stroker.setWidth(C_ARROW_SIZE);
+        return stroker.createStroke(path);
+    }
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE
+    {
+    }
+
+private:
+    QGraphicsPolygonItem *m_polygonItem;
+};
+
 /******************************************************************************
  ******************************************************************************/
 DesignSpaceItem::DesignSpaceItem(QGraphicsItem *parent) : QGraphicsObject(parent)
   , m_object(new DesignSpaceObject(this))
   , m_polygonItem(new QGraphicsPolygonItem(this))
+  , m_borderItem(new BorderItem(m_polygonItem, this))
+  , m_brush(QBrush(QColor(153, 217, 234, 126))) /* cyan */
+  , m_brushSelected(QBrush(QColor(217, 153, 234, 126))) /* pink */
 {
-    this->setFlag(QGraphicsItem::ItemIsMovable);
-    this->setFlag(QGraphicsItem::ItemIsSelectable);
+    /***********************************************************************\
+    *  Remarks:                                                             *
+    *                                                                       *
+    *  m_object                                                             *
+    *      this object is used for the callbacks of the Handles             *
+    *      (corners of the polygon)                                         *
+    *                                                                       *
+    *  m_borderItem                                                         *
+    *      this is a transparent (but visible!) graphics object             *
+    *      that catches the mouse click events occuring                     *
+    *      near the polygon's border.                                       *
+    *      Internally, the BorderItem simulates a thick enclosed path.      *
+    *                                                                       *
+    *  m_polygonItem                                                        *
+    *      this is a colored fill polygon representing the                  *
+    *      area of the design space. It catches the composite object's      *
+    *      mouse events                                                     *
+    *                                                                       *
+    \***********************************************************************/
 
-    m_polygonItem->setCursor(Qt::SizeAllCursor);
-    m_polygonItem->setZValue(50);
+    this->setFlag(QGraphicsItem::ItemIsSelectable);
+    this->setZValue(-50); /* Below the axes, but above the BG image and the grid */
+
+    m_polygonItem->setFillRule(Qt::WindingFill);
+    m_polygonItem->setPen(Qt::NoPen);
+
+
+    m_borderItem->installEventFilter(this);
+    m_borderItem->setVisible(true);
+
 }
 
 DesignSpaceItem::~DesignSpaceItem()
@@ -63,31 +144,65 @@ DesignSpaceItem::~DesignSpaceItem()
         delete m_object;
 }
 
+/******************************************************************************
+ ******************************************************************************/
+bool DesignSpaceItem::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::GraphicsSceneContextMenu) {
+        QGraphicsSceneContextMenuEvent *ctxtEvent
+                = static_cast<QGraphicsSceneContextMenuEvent*>(event);
+        {
+            HandleItem *handle = dynamic_cast<HandleItem*>(obj);
+            if (handle) {
+                QMenu menu;
+                QAction *action = menu.addAction(
+                            tr("Remove Handle"), m_object, SLOT(removeHandle()));
+                action->setData( (uint)handle );
+                menu.exec(ctxtEvent->screenPos());
+                return true;
+            }
+        }
+        {
+            BorderItem *border = dynamic_cast<BorderItem*>(obj);
+            if (border) {
+                QMenu menu;
+                QAction *action = menu.addAction(
+                            tr("Add Handle"), m_object, SLOT(addHandle()));
+                action->setData( (uint)border );
+                menu.exec(ctxtEvent->screenPos());
+                return true;
+            }
+        }
+
+    }
+    /* Pass the event on to the parent class */
+    return QObject::eventFilter(obj, event);
+
+}
+
+/******************************************************************************
+ ******************************************************************************/
+
 QRectF DesignSpaceItem::boundingRect() const
 {
-    return m_polygonItem->boundingRect();
-//    return QRectF(m_rect)
-//            | m_scalePoints[0]->boundingRect() | m_scalePoints[1]->boundingRect()
-//            | m_scalePoints[2]->boundingRect() | m_scalePoints[3]->boundingRect();
+    QRectF rect = m_polygonItem->boundingRect();
+    foreach (auto corner, m_corners) {
+        rect |= corner->boundingRect();
+    }
+    rect |= m_borderItem->boundingRect();
+    return rect;
 }
 
 QPainterPath DesignSpaceItem::shape() const
 {
-    QPainterPath path;
-    path.addPolygon(m_polygonItem->polygon());
- //   path.addRect(m_polygonItem->boundingRect());
- return path;
-
-  //  if (line().length() > 0.0) {
-        QPainterPathStroker stroker;
-        path.addPolygon(m_polygonItem->polygon());
-        stroker.setWidth(C_ARROW_SIZE);
-        return stroker.createStroke(path);
-  //  }
-
+    QPainterPath polygonPath;
+    polygonPath.addPolygon(m_polygonItem->polygon());
+    QPainterPath borderPath = m_borderItem->shape();
+    QPainterPath path = borderPath.united(polygonPath);
+    return path;
 }
 
-void DesignSpaceItem::paint(QPainter */*painter*/, const QStyleOptionGraphicsItem *, QWidget *)
+void DesignSpaceItem::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *)
 {
     bool selected = isSelected();
     if (!selected) {
@@ -102,18 +217,15 @@ void DesignSpaceItem::paint(QPainter */*painter*/, const QStyleOptionGraphicsIte
         corner->setVisible( selected );
     }
 
+    m_borderItem->setVisible( selected );
+    this->setFlag(QGraphicsItem::ItemIsMovable, selected);
+    this->setCursor( selected ? Qt::SizeAllCursor : Qt::ArrowCursor );
 
-   // painter->drawPolygon(polygon());
-   // m_polygonItem->paint(painter);
-            //const bool _isSelected = !m_pixmap.isNull() && isSelected();
-    //if (!m_pixmap.isNull()) {
-    //    painter->drawPixmap(m_rect, m_pixmap);
-    //    if (_isSelected) {
-    //        painter->setPen(QPen(Qt::blue, 1));
-    //        painter->setBrush(Qt::NoBrush);
-    //        painter->drawRect(m_rect);
-    //    }
-    //}
+    if (selected) {
+        m_polygonItem->setBrush(m_brushSelected);
+    } else {
+        m_polygonItem->setBrush(m_brush);
+    }
 }
 
 
@@ -132,10 +244,9 @@ void DesignSpaceItem::setPolygon(const QPolygonF &polygon)
         item->setPos( point );
         QObject::connect(item, SIGNAL(xChanged()), m_object, SLOT(onCornerPositionChanged()));
         QObject::connect(item, SIGNAL(yChanged()), m_object, SLOT(onCornerPositionChanged()));
+        item->installEventFilter(this);
         m_corners << item;
     }
-
-    // this->scene()->update();
 }
 
 void DesignSpaceItem::setCorner(const HandleItem *item)
@@ -149,9 +260,8 @@ void DesignSpaceItem::setCorner(const HandleItem *item)
             point.setX(item->x());
             point.setY(item->y());
             polygon.replace(i,point);
-            m_polygonItem->setPolygon( polygon );
+            m_polygonItem->setPolygon(polygon);
             break;
         }
     }
-  //  this->scene()->update();
 }
