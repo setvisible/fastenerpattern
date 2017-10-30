@@ -105,6 +105,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     /* [5] */
     /* Connect the rest of the GUI widgets together (selection, focus, etc.) */
+    QObject::connect(ui->spliceToolBar, SIGNAL(designSpaceVisibilityChanged(bool)),
+                     ui->spliceGraphicsWidget, SLOT(setDesignSpaceVisible(bool)));
     QObject::connect(ui->spliceToolBar, SIGNAL(axesVisibilityChanged(bool)),
                      ui->spliceGraphicsWidget, SLOT(setAxesVisible(bool)));
     QObject::connect(ui->spliceToolBar, SIGNAL(gridVisibilityChanged(bool)),
@@ -159,17 +161,10 @@ void MainWindow::newFile()
         m_calculator->clear();
 
         /* Settings */
-        ui->spliceToolBar->setAxesVisible(true);
-        ui->spliceToolBar->setGridVisible(true);
-        ui->spliceToolBar->setImageVisible(false);
+        ui->spliceToolBar->reset();
         ui->spliceGraphicsWidget->setImageUrl(QUrl());
-        ui->spliceToolBar->setComponentVisible(false);
-        ui->spliceToolBar->setResultantVisible(true);
-        ui->spliceToolBar->setTorqueVisible(true);
-        ui->spliceToolBar->setLabelVisible(false);
-        ui->spliceToolBar->setSnapEnable(false);
 
-        setClean();
+        this->setClean();
     }
 }
 
@@ -371,7 +366,7 @@ bool MainWindow::saveFile(const QString &path)
     m_physicalFile = true;
     m_currentFile.setFile(path);
     this->statusBar()->showMessage(tr("File saved"), 2000);
-    setClean();
+    this->setClean();
     return true;
 }
 
@@ -410,7 +405,7 @@ bool MainWindow::loadFile(const QString &path)
     m_physicalFile = true;
     m_currentFile = path;
     this->statusBar()->showMessage(tr("File loaded"), 5000);
-    setClean();
+    this->setClean();
     return true;
 }
 
