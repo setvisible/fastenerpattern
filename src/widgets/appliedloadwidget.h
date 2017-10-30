@@ -39,7 +39,7 @@ public:
     void setAppliedLoad(const Tensor &appliedLoad);
 
 public Q_SLOTS:
-    virtual void appliedLoadChanged() Q_DECL_OVERRIDE;
+    virtual void onAppliedLoadChanged() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void onValueChanged(double);

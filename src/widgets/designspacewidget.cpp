@@ -20,10 +20,7 @@
 #include <QtCore/QDebug>
 #include <QtWidgets/QTableWidget>
 
-#include <boost/units/cmath.hpp> /* pow<>() */
-
-#define C_COLUMN_COUNT 4
-#define C_SECTION_SIZE 20
+#define C_COLUMN_COUNT 1
 
 DesignSpaceWidget::DesignSpaceWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::DesignSpaceWidget)
@@ -31,21 +28,29 @@ DesignSpaceWidget::DesignSpaceWidget(QWidget *parent) : AbstractSpliceView(paren
     ui->setupUi(this);
 
     QStringList labels;
-    labels << tr("Name") <<  tr("FX") << tr("FY") << tr("Resultant");
+    labels << tr("Name");
     ui->tableWidget->setColumnCount( C_COLUMN_COUNT );
     ui->tableWidget->setHorizontalHeaderLabels(labels);
 
+    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidget->horizontalHeader()->setVisible(true);
     ui->tableWidget->verticalHeader()->setVisible(false);
-    ui->tableWidget->verticalHeader()->setDefaultSectionSize( C_SECTION_SIZE );
+    int size = ui->tableWidget->verticalHeader()->minimumSectionSize();
+    ui->tableWidget->verticalHeader()->setDefaultSectionSize(size);
+
     ui->tableWidget->setAlternatingRowColors(false);
     ui->tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     QObject::connect(ui->tableWidget, SIGNAL(itemSelectionChanged()),
                      this, SLOT(onItemSelectionChanged()));
+    QObject::connect(ui->tableWidget, SIGNAL(itemChanged(QTableWidgetItem*)),
+                     this, SLOT(onItemDataChanged(QTableWidgetItem*)));
 
-    this->resizeColumnToContents();
 }
 
 DesignSpaceWidget::~DesignSpaceWidget()
@@ -53,10 +58,14 @@ DesignSpaceWidget::~DesignSpaceWidget()
     delete ui;
 }
 
-void DesignSpaceWidget::resizeColumnToContents()
+/******************************************************************************
+ ******************************************************************************/
+void DesignSpaceWidget::onItemDataChanged(QTableWidgetItem *item)
 {
-    for(int i = 0; i < C_COLUMN_COUNT; i++)
-        ui->tableWidget->resizeColumnToContents(i);
+    const int index = item->row();
+    DesignSpace ds = model()->designSpaceAt(index);
+    ds.name = item->text();
+    model()->setDesignSpace(index, ds);
 }
 
 void DesignSpaceWidget::onItemSelectionChanged()
@@ -65,51 +74,44 @@ void DesignSpaceWidget::onItemSelectionChanged()
     int row = ui->tableWidget->rowCount();
     while (row>0) {
         row--;
-        if ( ui->tableWidget->item(row,0)->isSelected() )
+        QTableWidgetItem *item = ui->tableWidget->item(row, 0);
+        if (item && item->isSelected()) {
             set << row;
+        }
     }
-    model()->setFastenerSelection(set);
+    model()->setDesignSpaceSelection(set);
 }
 
-void DesignSpaceWidget::selectionFastenerChanged()
+/******************************************************************************
+ ******************************************************************************/
+void DesignSpaceWidget::onDesignSpaceInserted(const int index, const DesignSpace &designSpace)
 {
-    QSet<int> set = model()->selectedFastenerIndexes();
+    QTableWidgetItem *newItem = new QTableWidgetItem(designSpace.name);
+    ui->tableWidget->insertRow(index);
+    ui->tableWidget->setItem(index, 0, newItem);
+}
+
+void DesignSpaceWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
+{
+    QTableWidgetItem *item = ui->tableWidget->item(index, 0);
+    if (item)
+        item->setText(designSpace.name);
+}
+
+void DesignSpaceWidget::onDesignSpaceRemoved(const int index)
+{
+    ui->tableWidget->removeRow(index);
+}
+
+void DesignSpaceWidget::onSelectionDesignSpaceChanged()
+{
+    const QSet<int> set = model()->selectedDesignSpaceIndexes();
     int row = ui->tableWidget->rowCount();
     while (row>0) {
         row--;
-        bool selected = set.contains(row);
-        for (int col = 0; col < C_COLUMN_COUNT; ++col) {
-            ui->tableWidget->item(row, col)->setSelected( selected );
-        }
+        const bool selected = set.contains(row);
+        QTableWidgetItem *item = ui->tableWidget->item(row, 0);
+        if (item)
+            item->setSelected( selected );
     }
 }
-
-void DesignSpaceWidget::resultsChanged()
-{
-    const int count = model()->fastenerCount();
-    ui->tableWidget->setRowCount(count);
-
-    Q_ASSERT( ui->tableWidget->rowCount() == count );
-    for (int row = 0; row < count; ++row) {
-        Tensor res = model()->resultAt(row);
-        Fastener ft = model()->fastenerAt(row);
-
-        Force resultant =
-                boost::units::root<2>(
-                    boost::units::pow<2>(res.force_x)
-                    + boost::units::pow<2>(res.force_y));
-
-        QTableWidgetItem *item_0 = new QTableWidgetItem( ft.name );
-        QTableWidgetItem *item_1 = new QTableWidgetItem( QString("%0").arg( res.force_x.value(), 0, 'f', 1) );
-        QTableWidgetItem *item_2 = new QTableWidgetItem( QString("%0").arg( res.force_y.value(), 0, 'f', 1) );
-        QTableWidgetItem *item_3 = new QTableWidgetItem( QString("%0").arg( resultant.value(), 0, 'f', 1) );
-
-        ui->tableWidget->setItem(row, 0, item_0);
-        ui->tableWidget->setItem(row, 1, item_1);
-        ui->tableWidget->setItem(row, 2, item_2);
-        ui->tableWidget->setItem(row, 3, item_3);
-    }
-
-    this->resizeColumnToContents();
-}
-

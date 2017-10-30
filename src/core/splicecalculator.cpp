@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,7 @@
 #include <Core/Solvers/RigidBodySolver>
 
 #include "splice.h"
+#include "designspace.h"
 #include "fastener.h"
 #include "tensor.h"
 
@@ -43,8 +44,12 @@ SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent
     this->clear();
 }
 
-/******************************************************************************
- ******************************************************************************/
+/*!
+ * \fn void SpliceCalculator::changed()
+ * \brief This signal is emitted whenever the SpliceCalculator input data
+ * (i.e. Splice's data, like the applied load or the fasteners) is changed.
+ */
+
 /*! \brief Clear and emit the change, in order to update the views,
  * that derive from AbstractSpliceView.
  */
@@ -65,6 +70,31 @@ void SpliceCalculator::clear()
         i--;
         removeFastener(i);
     }
+}
+
+/******************************************************************************
+ ******************************************************************************/
+/* SERIALISATION JSON */
+/*! \brief Assign the SpliceCalculator's members values from the given \a json object.
+ */
+void SpliceCalculator::read(const QJsonObject &json)
+{
+    clear();
+    m_splice->read(json);
+    emit appliedLoadChanged();
+    for (int i = 0 ; i < fastenerCount(); ++i) {
+        emit fastenerInserted(i, fastenerAt(i));
+    }
+    emit changed();
+    recalculate();
+    emit resultsChanged();
+}
+
+/*! \brief Assigns the values from the SpliceCalculator to the given \a json object.
+ */
+void SpliceCalculator::write(QJsonObject &json) const
+{
+    m_splice->write(json);
 }
 
 /******************************************************************************
@@ -127,30 +157,6 @@ void SpliceCalculator::setDescription(const QString &description)
     }
 }
 
-/******************************************************************************
- ******************************************************************************/
-/* SERIALISATION JSON */
-/*! \brief Assign the SpliceCalculator's members values from the given \a json object.
- */
-void SpliceCalculator::read(const QJsonObject &json)
-{
-    clear();
-    m_splice->read(json);
-    emit appliedLoadChanged();
-    for (int i = 0 ; i < fastenerCount(); ++i) {
-        emit fastenersInserted(i, fastenerAt(i));
-    }
-    emit changed();
-    recalculate();
-    emit resultsChanged();
-}
-
-/*! \brief Assigns the values from the SpliceCalculator to the given \a json object.
- */
-void SpliceCalculator::write(QJsonObject &json) const
-{
-    m_splice->write(json);
-}
 
 /******************************************************************************
  ******************************************************************************/
@@ -167,6 +173,23 @@ Fastener SpliceCalculator::fastenerAt(const int index) const
     return Fastener();
 }
 
+/******************************************************************************
+ ******************************************************************************/
+int SpliceCalculator::designSpaceCount() const
+{
+    return m_splice->designSpaceCount();
+}
+
+DesignSpace SpliceCalculator::designSpaceAt(const int index) const
+{
+    if (index >= 0 && index < m_splice->designSpaceCount()) {
+        return m_splice->designSpaceAt(index);
+    }
+    return DesignSpace();
+}
+
+/******************************************************************************
+ ******************************************************************************/
 Tensor SpliceCalculator::appliedLoad() const
 {
     return m_splice->appliedLoad();
@@ -180,6 +203,13 @@ Tensor SpliceCalculator::resultAt(const int index) const
     return Tensor();
 }
 
+SolverParameters SpliceCalculator::solverParameters() const
+{
+    return m_params;
+}
+
+/******************************************************************************
+ ******************************************************************************/
 QSet<int> SpliceCalculator::selectedFastenerIndexes() const
 {
     return m_selectedFastenerIndexes;
@@ -195,7 +225,26 @@ QSet<int> SpliceCalculator::selectedDesignSpaceIndexes() const
 bool SpliceCalculator::insertFastener(const int index, const Fastener &fastener)
 {
     m_splice->insertFastener(index, fastener);
-    emit fastenersInserted(index, fastener);
+    emit fastenerInserted(index, fastener);
+    emit changed();
+    recalculate();
+    emit resultsChanged();
+    return true;
+}
+
+
+bool SpliceCalculator::setFastener(const int index, const Fastener &fastener)
+{
+    if (index < 0 || index >= m_splice->fastenerCount())
+        return false;
+
+    const Fastener old = m_splice->fastenerAt(index);
+    if (old == fastener)
+        return false;
+
+    m_splice->setFastenerAt(index, fastener);
+
+    emit fastenerChanged(index, fastener);
     emit changed();
     recalculate();
     emit resultsChanged();
@@ -209,7 +258,7 @@ bool SpliceCalculator::removeFastener(const int index)
     }
     if (index >= 0 && index < m_splice->fastenerCount()) {
         m_splice->removeFastenerAt(index);
-        emit fastenersRemoved(index);
+        emit fastenerRemoved(index);
         emit changed();
         recalculate();
         emit resultsChanged();
@@ -218,24 +267,61 @@ bool SpliceCalculator::removeFastener(const int index)
     return false;
 }
 
-bool SpliceCalculator::setFastener(const int index, const Fastener &fastener)
+
+/******************************************************************************
+ ******************************************************************************/
+bool SpliceCalculator::insertDesignSpace(const int index, const DesignSpace &designSpace)
 {
-    if (index < 0 || index >= m_splice->fastenerCount())
-        return false;
-
-    const Fastener old = m_splice->fastenerAt(index);
-    if (old == fastener)
-        return false;
-
-    m_splice->setFastenerAt(index, fastener);
-
-    emit fastenersChanged(index, fastener);
+    m_splice->insertDesignSpace(index, designSpace);
+    emit designSpaceInserted(index, designSpace);
     emit changed();
-    recalculate();
-    emit resultsChanged();
+
+    // ** Remark **
+    // Changing the design space does change the immediat results.
+    // This is why the following methods are not called:
+    //     recalculate();
+    //     emit resultsChanged();
+    // ** Remark **
+
     return true;
 }
 
+bool SpliceCalculator::setDesignSpace(const int index, const DesignSpace &designSpace)
+{
+    if (index < 0 || index >= m_splice->designSpaceCount())
+        return false;
+
+    const DesignSpace old = m_splice->designSpaceAt(index);
+    if (old == designSpace)
+        return false;
+
+    m_splice->setDesignSpaceAt(index, designSpace);
+
+    emit designSpaceChanged(index, designSpace);
+    emit changed();
+    // recalculate();
+    // emit resultsChanged();
+    return true;
+}
+
+bool SpliceCalculator::removeDesignSpace(const int index)
+{
+    if (m_selectedDesignSpaceIndexes.remove( index )) {
+        emit selectionDesignSpaceChanged();
+    }
+    if (index >= 0 && index < m_splice->designSpaceCount()) {
+        m_splice->removeDesignSpaceAt(index);
+        emit designSpaceRemoved(index);
+        emit changed();
+        // recalculate();
+        // emit resultsChanged();
+        return true;
+    }
+    return false;
+}
+
+/******************************************************************************
+ ******************************************************************************/
 bool SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
 {
     if (m_splice->appliedLoad() == loadcase)
@@ -246,33 +332,6 @@ bool SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
     recalculate();
     emit resultsChanged();
     return true;
-}
-
-/******************************************************************************
- ******************************************************************************/
-bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
-{
-    if (m_selectedFastenerIndexes == indexes)
-        return false;
-    m_selectedFastenerIndexes = indexes;
-    emit selectionFastenerChanged();
-    return true;
-}
-
-bool SpliceCalculator::setDesignSpaceSelection(const QSet<int> indexes)
-{
-    if (m_selectedDesignSpaceIndexes == indexes)
-        return false;
-    m_selectedDesignSpaceIndexes = indexes;
-    emit selectionDesignSpaceChanged();
-    return true;
-}
-
-/******************************************************************************
- ******************************************************************************/
-SolverParameters SpliceCalculator::solverParameters() const
-{
-    return m_params;
 }
 
 bool SpliceCalculator::setSolverParameters(SolverParameters params)
@@ -315,6 +374,28 @@ bool SpliceCalculator::setSolverParameters(SolverParameters params)
     return true;
 }
 
+/******************************************************************************
+ ******************************************************************************/
+bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
+{
+    if (m_selectedFastenerIndexes == indexes)
+        return false;
+    m_selectedFastenerIndexes = indexes;
+    emit selectionFastenerChanged();
+    return true;
+}
+
+bool SpliceCalculator::setDesignSpaceSelection(const QSet<int> indexes)
+{
+    if (m_selectedDesignSpaceIndexes == indexes)
+        return false;
+    m_selectedDesignSpaceIndexes = indexes;
+    emit selectionDesignSpaceChanged();
+    return true;
+}
+
+/******************************************************************************
+ ******************************************************************************/
 void SpliceCalculator::recalculate()
 {
     /// \todo Use worker thread here.

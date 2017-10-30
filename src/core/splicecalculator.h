@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,11 +39,11 @@ class SpliceCalculator : public AbstractSpliceModel
 public:
     explicit SpliceCalculator(QObject *parent = Q_NULLPTR);
 
+    void clear();
+
     /* JSON Serialization */
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
-
-    void clear();
 
     QString title() const;
     void setTitle(const QString &title);
@@ -59,23 +59,34 @@ public:
 
     virtual int fastenerCount() const Q_DECL_OVERRIDE;
     virtual Fastener fastenerAt(const int index) const Q_DECL_OVERRIDE;
+
+    virtual int designSpaceCount() const Q_DECL_OVERRIDE;
+    virtual DesignSpace designSpaceAt(const int index) const Q_DECL_OVERRIDE;
+
     virtual Tensor appliedLoad() const Q_DECL_OVERRIDE;
     virtual Tensor resultAt(const int index) const Q_DECL_OVERRIDE;
+    virtual SolverParameters solverParameters() const Q_DECL_OVERRIDE;
+
     virtual QSet<int> selectedFastenerIndexes() const Q_DECL_OVERRIDE;
     virtual QSet<int> selectedDesignSpaceIndexes() const Q_DECL_OVERRIDE;
-    virtual SolverParameters solverParameters() const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void changed();
 
 public Q_SLOTS:
     virtual bool insertFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual bool removeFastener(const int index) Q_DECL_OVERRIDE;
     virtual bool setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual bool removeFastener(const int index) Q_DECL_OVERRIDE;
+
+    virtual bool insertDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual bool setDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual bool removeDesignSpace(const int index) Q_DECL_OVERRIDE;
+
     virtual bool setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
+    virtual bool setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
+
     virtual bool setFastenerSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
     virtual bool setDesignSpaceSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
-    virtual bool setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
 
 private:
     SolverParameters m_params;

@@ -38,67 +38,103 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
         return;
 
     if (m_model) {
+        QObject::disconnect(m_model, SIGNAL(fastenerInserted(int,Fastener)),
+                            this, SLOT(onFastenerInserted(int,Fastener)));
+        QObject::disconnect(m_model, SIGNAL(fastenerChanged(int,Fastener)),
+                            this, SLOT(onFastenerChanged(int,Fastener)));
+        QObject::disconnect(m_model, SIGNAL(fastenerRemoved(int)),
+                            this, SLOT(onFastenerRemoved(int)));
+
+        QObject::disconnect(m_model, SIGNAL(designSpaceInserted(int,DesignSpace)),
+                            this, SLOT(onDesignSpaceInserted(int,DesignSpace)));
+        QObject::disconnect(m_model, SIGNAL(designSpaceChanged(int,DesignSpace)),
+                            this, SLOT(onDesignSpaceChanged(int,DesignSpace)));
+        QObject::disconnect(m_model, SIGNAL(designSpaceRemoved(int)),
+                            this, SLOT(onDesignSpaceRemoved(int)));
+
         QObject::disconnect(m_model, SIGNAL(appliedLoadChanged()),
-                            this, SLOT(appliedLoadChanged()));
-
-        QObject::disconnect(m_model, SIGNAL(fastenersChanged(int,Fastener)),
-                            this, SLOT(fastenersChanged(int,Fastener)));
-
-        QObject::disconnect(m_model, SIGNAL(fastenersInserted(int,Fastener)),
-                            this, SLOT(fastenersInserted(int,Fastener)));
-
-        QObject::disconnect(m_model, SIGNAL(fastenersRemoved(int)),
-                            this, SLOT(fastenersRemoved(int)));
+                            this, SLOT(onAppliedLoadChanged()));
+        QObject::disconnect(m_model, SIGNAL(resultsChanged()),
+                            this, SLOT(onResultsChanged()));
 
         QObject::disconnect(m_model, SIGNAL(selectionFastenerChanged()),
-                            this, SLOT(selectionFastenerChanged()));
-
-        QObject::disconnect(m_model, SIGNAL(resultsChanged()),
-                            this, SLOT(resultsChanged()));
+                            this, SLOT(onSelectionFastenerChanged()));
+        QObject::disconnect(m_model, SIGNAL(selectionDesignSpaceChanged()),
+                            this, SLOT(onSelectionDesignSpaceChanged()));
     }
     m_model = model;
     if (m_model) {
+        QObject::connect(m_model, SIGNAL(fastenerInserted(int,Fastener)),
+                         this, SLOT(onFastenerInserted(int,Fastener)));
+        QObject::connect(m_model, SIGNAL(fastenerChanged(int,Fastener)),
+                         this, SLOT(onFastenerChanged(int,Fastener)));
+        QObject::connect(m_model, SIGNAL(fastenerRemoved(int)),
+                         this, SLOT(onFastenerRemoved(int)));
+
+        QObject::connect(m_model, SIGNAL(designSpaceInserted(int,DesignSpace)),
+                         this, SLOT(onDesignSpaceInserted(int,DesignSpace)));
+        QObject::connect(m_model, SIGNAL(designSpaceChanged(int,DesignSpace)),
+                         this, SLOT(onDesignSpaceChanged(int,DesignSpace)));
+        QObject::connect(m_model, SIGNAL(designSpaceRemoved(int)),
+                         this, SLOT(onDesignSpaceRemoved(int)));
+
         QObject::connect(m_model, SIGNAL(appliedLoadChanged()),
-                         this, SLOT(appliedLoadChanged()));
-
-        QObject::connect(m_model, SIGNAL(fastenersChanged(int,Fastener)),
-                         this, SLOT(fastenersChanged(int,Fastener)));
-
-        QObject::connect(m_model, SIGNAL(fastenersInserted(int,Fastener)),
-                         this, SLOT(fastenersInserted(int,Fastener)));
-
-        QObject::connect(m_model, SIGNAL(fastenersRemoved(int)),
-                         this, SLOT(fastenersRemoved(int)));
+                         this, SLOT(onAppliedLoadChanged()));
+        QObject::connect(m_model, SIGNAL(resultsChanged()),
+                         this, SLOT(onResultsChanged()));
 
         QObject::connect(m_model, SIGNAL(selectionFastenerChanged()),
-                         this, SLOT(selectionFastenerChanged()));
-
-        QObject::connect(m_model, SIGNAL(resultsChanged()),
-                         this, SLOT(resultsChanged()));
+                         this, SLOT(onSelectionFastenerChanged()));
+        QObject::connect(m_model, SIGNAL(selectionDesignSpaceChanged()),
+                         this, SLOT(onSelectionDesignSpaceChanged()));
 
     }
 }
 
-void AbstractSpliceView::appliedLoadChanged()
+/******************************************************************************
+ ******************************************************************************/
+void AbstractSpliceView::onFastenerInserted(const int, const Fastener &)
 {
 }
 
-void AbstractSpliceView::fastenersInserted(const int /*index*/, const Fastener &/*fastener*/)
+void AbstractSpliceView::onFastenerChanged(const int, const Fastener &)
 {
 }
 
-void AbstractSpliceView::fastenersChanged(const int /*index*/, const Fastener &/*fastener*/)
+void AbstractSpliceView::onFastenerRemoved(const int)
 {
 }
 
-void AbstractSpliceView::fastenersRemoved(const int /*index*/)
+/******************************************************************************
+ ******************************************************************************/
+void AbstractSpliceView::onDesignSpaceInserted(const int, const DesignSpace &)
 {
 }
 
-void AbstractSpliceView::selectionFastenerChanged()
+void AbstractSpliceView::onDesignSpaceChanged(const int, const DesignSpace &)
 {
 }
 
-void AbstractSpliceView::resultsChanged()
+void AbstractSpliceView::onDesignSpaceRemoved(const int)
+{
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void AbstractSpliceView::onAppliedLoadChanged()
+{
+}
+
+void AbstractSpliceView::onResultsChanged()
+{
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void AbstractSpliceView::onSelectionFastenerChanged()
+{
+}
+
+void AbstractSpliceView::onSelectionDesignSpaceChanged()
 {
 }

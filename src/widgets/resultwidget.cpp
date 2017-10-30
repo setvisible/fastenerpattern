@@ -23,7 +23,6 @@
 #include <boost/units/cmath.hpp> /* pow<>() */
 
 #define C_COLUMN_COUNT 4
-#define C_SECTION_SIZE 20
 
 ResultWidget::ResultWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::ResultWidget)
@@ -37,10 +36,16 @@ ResultWidget::ResultWidget(QWidget *parent) : AbstractSpliceView(parent)
 
     ui->tableWidget->horizontalHeader()->setVisible(true);
     ui->tableWidget->verticalHeader()->setVisible(false);
-    ui->tableWidget->verticalHeader()->setDefaultSectionSize( C_SECTION_SIZE );
+    int size = ui->tableWidget->verticalHeader()->minimumSectionSize();
+    ui->tableWidget->verticalHeader()->setDefaultSectionSize(size);
+
     ui->tableWidget->setAlternatingRowColors(false);
     ui->tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     QObject::connect(ui->tableWidget, SIGNAL(itemSelectionChanged()),
                      this, SLOT(onItemSelectionChanged()));
@@ -71,7 +76,7 @@ void ResultWidget::onItemSelectionChanged()
     model()->setFastenerSelection(set);
 }
 
-void ResultWidget::selectionFastenerChanged()
+void ResultWidget::onSelectionFastenerChanged()
 {
     QSet<int> set = model()->selectedFastenerIndexes();
     int row = ui->tableWidget->rowCount();
@@ -84,7 +89,7 @@ void ResultWidget::selectionFastenerChanged()
     }
 }
 
-void ResultWidget::resultsChanged()
+void ResultWidget::onResultsChanged()
 {
     const int count = model()->fastenerCount();
     ui->tableWidget->setRowCount(count);

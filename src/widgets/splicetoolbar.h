@@ -34,7 +34,8 @@ public:
     explicit SpliceToolbarPrivate(QWidget *parent = 0);
 
 public Q_SLOTS:
-    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
+    virtual void onSelectionFastenerChanged() Q_DECL_OVERRIDE;
+    virtual void onSelectionDesignSpaceChanged() Q_DECL_OVERRIDE;
 
 };
 
@@ -54,7 +55,10 @@ public:
     void setModel(AbstractSpliceModel *model);
     AbstractSpliceModel *model() const;
 
+    void reset();
+
 Q_SIGNALS:
+    void designSpaceVisibilityChanged(bool visible);
     void axesVisibilityChanged(bool visible);
     void gridVisibilityChanged(bool visible);
     void imageVisibilityChanged(bool visible);
@@ -66,13 +70,8 @@ Q_SIGNALS:
     void distanceVisibilityChanged(bool visible);
 
 public Q_SLOTS:
-    void fastenerAdd();
-    void fastenerDuplicate();
-    void fastenerSelectAll();
-    void fastenerRemove();
-
-    void designSpaceAdd();
-    void designSpaceRemove();
+    bool isDesignSpaceVisible() const;
+    void setDesignSpaceVisible(bool visible);
 
     bool isAxesVisible() const;
     void setAxesVisible(bool visible);
@@ -101,8 +100,17 @@ public Q_SLOTS:
     bool isDistanceVisible() const;
     void setDistanceVisible(bool visible);
 
-protected:
-    void _q_selectionChanged();
+protected Q_SLOTS:
+    void _q_selectionFastenerChanged();
+    void _q_selectionDesignSpaceChanged();
+
+private Q_SLOTS:
+    void fastenerAdd();
+    void fastenerDuplicate();
+    void fastenerSelectAll();
+    void fastenerRemove();
+    void designSpaceAdd();
+    void designSpaceRemove();
 
 private:
     QAction *m_buttonFastenerAdd;
@@ -110,6 +118,7 @@ private:
     QAction *m_buttonFastenerSelectAll;
     QAction *m_buttonFastenerRemove;
     // --
+    QAction *m_buttonShowDesignSpace;
     QAction *m_buttonDesignSpaceAdd;
     QAction *m_buttonDesignSpaceRemove;
     // --
@@ -125,6 +134,7 @@ private:
     QAction *m_buttonDistance;
 
     void createActions();
+
 };
 
 #endif // WIDGETS_SPLICE_TOOLBAR_H

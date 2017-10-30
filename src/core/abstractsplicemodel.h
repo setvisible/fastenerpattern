@@ -22,47 +22,84 @@
 
 #include <Core/Tensor>
 #include <Core/Fastener>
+#include <Core/DesignSpace>
 #include <Core/Solvers/Parameters>
 
 class AbstractSpliceModel : public QObject
 {
     Q_OBJECT
+
 public:
     explicit AbstractSpliceModel(QObject *parent = Q_NULLPTR) : QObject(parent) {}
     ~AbstractSpliceModel() {}
 
+    /* Public Getters */
     Q_INVOKABLE virtual int fastenerCount() const = 0;
     Q_INVOKABLE virtual Fastener fastenerAt(const int index) const = 0;
-    Q_INVOKABLE virtual Tensor appliedLoad() const = 0;
-    Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
+
+    Q_INVOKABLE virtual int designSpaceCount() const = 0;
+    Q_INVOKABLE virtual DesignSpace designSpaceAt(const int index) const = 0;
+
     Q_INVOKABLE virtual QSet<int> selectedFastenerIndexes() const = 0;
     Q_INVOKABLE virtual QSet<int> selectedDesignSpaceIndexes() const = 0;
+
+    Q_INVOKABLE virtual Tensor appliedLoad() const = 0;
+    Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
     Q_INVOKABLE virtual SolverParameters solverParameters() const = 0;
 
+
 Q_SIGNALS:
-    void appliedLoadChanged();
-    void fastenersInserted(const int index, const Fastener &fastener);
-    void fastenersChanged(const int index, const Fastener &fastener);
-    void fastenersRemoved(const int index);
+
+    /* Internal Notifications */
+    void fastenerInserted(const int index, const Fastener &fastener);
+    void fastenerChanged(const int index, const Fastener &fastener);
+    void fastenerRemoved(const int index);
+
+    void designSpaceInserted(const int index, const DesignSpace &designSpace);
+    void designSpaceChanged(const int index, const DesignSpace &designSpace);
+    void designSpaceRemoved(const int index);
+
     void selectionFastenerChanged();
     void selectionDesignSpaceChanged();
+
+    void appliedLoadChanged();
     void resultsChanged();
+
 
 public Q_SLOTS:
 
+    /* Public Setters */
     Q_INVOKABLE virtual bool insertFastener(const int index, const Fastener &fastener) {
         Q_UNUSED(index);
         Q_UNUSED(fastener);
-        return false;
-    }
-    Q_INVOKABLE virtual bool removeFastener(const int index) {
-        Q_UNUSED(index);
         return false;
     }
 
     Q_INVOKABLE virtual bool setFastener(const int index, const Fastener &fastener) {
         Q_UNUSED(index);
         Q_UNUSED(fastener);
+        return false;
+    }
+
+    Q_INVOKABLE virtual bool removeFastener(const int index) {
+        Q_UNUSED(index);
+        return false;
+    }
+
+    Q_INVOKABLE virtual bool insertDesignSpace(const int index, const DesignSpace &designSpace) {
+        Q_UNUSED(index);
+        Q_UNUSED(designSpace);
+        return false;
+    }
+
+    Q_INVOKABLE virtual bool setDesignSpace(const int index, const DesignSpace &designSpace) {
+        Q_UNUSED(index);
+        Q_UNUSED(designSpace);
+        return false;
+    }
+
+    Q_INVOKABLE virtual bool removeDesignSpace(const int index) {
+        Q_UNUSED(index);
         return false;
     }
 

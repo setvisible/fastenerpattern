@@ -31,8 +31,8 @@ public:
     ~ResultWidget();
 
 public Q_SLOTS:
-    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
-    virtual void resultsChanged() Q_DECL_OVERRIDE;
+    virtual void onSelectionFastenerChanged() Q_DECL_OVERRIDE;
+    virtual void onResultsChanged() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void onItemSelectionChanged();

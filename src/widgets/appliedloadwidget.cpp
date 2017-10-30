@@ -45,13 +45,13 @@ void AppliedLoadWidget::setDecimals(int prec)
     ui->tz->setDecimals(prec);
 }
 
-void AppliedLoadWidget::onValueChanged(double  /*value*/)
+void AppliedLoadWidget::onValueChanged(double /*value*/)
 {
     Tensor lc = this->appliedLoad();
     model()->setAppliedLoad(lc);
 }
 
-void AppliedLoadWidget::appliedLoadChanged()
+void AppliedLoadWidget::onAppliedLoadChanged()
 {
     Tensor lc = model()->appliedLoad();
     this->setAppliedLoad( lc );

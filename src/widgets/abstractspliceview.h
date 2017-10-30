@@ -32,12 +32,19 @@ public:
     AbstractSpliceModel *model() const;
 
 public Q_SLOTS:
-    virtual void appliedLoadChanged();
-    virtual void fastenersInserted(const int index, const Fastener &fastener);
-    virtual void fastenersChanged(const int index, const Fastener &fastener);
-    virtual void fastenersRemoved(const int index);
-    virtual void selectionFastenerChanged();
-    virtual void resultsChanged();
+    virtual void onFastenerInserted(const int index, const Fastener &fastener);
+    virtual void onFastenerChanged(const int index, const Fastener &fastener);
+    virtual void onFastenerRemoved(const int index);
+
+    virtual void onDesignSpaceInserted(const int index, const DesignSpace &designSpace);
+    virtual void onDesignSpaceChanged(const int index, const DesignSpace &designSpace);
+    virtual void onDesignSpaceRemoved(const int index);
+
+    virtual void onAppliedLoadChanged();
+    virtual void onResultsChanged();
+
+    virtual void onSelectionFastenerChanged();
+    virtual void onSelectionDesignSpaceChanged();
 
 private:
     AbstractSpliceModel *m_model;

@@ -42,50 +42,8 @@ OptimisationWidget::~OptimisationWidget()
     delete ui;
 }
 
-void OptimisationWidget::fastenersInserted(const int index, const Fastener &fastener)
-{
-  //  qDebug() << Q_FUNC_INFO;
-    /*  QTreeWidgetItem* item = new QTreeWidgetItem();
-    ui->treeWidget->insertTopLevelItem(index, item);
-    item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
-
-    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
-    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
-    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
-    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
-    item->setText(4, DOFToString(fastener.DoF_X));
-    item->setText(5, DOFToString(fastener.DoF_Y));
-
-    this->resizeColumnToContents();*/
-}
-
-void OptimisationWidget::fastenersChanged(const int index, const Fastener &fastener)
-{
-   // qDebug() << Q_FUNC_INFO;
-    /*  QTreeWidgetItem* item = ui->treeWidget->topLevelItem(index);
-    if (!item)
-        return;
-
-    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
-    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
-    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
-    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
-    item->setText(4, DOFToString(fastener.DoF_X));
-    item->setText(5, DOFToString(fastener.DoF_Y));
-
-    this->resizeColumnToContents();*/
-}
-
-void OptimisationWidget::fastenersRemoved(const int index)
-{
-  //  qDebug() << Q_FUNC_INFO;
-    /* QTreeWidgetItem* item = ui->treeWidget->takeTopLevelItem(index);
-    if (item)
-        delete item;
-    this->resizeColumnToContents();*/
-
-}
-
+/******************************************************************************
+ ******************************************************************************/
 void OptimisationWidget::onItemSelectionChanged()
 {
   //  qDebug() << Q_FUNC_INFO;
@@ -105,8 +63,55 @@ void OptimisationWidget::onItemSelectionChanged()
     model()->setSelection(set);*/
 }
 
+/******************************************************************************
+ ******************************************************************************/
+void OptimisationWidget::onFastenerInserted(const int index, const Fastener &fastener)
+{
+  //  qDebug() << Q_FUNC_INFO;
+    /*  QTreeWidgetItem* item = new QTreeWidgetItem();
+    ui->treeWidget->insertTopLevelItem(index, item);
+    item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
 
-void OptimisationWidget::selectionFastenerChanged()
+    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
+    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
+    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
+    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
+    item->setText(4, DOFToString(fastener.DoF_X));
+    item->setText(5, DOFToString(fastener.DoF_Y));
+
+    this->resizeColumnToContents();*/
+}
+
+void OptimisationWidget::onFastenerChanged(const int index, const Fastener &fastener)
+{
+   // qDebug() << Q_FUNC_INFO;
+    /*  QTreeWidgetItem* item = ui->treeWidget->topLevelItem(index);
+    if (!item)
+        return;
+
+    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
+    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
+    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
+    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
+    item->setText(4, DOFToString(fastener.DoF_X));
+    item->setText(5, DOFToString(fastener.DoF_Y));
+
+    this->resizeColumnToContents();*/
+}
+
+void OptimisationWidget::onFastenerRemoved(const int index)
+{
+  //  qDebug() << Q_FUNC_INFO;
+    /* QTreeWidgetItem* item = ui->treeWidget->takeTopLevelItem(index);
+    if (item)
+        delete item;
+    this->resizeColumnToContents();*/
+
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void OptimisationWidget::onSelectionFastenerChanged()
 {
   //  qDebug() << Q_FUNC_INFO;
     /* QSet<int> set = model()->selectedIndexes();
@@ -124,7 +129,27 @@ void OptimisationWidget::selectionFastenerChanged()
     }*/
 }
 
-void OptimisationWidget::resultsChanged()
+void OptimisationWidget::onSelectionDesignSpaceChanged()
+{
+  //  qDebug() << Q_FUNC_INFO;
+    /* QSet<int> set = model()->selectedIndexes();
+    QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
+
+    if (!rootItem)
+        return;
+
+    int i = rootItem->childCount();
+    while (i>0) {
+        i--;
+        QTreeWidgetItem *item = rootItem->child(i);
+        if (item)
+            ui->treeWidget->setItemSelected(item, set.contains(i));
+    }*/
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void OptimisationWidget::onResultsChanged()
 {
  //   qDebug() << Q_FUNC_INFO;
 

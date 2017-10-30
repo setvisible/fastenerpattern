@@ -51,6 +51,8 @@ void FastenerWidget::setDecimals(int prec)
 }
 
 
+/******************************************************************************
+ ******************************************************************************/
 void FastenerWidget::onTextChanged(QString /*text*/)
 {
     this->onChanged();
@@ -70,9 +72,11 @@ void FastenerWidget::onChanged()
     model()->setFastener(m_currentIndex, fastener);
 }
 
-void FastenerWidget::fastenersChanged(const int index, const Fastener &fastener)
+/******************************************************************************
+ ******************************************************************************/
+void FastenerWidget::onFastenerChanged(const int index, const Fastener &fastener)
 {
-    /// \todo Add the other slots (fastenersRemoved and fastenersAdded) ?
+    /// \todo Add the other slots (fastenerRemoved and fastenerAdded) ?
 
     Q_UNUSED(index);
     Q_UNUSED(fastener);
@@ -84,7 +88,7 @@ void FastenerWidget::fastenersChanged(const int index, const Fastener &fastener)
     }
 }
 
-void FastenerWidget::selectionFastenerChanged()
+void FastenerWidget::onSelectionFastenerChanged()
 {
     QSet<int> set = model()->selectedFastenerIndexes();
     if (set.count() == 1) {
@@ -98,6 +102,8 @@ void FastenerWidget::selectionFastenerChanged()
     ui->groupBox->setEnabled(set.count() == 1);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 Fastener FastenerWidget::fastener() const
 {
     Fastener fastener;

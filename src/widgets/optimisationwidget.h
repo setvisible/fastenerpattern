@@ -27,21 +27,23 @@ class OptimisationWidget : public AbstractSpliceView
 {
     Q_OBJECT
 public:
-    explicit OptimisationWidget(QWidget *parent = 0);
+    explicit OptimisationWidget(QWidget *parent = Q_NULLPTR);
     virtual ~OptimisationWidget();
 
 public Q_SLOTS:
-    virtual void fastenersInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void fastenersChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void fastenersRemoved(const int index) Q_DECL_OVERRIDE;
-    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
-    virtual void resultsChanged() Q_DECL_OVERRIDE;
+    virtual void onFastenerInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void onFastenerChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void onFastenerRemoved(const int index) Q_DECL_OVERRIDE;
+    virtual void onSelectionFastenerChanged() Q_DECL_OVERRIDE;
+    virtual void onSelectionDesignSpaceChanged() Q_DECL_OVERRIDE;
+    virtual void onResultsChanged() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void onItemSelectionChanged();
 
 private:
     Ui::OptimisationWidget *ui;
+
 };
 
 #endif // WIDGETS_OPTIMISATION_WIDGET_H

@@ -46,7 +46,7 @@ void TableWidget::resizeColumnToContents()
         ui->treeWidget->resizeColumnToContents(i);
 }
 
-void TableWidget::fastenersInserted(const int index, const Fastener &fastener)
+void TableWidget::onFastenerInserted(const int index, const Fastener &fastener)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem();
     ui->treeWidget->insertTopLevelItem(index, item);
@@ -62,7 +62,7 @@ void TableWidget::fastenersInserted(const int index, const Fastener &fastener)
     this->resizeColumnToContents();
 }
 
-void TableWidget::fastenersChanged(const int index, const Fastener &fastener)
+void TableWidget::onFastenerChanged(const int index, const Fastener &fastener)
 {
     QTreeWidgetItem* item = ui->treeWidget->topLevelItem(index);
     if (!item)
@@ -78,7 +78,7 @@ void TableWidget::fastenersChanged(const int index, const Fastener &fastener)
     this->resizeColumnToContents();
 }
 
-void TableWidget::fastenersRemoved(const int index)
+void TableWidget::onFastenerRemoved(const int index)
 {
     QTreeWidgetItem* item = ui->treeWidget->takeTopLevelItem(index);
     if (item)
@@ -106,7 +106,7 @@ void TableWidget::onItemSelectionChanged()
 }
 
 
-void TableWidget::selectionFastenerChanged()
+void TableWidget::onSelectionFastenerChanged()
 {
     QSet<int> set = model()->selectedFastenerIndexes();
     QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();

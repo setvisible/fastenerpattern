@@ -19,10 +19,11 @@
 
 #include <Widgets/AbstractSpliceView>
 
+class QTableWidgetItem;
+
 namespace Ui {
 class DesignSpaceWidget;
 }
-
 class DesignSpaceWidget : public AbstractSpliceView
 {
     Q_OBJECT
@@ -31,15 +32,17 @@ public:
     ~DesignSpaceWidget();
 
 public Q_SLOTS:
-    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
-    virtual void resultsChanged() Q_DECL_OVERRIDE;
+    virtual void onDesignSpaceInserted(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void onDesignSpaceChanged(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void onDesignSpaceRemoved(const int index) Q_DECL_OVERRIDE;
+    virtual void onSelectionDesignSpaceChanged() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
+    void onItemDataChanged(QTableWidgetItem *item);
     void onItemSelectionChanged();
 
 private:
     Ui::DesignSpaceWidget *ui;
-    void resizeColumnToContents();
 
 };
 

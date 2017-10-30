@@ -31,10 +31,10 @@ public:
     virtual ~TableWidget();
 
 public Q_SLOTS:
-    virtual void fastenersInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void fastenersChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void fastenersRemoved(const int index) Q_DECL_OVERRIDE;
-    virtual void selectionFastenerChanged() Q_DECL_OVERRIDE;
+    virtual void onFastenerInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void onFastenerChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void onFastenerRemoved(const int index) Q_DECL_OVERRIDE;
+    virtual void onSelectionFastenerChanged() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void onItemSelectionChanged();

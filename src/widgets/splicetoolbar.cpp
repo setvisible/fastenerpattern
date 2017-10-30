@@ -27,9 +27,14 @@ SpliceToolbarPrivate::SpliceToolbarPrivate(QWidget *parent)
 {
 }
 
-void SpliceToolbarPrivate::selectionFastenerChanged()
+void SpliceToolbarPrivate::onSelectionFastenerChanged()
 {
-    q_ptr->_q_selectionChanged();
+    q_ptr->_q_selectionFastenerChanged();
+}
+
+void SpliceToolbarPrivate::onSelectionDesignSpaceChanged()
+{
+    q_ptr->_q_selectionDesignSpaceChanged();
 }
 
 
@@ -40,6 +45,7 @@ SpliceToolbar::SpliceToolbar(const QString &title, QWidget *parent)
     , d_ptr(new SpliceToolbarPrivate(this))
 {
     this->createActions();
+    this->reset();
 }
 
 SpliceToolbar::SpliceToolbar(QWidget *parent)
@@ -47,6 +53,7 @@ SpliceToolbar::SpliceToolbar(QWidget *parent)
     , d_ptr(new SpliceToolbarPrivate(this))
 {
     this->createActions();
+    this->reset();
 }
 
 SpliceToolbar::~SpliceToolbar()
@@ -64,6 +71,34 @@ void SpliceToolbar::setModel(AbstractSpliceModel *model)
     d_ptr->setModel(model);
 }
 
+/******************************************************************************
+ ******************************************************************************/
+void SpliceToolbar::reset()
+{
+    m_buttonFastenerDuplicate->setEnabled(false);
+    m_buttonFastenerSelectAll->setEnabled(false);
+    m_buttonFastenerRemove->setEnabled(false);
+    // --
+    m_buttonDesignSpaceAdd->setVisible(false);
+    m_buttonDesignSpaceRemove->setEnabled(false);
+    m_buttonDesignSpaceRemove->setVisible(false);
+    m_buttonShowDesignSpace->setChecked(false);
+    // --
+    m_buttonShowAxes->setChecked(true);
+    m_buttonShowGrid->setChecked(true);
+    m_buttonShowBG->setChecked(false);
+    // --
+    m_buttonShowComponent->setChecked(false);
+    m_buttonShowResultant->setChecked(true);
+    m_buttonShowTorque->setChecked(true);
+    m_buttonShowLabel->setChecked(false);
+    // --
+    m_buttonSnap->setChecked(false);
+    m_buttonDistance->setChecked(false);
+}
+
+/******************************************************************************
+ ******************************************************************************/
 void SpliceToolbar::createActions()
 {
     {
@@ -80,7 +115,7 @@ void SpliceToolbar::createActions()
                     QIcon(":/icons/menu/bolt_duplicate_24x24.png"),
                     tr("&Duplicate"), this);
         m_buttonFastenerDuplicate->setStatusTip(tr("Duplicate the selection"));
-        m_buttonFastenerDuplicate->setShortcuts(QKeySequence::Copy);
+        m_buttonFastenerDuplicate->setShortcuts(QKeySequence::Paste);
         QObject::connect(m_buttonFastenerDuplicate, SIGNAL(triggered(bool)),
                          this, SLOT(fastenerDuplicate()));
         this->addAction(m_buttonFastenerDuplicate);
@@ -107,6 +142,16 @@ void SpliceToolbar::createActions()
     }
     this->addSeparator();
     {
+        m_buttonShowDesignSpace = new QAction(
+                    QIcon(":/icons/menu/edit_design_space_24x24.png"),
+                    tr("Show& Design Space"), this);
+        m_buttonShowDesignSpace->setCheckable(true);
+        m_buttonShowDesignSpace->setStatusTip(tr("Show the design space"));
+        QObject::connect(m_buttonShowDesignSpace, SIGNAL(toggled(bool)),
+                         SIGNAL(designSpaceVisibilityChanged(bool)));
+        this->addAction(m_buttonShowDesignSpace);
+    }
+    {
         m_buttonDesignSpaceAdd = new QAction(
                     QIcon(":/icons/menu/edit_design_space_add_24x24.png"),
                     tr("&Add Design Space"), this);
@@ -124,6 +169,12 @@ void SpliceToolbar::createActions()
         QObject::connect(m_buttonDesignSpaceRemove, SIGNAL(triggered(bool)),
                          this, SLOT(designSpaceRemove()));
         this->addAction(m_buttonDesignSpaceRemove);
+    }
+    {
+        QObject::connect(m_buttonShowDesignSpace, SIGNAL(toggled(bool)),
+                         m_buttonDesignSpaceAdd, SLOT(setVisible(bool)));
+        QObject::connect(m_buttonShowDesignSpace, SIGNAL(toggled(bool)),
+                         m_buttonDesignSpaceRemove, SLOT(setVisible(bool)));
     }
     this->addSeparator();
     {
@@ -226,6 +277,16 @@ void SpliceToolbar::createActions()
 
 /******************************************************************************
  ******************************************************************************/
+bool SpliceToolbar::isDesignSpaceVisible() const
+{
+    return m_buttonShowDesignSpace->isChecked();
+}
+
+void SpliceToolbar::setDesignSpaceVisible(bool visible)
+{
+    m_buttonShowDesignSpace->setChecked(visible);
+}
+
 bool SpliceToolbar::isAxesVisible() const
 {
     return m_buttonShowAxes->isChecked();
@@ -372,9 +433,14 @@ void SpliceToolbar::fastenerRemove()
  ******************************************************************************/
 void SpliceToolbar::designSpaceAdd()
 {
-    Fastener f(0.0*_mm, 0.0*_mm, 4.78*_mm, 3.*_mm);
-    int count =  model()->fastenerCount();
-    model()->insertFastener(count, f);
+    const qreal halfwidth = 50.0;
+    DesignSpace ds;
+    ds.polygon << QPointF( -halfwidth, -halfwidth)
+               << QPointF( -halfwidth,  halfwidth)
+               << QPointF(  halfwidth,  halfwidth)
+               << QPointF(  halfwidth, -halfwidth);
+    int count =  model()->designSpaceCount();
+    model()->insertDesignSpace(count, ds);
 }
 
 void SpliceToolbar::designSpaceRemove()
@@ -383,21 +449,27 @@ void SpliceToolbar::designSpaceRemove()
      * REMARK: Here the selection changes during the removal, thus
      * we need to remove the indexes from the highest to the lowest.
      */
-    QSet<int> set = model()->selectedFastenerIndexes();
+    QSet<int> set = model()->selectedDesignSpaceIndexes();
     QList<int> list = set.toList();
     qSort(list);
     while (!list.isEmpty()) {
         int index = list.last();
         list.removeLast();
-        model()->removeFastener(index);
+        model()->removeDesignSpace(index);
     }
 }
 
 /******************************************************************************
  ******************************************************************************/
-void SpliceToolbar::_q_selectionChanged()
+void SpliceToolbar::_q_selectionFastenerChanged()
 {
     bool selected = (!model()->selectedFastenerIndexes().isEmpty());
     m_buttonFastenerDuplicate->setEnabled(selected);
     m_buttonFastenerRemove->setEnabled(selected);
+}
+
+void SpliceToolbar::_q_selectionDesignSpaceChanged()
+{
+    bool selected = (!model()->selectedDesignSpaceIndexes().isEmpty());
+    m_buttonDesignSpaceRemove->setEnabled(selected);
 }

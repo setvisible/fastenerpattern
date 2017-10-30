@@ -21,7 +21,6 @@
 #include <QtWidgets/QTableWidget>
 
 #define C_COLUMN_COUNT 3
-#define C_SECTION_SIZE 20
 
 DesignVariableWidget::DesignVariableWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::DesignVariableWidget)
@@ -35,10 +34,16 @@ DesignVariableWidget::DesignVariableWidget(QWidget *parent) : AbstractSpliceView
 
     ui->tableWidget->horizontalHeader()->setVisible(true);
     ui->tableWidget->verticalHeader()->setVisible(false);
-    ui->tableWidget->verticalHeader()->setDefaultSectionSize( C_SECTION_SIZE );
+    int size = ui->tableWidget->verticalHeader()->minimumSectionSize();
+    ui->tableWidget->verticalHeader()->setDefaultSectionSize(size);
+
     ui->tableWidget->setAlternatingRowColors(false);
     ui->tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     QObject::connect(ui->tableWidget, SIGNAL(itemSelectionChanged()),
                      this, SLOT(onItemSelectionChanged()));
@@ -70,28 +75,28 @@ void DesignVariableWidget::onItemSelectionChanged()
 }
 
 
-void DesignVariableWidget::fastenersInserted(const int index, const Fastener &fastener)
+void DesignVariableWidget::onFastenerInserted(const int index, const Fastener &fastener)
 {
     Q_UNUSED(index)
     Q_UNUSED(fastener)
     updateTable();
 }
 
-void DesignVariableWidget::fastenersChanged(const int index, const Fastener &fastener)
+void DesignVariableWidget::onFastenerChanged(const int index, const Fastener &fastener)
 {
     Q_UNUSED(index)
     Q_UNUSED(fastener)
     updateTable();
 }
 
-void DesignVariableWidget::fastenersRemoved(const int index)
+void DesignVariableWidget::onFastenerRemoved(const int index)
 {
     Q_UNUSED(index)
     updateTable();
 }
 
 
-void DesignVariableWidget::selectionFastenerChanged()
+void DesignVariableWidget::onSelectionFastenerChanged()
 {
     QSet<int> set = model()->selectedFastenerIndexes();
     int row = ui->tableWidget->rowCount();
