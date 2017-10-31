@@ -242,6 +242,7 @@ void DesignSpaceItem::setPolygon(const QPolygonF &polygon)
     foreach (const QPointF &point, polygon) {
         HandleItem *item = new HandleItem(this);
         item->setPos( point );
+        item->setCoordinateVisible(true);
         QObject::connect(item, SIGNAL(xChanged()), m_object, SLOT(onCornerPositionChanged()));
         QObject::connect(item, SIGNAL(yChanged()), m_object, SLOT(onCornerPositionChanged()));
         item->installEventFilter(this);

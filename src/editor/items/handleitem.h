@@ -17,17 +17,28 @@
 #ifndef EDITOR_ITEMS_HANDLE_ITEM_H
 #define EDITOR_ITEMS_HANDLE_ITEM_H
 
-#include <QGraphicsObject>
+#include <QtWidgets/QGraphicsObject>
+
+class QGraphicsSimpleTextItem;
 
 class HandleItem : public QGraphicsObject
 {
+    Q_OBJECT
 public:
     explicit HandleItem(QGraphicsItem *parent = Q_NULLPTR);
+
+    bool isCoordinateVisible() const;
+    void setCoordinateVisible(bool visible);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
 
+private Q_SLOTS:
+    void onPosChanged();
+
+private:
+    QGraphicsSimpleTextItem *m_labelItem;
 };
 
 

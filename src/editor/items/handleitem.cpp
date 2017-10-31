@@ -20,29 +20,74 @@
 #include <QtGui/QCursor>
 #include <QtGui/QPainter>
 
+#include <QtWidgets/QGraphicsSimpleTextItem>
+
 /*! \class HandleItem
- *  \brief The class HandleItem is a graphics item representing
- *         a movable handle.
+ *  \brief The class HandleItem is a graphics item representing a movable handle.
+ *
+ * Optionally, use setCoordinateVisible() to show the coordinates
+ * of the HandleItem.
+ *
  */
 
 HandleItem::HandleItem(QGraphicsItem *parent) : QGraphicsObject(parent)
+  , m_labelItem(new QGraphicsSimpleTextItem(this))
 {
     this->setFlag(QGraphicsItem::ItemIsMovable);
     this->setFlag(QGraphicsItem::ItemIsSelectable);
     this->setCursor(Qt::SizeVerCursor);
     this->setZValue(500);
+
+    //m_labelItem->setText(QLatin1String("Dummy Text..."));
+    const QFontMetrics fm( m_labelItem->font() );
+    const int pixelsHigh = fm.height();
+    m_labelItem->setPos(10, -0.5 * pixelsHigh - 1);
+    m_labelItem->setVisible(false);
+    connect(this->parentObject(), SIGNAL(xChanged()), this, SLOT(onPosChanged()));
+    connect(this->parentObject(), SIGNAL(yChanged()), this, SLOT(onPosChanged()));
+    connect(this, SIGNAL(xChanged()), this, SLOT(onPosChanged()));
+    connect(this, SIGNAL(yChanged()), this, SLOT(onPosChanged()));
+
+    onPosChanged();
 }
 
+/******************************************************************************
+ ******************************************************************************/
+bool HandleItem::isCoordinateVisible() const
+{
+    return m_labelItem->isVisible();
+}
+
+void HandleItem::setCoordinateVisible(bool visible)
+{
+    m_labelItem->setVisible(visible);
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void HandleItem::onPosChanged()
+{
+    QString text =
+            QString("(%0,%1)")
+            .arg(m_labelItem->scenePos().x(), 0, 'f', 1)
+            .arg(m_labelItem->scenePos().y(), 0, 'f', 1);
+    m_labelItem->setText(text);
+}
+
+/******************************************************************************
+ ******************************************************************************/
 QRectF HandleItem::boundingRect() const
 {
     return shape().boundingRect();
 }
+
 QPainterPath HandleItem::shape() const
 {
     QPainterPath path;
     path.addRect(QRectF(-6, -6, 14, 14)); /* two times bigger than the drawn rect */
     return path;
 }
+
 void HandleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->setPen(QPen(Qt::black, 1));
