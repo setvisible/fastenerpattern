@@ -46,7 +46,7 @@ private slots:
     void test_setAppliedLoad();
 
     /* Misc. */
-    void test_setSelection();
+    void test_setFastenerSelection();
 
 };
 
@@ -62,7 +62,7 @@ void tst_SpliceCalculator::test_clear()
     target.insertFastener(0, Fastener(  1.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
     target.insertFastener(1, Fastener(  2.*_mm, 0.*_mm, 4.83*_mm, 3.*_mm ));
     QSet<int> input = {0,1,5,9,10};
-    target.setSelection( input );
+    target.setFastenerSelection( input );
 
     // When
     target.clear();
@@ -70,7 +70,7 @@ void tst_SpliceCalculator::test_clear()
     // Then
     QCOMPARE( target.fastenerCount(), 0);
     QCOMPARE( target.appliedLoad(), Tensor() );
-    QCOMPARE( target.selectedIndexes().empty(), true);
+    QCOMPARE( target.selectedFastenerIndexes().empty(), true);
 }
 
 /*************************************************************************
@@ -205,15 +205,15 @@ void tst_SpliceCalculator::test_setAppliedLoad()
 
 /*************************************************************************
  *************************************************************************/
-void tst_SpliceCalculator::test_setSelection()
+void tst_SpliceCalculator::test_setFastenerSelection()
 {
     // Given
     SpliceCalculator target;
 
     // When
     QSet<int> expected = {0,1,5,9,10};
-    target.setSelection( expected );
-    QSet<int> actual = target.selectedIndexes();
+    target.setFastenerSelection( expected );
+    QSet<int> actual = target.selectedFastenerIndexes();
 
     // Then
     QCOMPARE( actual, expected);
