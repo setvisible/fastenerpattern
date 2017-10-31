@@ -48,34 +48,42 @@ private:
  ******************************************************************************/
 class DesignSpaceItem : public QGraphicsObject
 {
+    Q_OBJECT
 public:
     explicit DesignSpaceItem(QGraphicsItem *parent = Q_NULLPTR);
     ~DesignSpaceItem();
+
+    QString name() const;
+    void setName(const QString &name);
+
+    QPolygonF polygon() const;
+    void setPolygon(const QPolygonF &polygon);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
 
-    QPolygonF polygon() const;
-    void setPolygon(const QPolygonF &polygon);
-
-    void setCorner(const HandleItem *item);
+Q_SIGNALS:
+    void changed();
 
 protected:
-  //  bool sceneEventFilter(QGraphicsItem *watched, QEvent *event) Q_DECL_OVERRIDE;
+    friend class DesignSpaceObject;
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
- //   void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) Q_DECL_OVERRIDE;
-
+    void moveHandle(const HandleItem *item);
 
 private:
-    DesignSpaceObject *m_object;
-    QGraphicsPolygonItem *m_polygonItem;
-    QList<HandleItem*> m_corners;
 
-    BorderItem *m_borderItem;
+    /// \todo Use a d_ptr instead of m_object ?
+
+    DesignSpaceObject *m_object;
+    QString m_name;
+    QGraphicsPolygonItem *m_polygonItem;
+    QList<HandleItem*> m_handleItems; /* Handles are movable corners of the polygon */
+    BorderItem *m_borderItem; /* Fake border item that catches mouse events. */
 
     QBrush m_brush;
     QBrush m_brushSelected;
+
 };
 
 #endif // EDITOR_ITEMS_DESIGN_SPACE_ITEM_H

@@ -45,7 +45,7 @@ void DesignSpaceObject::onCornerPositionChanged()
         return;
     if (!item->isSelected())
         return;
-    m_parent->setCorner(item);
+    m_parent->moveHandle(item);
 }
 
 void DesignSpaceObject::addHandle()
@@ -101,6 +101,7 @@ private:
  ******************************************************************************/
 DesignSpaceItem::DesignSpaceItem(QGraphicsItem *parent) : QGraphicsObject(parent)
   , m_object(new DesignSpaceObject(this))
+  , m_name(QString())
   , m_polygonItem(new QGraphicsPolygonItem(this))
   , m_borderItem(new BorderItem(m_polygonItem, this))
   , m_brush(QBrush(QColor(153, 217, 234, 126))) /* cyan */
@@ -136,6 +137,8 @@ DesignSpaceItem::DesignSpaceItem(QGraphicsItem *parent) : QGraphicsObject(parent
     m_borderItem->installEventFilter(this);
     m_borderItem->setVisible(true);
 
+    QObject::connect(this, SIGNAL(xChanged()), SIGNAL(changed()));
+    QObject::connect(this, SIGNAL(yChanged()), SIGNAL(changed()));
 }
 
 DesignSpaceItem::~DesignSpaceItem()
@@ -173,20 +176,17 @@ bool DesignSpaceItem::eventFilter(QObject *obj, QEvent *event)
                 return true;
             }
         }
-
     }
     /* Pass the event on to the parent class */
     return QObject::eventFilter(obj, event);
-
 }
 
 /******************************************************************************
  ******************************************************************************/
-
 QRectF DesignSpaceItem::boundingRect() const
 {
     QRectF rect = m_polygonItem->boundingRect();
-    foreach (auto corner, m_corners) {
+    foreach (auto corner, m_handleItems) {
         rect |= corner->boundingRect();
     }
     rect |= m_borderItem->boundingRect();
@@ -206,14 +206,14 @@ void DesignSpaceItem::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidge
 {
     bool selected = isSelected();
     if (!selected) {
-        foreach (auto corner, m_corners) {
+        foreach (auto corner, m_handleItems) {
             if (corner->isSelected()) {
                 selected = true;
                 break;
             }
         }
     }
-    foreach (auto corner, m_corners) {
+    foreach (auto corner, m_handleItems) {
         corner->setVisible( selected );
     }
 
@@ -228,41 +228,86 @@ void DesignSpaceItem::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidge
     }
 }
 
+QString DesignSpaceItem::name() const
+{
+    return m_name;
+}
 
+void DesignSpaceItem::setName(const QString &name)
+{
+    if (m_name == name) return;
+    m_name = name;
+    emit changed();
+}
+
+
+
+/******************************************************************************
+ ******************************************************************************/
+/*!
+ * \brief Return the polygon, in the coordinates of the scene.
+ */
 QPolygonF DesignSpaceItem::polygon() const
 {
-    return m_polygonItem->polygon();
+    QPolygonF polygon = m_polygonItem->polygon();
+    polygon.translate(this->pos());
+    return polygon;
 }
 
+/*!
+ * \brief Set the \a polygon, in the coordinates of the scene.
+ */
 void DesignSpaceItem::setPolygon(const QPolygonF &polygon)
 {
-    m_polygonItem->setPolygon(polygon);
+    if (polygon == this->polygon())
+        return;
 
-    m_corners.clear();
-    foreach (const QPointF &point, polygon) {
-        HandleItem *item = new HandleItem(this);
-        item->setPos( point );
-        item->setCoordinateVisible(true);
-        QObject::connect(item, SIGNAL(xChanged()), m_object, SLOT(onCornerPositionChanged()));
-        QObject::connect(item, SIGNAL(yChanged()), m_object, SLOT(onCornerPositionChanged()));
-        item->installEventFilter(this);
-        m_corners << item;
+    const QPointF position = this->pos();
+    const QPolygonF trans = polygon.translated( -position );
+    m_polygonItem->setPolygon(trans);
+
+    if ( polygon.count() != m_handleItems.count() ) {
+
+        /* Recreate the HandleItems */
+
+        /// \todo same as m_handleItems.clear() ?
+        while (m_handleItems.count() > 0) {
+            HandleItem *item = m_handleItems.takeFirst();
+            delete item;
+        }
+
+        foreach (const QPointF &point, polygon) {
+            HandleItem *item = new HandleItem(this);
+            item->setPos( point );
+            item->setCoordinateVisible(true);
+            QObject::connect(item, SIGNAL(xChanged()), m_object, SLOT(onCornerPositionChanged()));
+            QObject::connect(item, SIGNAL(yChanged()), m_object, SLOT(onCornerPositionChanged()));
+            item->installEventFilter(this);
+            m_handleItems << item;
+        }
     }
+
+    // update the Handles
+    Q_ASSERT(polygon.count() ==  m_handleItems.count());
+    for (int i = 0; i < m_handleItems.count(); ++i) {
+        m_handleItems[i]->setPos(polygon.at(i));
+    }
+    emit changed();
 }
 
-void DesignSpaceItem::setCorner(const HandleItem *item)
+/******************************************************************************
+ ******************************************************************************/
+/// \internal
+void DesignSpaceItem::moveHandle(const HandleItem *item)
 {
     QPolygonF polygon = m_polygonItem->polygon();
-    Q_ASSERT(polygon.count() ==  m_corners.count());
-
-    for (int i = 0; i < m_corners.count(); ++i) {
-        if (m_corners.at(i) == item) {
-            QPointF point = polygon.at(i);
-            point.setX(item->x());
-            point.setY(item->y());
-            polygon.replace(i,point);
+    Q_ASSERT(polygon.count() ==  m_handleItems.count());
+    for (int i = 0; i < m_handleItems.count(); ++i) {
+        if (m_handleItems.at(i) == item) {
+            polygon.replace(i, item->pos());
             m_polygonItem->setPolygon(polygon);
             break;
         }
     }
+    emit changed();
 }
