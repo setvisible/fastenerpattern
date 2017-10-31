@@ -111,7 +111,7 @@ void SpliceGraphicsWidget::onSelectionChanged()
     }
 }
 
-void SpliceGraphicsWidget::onFastenerPositionChanged()
+void SpliceGraphicsWidget::onFastenerItemPositionChanged()
 {
     FastenerItem *item = static_cast<FastenerItem *>(sender());
     if (!item)
@@ -124,13 +124,26 @@ void SpliceGraphicsWidget::onFastenerPositionChanged()
     model()->setFastener(index, fastener);
 }
 
+void SpliceGraphicsWidget::onDesignSpaceItemChanged()
+{
+    DesignSpaceItem *item = static_cast<DesignSpaceItem *>(sender());
+    if (!item)
+        return;
+
+    int index = m_designSpaceItems.indexOf(item);
+    DesignSpace designSpace = model()->designSpaceAt(index);
+    designSpace.name = item->name();
+    designSpace.polygon = item->polygon();
+    model()->setDesignSpace(index, designSpace);
+}
+
 /******************************************************************************
  ******************************************************************************/
 void SpliceGraphicsWidget::onFastenerInserted(const int index, const Fastener &fastener)
 {
     FastenerItem *item = new FastenerItem();
-    QObject::connect(item, SIGNAL(xChanged()), this, SLOT(onFastenerPositionChanged()));
-    QObject::connect(item, SIGNAL(yChanged()), this, SLOT(onFastenerPositionChanged()));
+    QObject::connect(item, SIGNAL(xChanged()), this, SLOT(onFastenerItemPositionChanged()));
+    QObject::connect(item, SIGNAL(yChanged()), this, SLOT(onFastenerItemPositionChanged()));
 
     m_backgroundWidget->scene()->addItem(item);
     m_fastenerItems.insert(index, item);
@@ -162,9 +175,10 @@ void SpliceGraphicsWidget::onFastenerRemoved(const int index)
 {
     if (index >= 0 && index < m_fastenerItems.count()) {
         FastenerItem* item = m_fastenerItems.takeAt(index);
-        QObject::disconnect(item, SIGNAL(xChanged()), this, SLOT(onFastenerPositionChanged()));
-        QObject::disconnect(item, SIGNAL(yChanged()), this, SLOT(onFastenerPositionChanged()));
+        QObject::disconnect(item, SIGNAL(xChanged()), this, SLOT(onFastenerItemPositionChanged()));
+        QObject::disconnect(item, SIGNAL(yChanged()), this, SLOT(onFastenerItemPositionChanged()));
         m_backgroundWidget->scene()->removeItem(item);
+        delete item;
     }
     this->updateDistanceItemPositions();
 }
@@ -174,30 +188,32 @@ void SpliceGraphicsWidget::onFastenerRemoved(const int index)
 void SpliceGraphicsWidget::onDesignSpaceInserted(const int index, const DesignSpace &designSpace)
 {
     DesignSpaceItem *item = new DesignSpaceItem();
-    // QObject::connect(item, SIGNAL(xChanged()), this, SLOT(onFastenerPositionChanged()));
-    // QObject::connect(item, SIGNAL(yChanged()), this, SLOT(onFastenerPositionChanged()));
+    QObject::connect(item, SIGNAL(changed()), this, SLOT(onDesignSpaceItemChanged()));
 
     m_backgroundWidget->scene()->addItem(item);
     m_designSpaceItems.insert(index, item);
 
-    item->setPolygon( designSpace.polygon );
+    item->setName(designSpace.name);
+    item->setPolygon(designSpace.polygon);
 }
 
 void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
 {
-
+    if (index >= 0 && index < m_designSpaceItems.count()) {
+        DesignSpaceItem *item = m_designSpaceItems[index];
+        item->setName(designSpace.name);
+        item->setPolygon(designSpace.polygon);
+    }
 }
 
 void SpliceGraphicsWidget::onDesignSpaceRemoved(const int index)
 {
     if (index >= 0 && index < m_designSpaceItems.count()) {
         DesignSpaceItem* item = m_designSpaceItems.takeAt(index);
-        // QObject::disconnect(item, SIGNAL(xChanged()), this, SLOT(onFastenerPositionChanged()));
-        // QObject::disconnect(item, SIGNAL(yChanged()), this, SLOT(onFastenerPositionChanged()));
+        QObject::disconnect(item, SIGNAL(changed()), this, SLOT(onDesignSpaceItemChanged()));
         m_backgroundWidget->scene()->removeItem(item);
-
+        delete item;
     }
-
 }
 
 /******************************************************************************

@@ -100,8 +100,8 @@ public Q_SLOTS:
 private Q_SLOTS:
     void update();
     void onSelectionChanged();
-    void onFastenerPositionChanged();
-
+    void onFastenerItemPositionChanged();
+    void onDesignSpaceItemChanged();
 
 private:
     QVBoxLayout *m_mainLayout;
