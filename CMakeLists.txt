@@ -186,6 +186,9 @@ get_target_property(QtCore_LOCATION Qt5::Core LOCATION)
 get_filename_component(QT_DLL_DIR ${QtCore_LOCATION} PATH)
 
 install(FILES
+    ${QT_DLL_DIR}/libgcc_s_dw2-1.dll
+    ${QT_DLL_DIR}/libstdc++-6.dll
+    ${QT_DLL_DIR}/libwinpthread-1.dll
     ${QT_DLL_DIR}/Qt5Core.dll
     ${QT_DLL_DIR}/Qt5Gui.dll
     ${QT_DLL_DIR}/Qt5Widgets.dll

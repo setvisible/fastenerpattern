@@ -62,13 +62,15 @@ void SpliceCalculator::clear()
 
     QSet<int> emptySet;
     setFastenerSelection(emptySet);
+    setDesignSpaceSelection(emptySet);
 
     setAppliedLoad(Tensor(0*N, 0*N, 0*N_m));
 
-    int i = fastenerCount();
-    while (i > 0) {
-        i--;
+    for (int i = fastenerCount()-1; i >=0; --i) {
         removeFastener(i);
+    }
+    for (int i = designSpaceCount()-1; i >=0; --i) {
+        removeDesignSpace(i);
     }
 }
 
@@ -84,6 +86,9 @@ void SpliceCalculator::read(const QJsonObject &json)
     emit appliedLoadChanged();
     for (int i = 0 ; i < fastenerCount(); ++i) {
         emit fastenerInserted(i, fastenerAt(i));
+    }
+    for (int i = 0 ; i < designSpaceCount(); ++i) {
+        emit designSpaceInserted(i, designSpaceAt(i));
     }
     emit changed();
     recalculate();
