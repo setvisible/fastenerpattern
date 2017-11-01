@@ -56,8 +56,8 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    QPolygonF polygon() const;
-    void setPolygon(const QPolygonF &polygon);
+    QPolygonF truePolygon() const;
+    void setTruePolygon(const QPolygonF &polygon);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
@@ -69,7 +69,9 @@ Q_SIGNALS:
 protected:
     friend class DesignSpaceObject;
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
-    void moveHandle(const HandleItem *item);
+    QPolygonF polygon() const;
+    void setPolygon(const QPolygonF &polygon);
+    void updatePolygonCorner(const HandleItem *item);
 
 private:
 

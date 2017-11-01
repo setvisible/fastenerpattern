@@ -30,6 +30,37 @@
 #include <QtGui/QContextMenuEvent>
 
 
+/******************************************************************************
+ ******************************************************************************/
+/*! \brief Return the squared distance between a given point \a point
+ *         and a given line defined by its two end-points \a p1 and \a p2.
+ */
+static qreal squaredDistanceFromLine(const QPointF &point,
+                                     const QPointF &p1, const QPointF &p2)
+{
+    /******************************************************\
+    *                          ->                          *
+    *                p1        u     p2                    *
+    *                 o-----+--------o                     *
+    *                  \    |                              *
+    *                   \   | ->                           *
+    *                 -> \  | w                            *
+    *                 v   \ |                              *
+    *                      \|                              *
+    *                       o point                        *
+    * Formula:                                             *
+    *     ->   ->         -> ->    ->     ->     ->        *
+    *     w  = v  - ( dot(u, v) / (|u| * |u|)) * u         *
+    *                                                      *
+    \******************************************************/
+    QPointF u = p2 - p1;
+    QPointF v = point - p1;
+    qreal dot = QPointF::dotProduct(u, v);
+    qreal squared_u = ( u.x() * u.x() ) + ( u.y() * u.y() );
+    QPointF w = v - ( dot / squared_u ) * u;
+    qreal squared_distance = ( w.x() * w.x() ) + ( w.y() * w.y() );
+    return squared_distance;
+}
 
 /******************************************************************************
  ******************************************************************************/
@@ -45,24 +76,68 @@ void DesignSpaceObject::onCornerPositionChanged()
         return;
     if (!item->isSelected())
         return;
-    m_parent->moveHandle(item);
+    m_parent->updatePolygonCorner(item);
 }
 
 void DesignSpaceObject::addHandle()
 {
+    /*************************************************************************\
+    * - Project the event point on each segment of the polygon.               *
+    * - Then, calculate the distance between the event point and              *
+    *   the projected point.                                                  *
+    * - Finally, take the smallest distance, and insert the projected point   *
+    *   to the polygon.                                                       *
+    \*************************************************************************/
     const QAction *action = qobject_cast<const QAction *>(this->sender());
-    const uint item = action->data().toUInt();
-    qDebug() << Q_FUNC_INFO << item;
+    const QPointF pos = action->data().toPointF();
+
+    QPolygonF polygon = m_parent->polygon();
+
+    int final = -1;
+    qreal current = 10000 * C_ARROW_SIZE * C_ARROW_SIZE;
+
+    /* Process all the segments from first() to last() */
+    for (int i = 1; i < polygon.count(); ++i) {
+        const QPointF p1 = polygon.at(i-1);
+        const QPointF p2 = polygon.at(i);
+        qreal dist = squaredDistanceFromLine(pos, p1, p2);
+        if (dist < current) {
+            current = dist;
+            final = i;
+        }
+    }
+    /* Enclose the loop: process last segment from last() to first() */
+    {
+        const QPointF p1 = polygon.last();
+        const QPointF p2 = polygon.first();
+        qreal dist = squaredDistanceFromLine(pos, p1, p2);
+        if (dist < current) {
+            current = dist;
+            final = 0;
+        }
+    }
+
+    polygon.insert(final, pos);
+    m_parent->setPolygon(polygon);
+    m_parent->setSelected(true);
 }
 
 void DesignSpaceObject::removeHandle()
 {
     const QAction *action = qobject_cast<const QAction *>(this->sender());
-    const uint handlePointer = action->data().toUInt();
-
-
-    qDebug() << Q_FUNC_INFO << handlePointer;
-
+    const QPointF pos = action->data().toPointF();
+    QPolygonF polygon = m_parent->polygon();
+    if (polygon.count() < 4) { /* The polygon must have 3 points at least. */
+        return;
+    }
+    for (int i = 0; i < polygon.count(); ++i) {
+        if (pos == polygon.at(i)) {
+            polygon.removeAt(i);
+            m_parent->setPolygon(polygon);
+            break;
+        }
+    }
+    m_parent->setSelected(true);
 }
 
 /******************************************************************************
@@ -118,12 +193,15 @@ DesignSpaceItem::DesignSpaceItem(QGraphicsItem *parent) : QGraphicsObject(parent
     *      this is a transparent (but visible!) graphics object             *
     *      that catches the mouse click events occuring                     *
     *      near the polygon's border.                                       *
-    *      Internally, the BorderItem simulates a thick enclosed path.      *
+    *      Internally, the BorderItem simulates a thick enclosed path,      *
+    *      to catch the mouse events, even if the cursor is not             *
+    *      -but roughly- on the border.                                     *
     *                                                                       *
     *  m_polygonItem                                                        *
     *      this is a colored fill polygon representing the                  *
-    *      area of the design space. It catches the composite object's      *
-    *      mouse events                                                     *
+    *      area of the design space.                                        *
+    *      It also catches the composite object's mouse events,             *
+    *      i.e. global displacement of the object.                          *
     *                                                                       *
     \***********************************************************************/
 
@@ -143,6 +221,9 @@ DesignSpaceItem::DesignSpaceItem(QGraphicsItem *parent) : QGraphicsObject(parent
 
 DesignSpaceItem::~DesignSpaceItem()
 {
+    // QObject::disconnect(this, SIGNAL(xChanged()), SIGNAL(changed()));
+    // QObject::disconnect(this, SIGNAL(yChanged()), SIGNAL(changed()));
+
     if (m_object)
         delete m_object;
 }
@@ -160,7 +241,7 @@ bool DesignSpaceItem::eventFilter(QObject *obj, QEvent *event)
                 QMenu menu;
                 QAction *action = menu.addAction(
                             tr("Remove Handle"), m_object, SLOT(removeHandle()));
-                action->setData( (uint)handle );
+                action->setData( handle->scenePos() );
                 menu.exec(ctxtEvent->screenPos());
                 return true;
             }
@@ -171,7 +252,7 @@ bool DesignSpaceItem::eventFilter(QObject *obj, QEvent *event)
                 QMenu menu;
                 QAction *action = menu.addAction(
                             tr("Add Handle"), m_object, SLOT(addHandle()));
-                action->setData( (uint)border );
+                action->setData( ctxtEvent->scenePos() );
                 menu.exec(ctxtEvent->screenPos());
                 return true;
             }
@@ -228,6 +309,8 @@ void DesignSpaceItem::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidge
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 QString DesignSpaceItem::name() const
 {
     return m_name;
@@ -240,10 +323,39 @@ void DesignSpaceItem::setName(const QString &name)
     emit changed();
 }
 
+/******************************************************************************
+ ******************************************************************************/
+/*!
+ * \brief Return the polygon, in the coordinates of the scene.
+ */
+QPolygonF DesignSpaceItem::truePolygon() const
+{
+    QPolygonF scaled = this->polygon();
+    for (int i = 0; i < scaled.count(); ++i) {
+        QPointF truePoint = scaled.at(i);
+        truePoint /= C_DEFAULT_SCREEN_DPI;
+        scaled.replace(i, truePoint);
+    }
+    return scaled;
+}
 
+/*!
+ * \brief Set the \a polygon, in the coordinates of the scene.
+ */
+void DesignSpaceItem::setTruePolygon(const QPolygonF &polygon)
+{
+    QPolygonF scaled = polygon;
+    for (int i = 0; i < scaled.count(); ++i) {
+        QPointF truePoint = scaled.at(i);
+        truePoint *= C_DEFAULT_SCREEN_DPI;
+        scaled.replace(i, truePoint);
+    }
+    setPolygon(scaled);
+}
 
 /******************************************************************************
  ******************************************************************************/
+
 /*!
  * \brief Return the polygon, in the coordinates of the scene.
  */
@@ -266,17 +378,19 @@ void DesignSpaceItem::setPolygon(const QPolygonF &polygon)
     const QPolygonF trans = polygon.translated( -position );
     m_polygonItem->setPolygon(trans);
 
-    if ( polygon.count() != m_handleItems.count() ) {
+    if ( trans.count() != m_handleItems.count() ) {  /* Reallocate properly the HandleItems */
 
-        /* Recreate the HandleItems */
-
-        /// \todo same as m_handleItems.clear() ?
+        /* Destruction */
         while (m_handleItems.count() > 0) {
             HandleItem *item = m_handleItems.takeFirst();
+            QObject::disconnect(item, SIGNAL(xChanged()), m_object, SLOT(onCornerPositionChanged()));
+            QObject::disconnect(item, SIGNAL(yChanged()), m_object, SLOT(onCornerPositionChanged()));
+            item->removeEventFilter(this);
             delete item;
         }
 
-        foreach (const QPointF &point, polygon) {
+        /* Construction */
+        foreach (const QPointF &point, trans) {
             HandleItem *item = new HandleItem(this);
             item->setPos( point );
             item->setCoordinateVisible(true);
@@ -286,20 +400,26 @@ void DesignSpaceItem::setPolygon(const QPolygonF &polygon)
             m_handleItems << item;
         }
     }
+    Q_ASSERT(trans.count() ==  m_handleItems.count());
 
-    // update the Handles
-    Q_ASSERT(polygon.count() ==  m_handleItems.count());
+    /* Update the position of the Handles */
     for (int i = 0; i < m_handleItems.count(); ++i) {
-        m_handleItems[i]->setPos(polygon.at(i));
+        m_handleItems[i]->setPos(trans.at(i));
     }
+
     emit changed();
 }
 
 /******************************************************************************
  ******************************************************************************/
 /// \internal
-void DesignSpaceItem::moveHandle(const HandleItem *item)
+void DesignSpaceItem::updatePolygonCorner(const HandleItem *item)
 {
+    /********************************************************************\
+    * Update the m_polygonItem's polygon, but not the Handles positions. *
+    * The Handles are already updated internally by the QGraphicsItem.   *
+    * This trick avoids to re-emit the x-y-Changed() signals.            *
+    \********************************************************************/
     QPolygonF polygon = m_polygonItem->polygon();
     Q_ASSERT(polygon.count() ==  m_handleItems.count());
     for (int i = 0; i < m_handleItems.count(); ++i) {
