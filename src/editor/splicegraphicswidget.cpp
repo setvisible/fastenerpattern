@@ -133,7 +133,7 @@ void SpliceGraphicsWidget::onDesignSpaceItemChanged()
     int index = m_designSpaceItems.indexOf(item);
     DesignSpace designSpace = model()->designSpaceAt(index);
     designSpace.name = item->name();
-    designSpace.polygon = item->polygon();
+    designSpace.polygon = item->truePolygon();
     model()->setDesignSpace(index, designSpace);
 }
 
@@ -194,7 +194,7 @@ void SpliceGraphicsWidget::onDesignSpaceInserted(const int index, const DesignSp
     m_designSpaceItems.insert(index, item);
 
     item->setName(designSpace.name);
-    item->setPolygon(designSpace.polygon);
+    item->setTruePolygon(designSpace.polygon);
 }
 
 void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
@@ -202,7 +202,7 @@ void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpa
     if (index >= 0 && index < m_designSpaceItems.count()) {
         DesignSpaceItem *item = m_designSpaceItems[index];
         item->setName(designSpace.name);
-        item->setPolygon(designSpace.polygon);
+        item->setTruePolygon(designSpace.polygon);
     }
 }
 

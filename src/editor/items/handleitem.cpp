@@ -15,6 +15,7 @@
  */
 
 #include "handleitem.h"
+#include "utils_scale.h"
 
 #include <QtCore/QDebug>
 #include <QtGui/QCursor>
@@ -69,8 +70,8 @@ void HandleItem::onPosChanged()
 {
     QString text =
             QString("(%0,%1)")
-            .arg(m_labelItem->scenePos().x(), 0, 'f', 1)
-            .arg(m_labelItem->scenePos().y(), 0, 'f', 1);
+            .arg(this->scenePos().x() / C_DEFAULT_SCREEN_DPI, 0, 'f', 1)
+            .arg(this->scenePos().y() / C_DEFAULT_SCREEN_DPI, 0, 'f', 1);
     m_labelItem->setText(text);
 }
 
