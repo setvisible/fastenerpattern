@@ -81,6 +81,8 @@
     <addaction name="action_4BoltJoint"/>
     <addaction name="action_PatternJoint"/>
     <addaction name="action_RandomPattern"/>
+    <addaction name="separator"/>
+    <addaction name="action_Optimize4Bolt"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -229,6 +231,11 @@
   <action name="action_Properties">
    <property name="text">
     <string>&amp;Properties...</string>
+   </property>
+  </action>
+  <action name="action_Optimize4Bolt">
+   <property name="text">
+    <string>Optimize 4-Bolt Joint</string>
    </property>
   </action>
  </widget>

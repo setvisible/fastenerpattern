@@ -426,3 +426,8 @@ void MainWindow::on_action_RandomPattern_triggered()
 {
     loadFile(":/examples/RandomJoint.splice");
 }
+
+void MainWindow::on_action_Optimize4Bolt_triggered()
+{
+    loadFile(":/examples/Optimize_4BoltJoint.splice");
+}

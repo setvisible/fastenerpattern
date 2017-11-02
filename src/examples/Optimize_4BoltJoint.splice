@@ -1,0 +1,80 @@
+{
+    "author": "S. Vavassori",
+    "date": "01/11/2017",
+    "description": "Optimizing a pattern with 4 bolts",
+    "designspaces": [
+        {
+            "name": "Splice (design space)",
+            "points": [
+                [
+                    -40.0,
+                    0.0
+                ],
+                [
+                    -40.0,
+                    20.0
+                ],
+                [
+                    -20.0,
+                    20.0
+                ],
+                [
+                    -10.0,
+                    10.0
+                ],
+                [
+                    20.0,
+                    10.0
+                ],
+                [
+                    20.0,
+                    0.0
+                ]
+            ]
+        }
+    ],
+    "fasteners": [
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "Bolt 1",
+            "position_x": -0.010,
+            "position_y": 0.005,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "Bolt 2",
+            "position_x": -0.017,
+            "position_y": 0.005,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "Bolt 3",
+            "position_x": -0.024,
+            "position_y": 0.005,
+            "thickness": 0.003
+        },
+        {
+            "DoF_X": true,
+            "DoF_Y": true,
+            "diameter": 0.00478,
+            "name": "Bolt 4",
+            "position_x": -0.031,
+            "position_y": 0.005,
+            "thickness": 0.003
+        }
+    ],
+    "load": {
+        "fx":  50.0,
+        "fy": 100.0,
+        "mz":  -5.0
+    },
+    "title": "Objective: Optimize 4 Bolt Joint"
+}

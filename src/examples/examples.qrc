@@ -3,5 +3,6 @@
         <file>4BoltJoint.splice</file>
         <file>PatternJoint.splice</file>
         <file>RandomJoint.splice</file>
+        <file>Optimize_4BoltJoint.splice</file>
     </qresource>
 </RCC>
