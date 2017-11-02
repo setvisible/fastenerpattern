@@ -79,10 +79,10 @@ void SpliceToolbar::reset()
     m_buttonFastenerSelectAll->setEnabled(false);
     m_buttonFastenerRemove->setEnabled(false);
     // --
-    m_buttonDesignSpaceAdd->setVisible(false);
+    m_buttonDesignSpaceAdd->setVisible(true);
     m_buttonDesignSpaceRemove->setEnabled(false);
-    m_buttonDesignSpaceRemove->setVisible(false);
-    m_buttonShowDesignSpace->setChecked(false);
+    m_buttonDesignSpaceRemove->setVisible(true);
+    m_buttonShowDesignSpace->setChecked(true);
     // --
     m_buttonShowAxes->setChecked(true);
     m_buttonShowGrid->setChecked(true);
