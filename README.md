@@ -36,88 +36,92 @@ It makes the code of this software more robust (=less permissive) and more relia
 
 ### Triangle (Delaunay triangulation)
 
-[Triangle](http://www.cs.cmu.edu/~quake/triangle.html "http://www.cs.cmu.edu/~quake/triangle.html"), by Jonathan Shewchuk, is an award-winning C language code that generates Delaunay triangulations, constrained Delaunay triangulations (forced to have certain edges), and quality-conforming Delaunay triangulations (which avoid small angles by inserting extra points). It has been widely used for finite element analysis and is fast and robust.
+[Triangle](http://www.cs.cmu.edu/~quake/triangle.html "http://www.cs.cmu.edu/~quake/triangle.html"),
+by Jonathan Shewchuk, is an award-winning C language code that generates Delaunay triangulations,
+constrained Delaunay triangulations (forced to have certain edges), and quality-conforming
+Delaunay triangulations (which avoid small angles by inserting extra points).
+It has been widely used for finite element analysis and is fast and robust.
 
 It is available at [http://www.cs.cmu.edu/~quake/triangle.html](http://www.cs.cmu.edu/~quake/triangle.html "http://www.cs.cmu.edu/~quake/triangle.html").
 
 
-## Constraint Programming
-
-**[Work In Progress]**
-
-FastenerPattern uses a third-party *Constraint Programming* (CP) solver called
-[GeCode](http://gecode.org "http://gecode.org").
-GeCode won all gold medals in all categories at the MiniZinc Challenges from 2008 to 2012.
-
-More info
-[here](http://www.gecode.org/ "http://www.gecode.org/")
-and
-[here](https://en.wikipedia.org/wiki/Gecode "https://en.wikipedia.org/wiki/Gecode").
-
-GeCode ("generic constraint development environment") is downloadable
-[here](http://www.gecode.org/download.html "http://www.gecode.org/download.html").
-
-
-### Remark
-
-On Windows, GeCode can be built with MSVC 2013 (32 or 64bits) or MSVC 2015 (32 or 64bits).
-At the time of writing those lines, compiling GeCode with MinGW causes problems.
-FastenerPattern can still be compiled with MinGW (32bits), however the CP features are disabled.
-
 
 ## Installation
 
-Download the most recent package from the
-[download](https://github.com/setvisible/fastenerpattern/releases "Last Releases")
-page, unzip it and run it.
+The following intructions are in the
+[manual](user-manual/User_Manual.pdf "User_Manual.pdf").
 
-[Work In Progress]
-
-Read the [User's Manual](user-manual/User_Manual.pdf "User_Manual.pdf").
-
-
-## Build
-
-1. Download `FastenerPattern.tar.gz`
+1. Download the most recent package
 [here](https://github.com/setvisible/fastenerpattern/releases "Last Releases").
 
 2. Unzip:
 
         $ tar zxvf FastenerPattern.tar.gz
-        $ cd pch2csv/
+        $ cd FastenerPattern/
 
-3. Build with CMake
+3. Build
 
-     - On Unix / Mac OS X
+     - On Unix or Mac OS X
 
             $ mkdir -p build
             $ cd build/
-            $ cmake ..
-            $ make -j
-            $ make install
+            $ cmake ..              # Perform a system check.
 
-     - On Windows (MinGW) [Warning: CP solver disabled]
+            Then
+            $ make -j               # Build the program(s).
+            $ make strip            # Remove unneeded symbols.
+
+            Finally
+            $ sudo make install     # Install the program(s).
+
+        Enjoy FastenerPattern using `fastenerpattern`.
+
+        Rem: On MacOSX, you may must type
+        `$ chmod +x install.sh`
+        after `$ make` for installing.
+
+
+     - On Windows (with MinGW)
 
             > mkdir build
             > cd build/
             > cmake .. -G "MinGW Makefiles"
+
+            Then
             > make -j
+            > make install/strip
+
+            Finally (could require admin rights)
             > make install
 
-       (the last command could require admin rights)
 
-     - On Windows (MSVC 2015)
+
+     - On Windows (with MSVC 2015)
 
             > mkdir build
             > cd build/
             > cmake .. -G "Visual Studio 14 2015"
-            > start .
 
-         Then, double click the Visual Studio project (vcxproj).
+            > start .
+            Then, double click the Visual Studio project (vcxproj).
+
+        Enjoy FastenerPattern running `fastenerpattern.exe`.
 
 
 ## License
 
-The code is released under the GNU **LGPLv3** open source license.
+Copyright 2016-2017 FastenerPattern Contributors, some rights reserved.
 
-[https://www.gnu.org/licenses/lgpl-3.0.en.html](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+FastenerPattern is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License - GNU LGPL -
+as published by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+
+FastenerPattern is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with FastenerPattern. If not, see
+<https://www.gnu.org/licenses/lgpl-3.0.en.html>.
