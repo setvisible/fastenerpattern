@@ -16,14 +16,21 @@
 
 #include "dummysolver.h"
 
-#include <Core/Units/UnitSystem>
-#include <Core/Units/AreaMomentOfInertia>
+#include <boost/units/cmath.hpp> // pow()
 
-#include <boost/units/cmath.hpp>   /* pow() */
-#include <QtCore/QDebug>
-
-using namespace boost;
-using namespace units;
+/*! \class DummySolver
+ * \brief The class DummySolver is a mock solver, that is used to
+ *        test \a OptimizationSolver.
+ *
+ * The rationale of this mock solver is:
+ * "Closer the fastener from Point(0,0) is, higher the fastener's load is."
+ *
+ * This will encourage the tested OptimizationSolver to find
+ * the best design solution having fasteners as far as possible
+ * from Point(0,0).
+ *
+ * \remark The DummySolver is also tested ;)
+ */
 
 DummySolver::DummySolver(QObject *parent) : ISolver(parent)
 {
@@ -38,39 +45,45 @@ QList<Tensor> DummySolver::calculate(const Splice *splice)
     Q_ASSERT(splice);
     QList<Tensor> res;
 
-    /* plus la distance du fastener au point (0,0) est grande,*/
-    /* plus faible est la force. */
-/*
+    Length maxDistance = 0.0 *m;
     const int count = splice->fastenerCount();
 
-    Fastener bnd; // boundary
     for (int i = 0 ; i < count ; ++i) {
         const Fastener f = splice->fastenerAt(i);
 
-        Length posX = boost::units::abs(f.positionX);
-        Length posY = boost::units::abs(f.positionY);
+        Length squaredDistance =
+                boost::units::sqrt(
+                    boost::units::pow<2>(f.positionX) +
+                    boost::units::pow<2>(f.positionY));
 
-        if (bnd.positionX < posX) {
-            bnd.positionX = posX;
+        if (maxDistance < squaredDistance) {
+            maxDistance = squaredDistance;
         }
-        if (bnd.positionY < posY) {
-            bnd.positionY = posY;
-        }
+    }
+
+    if (maxDistance < 0.001 *m) {
+        maxDistance = 0.001 *m;
     }
 
     for (int i = 0 ; i < count ; ++i) {
         const Fastener f = splice->fastenerAt(i);
 
-        Length posX = boost::units::abs(f.positionX);
-        Length posY = boost::units::abs(f.positionY);
+        Length distance =
+                boost::units::sqrt(
+                    boost::units::pow<2>(f.positionX) +
+                    boost::units::pow<2>(f.positionY));
 
-        Tensor fastenerload;
-        fastenerload.force_x = ((bnd.positionX - posX) / bnd.positionX ) * 1000.*N;
-        fastenerload.force_y = ((bnd.positionY - posY) / bnd.positionY ) * 1000.*N;
-        fastenerload.torque_z = 0.0 *si::newton_meters;
+        /* k is between 1. (closest) and 0.000001 (farthest). */
+        qreal k = (maxDistance - 0.99 * distance) / maxDistance;
+        Q_ASSERT((1. >= k) && (k > 0.));
 
-        res.append(fastenerload);
-    }*/
+        Tensor t;
+        t.force_x = k * splice->appliedLoad().force_x;
+        t.force_y = k * splice->appliedLoad().force_x;
+        t.torque_z = k * splice->appliedLoad().torque_z;
+
+        res.append(t);
+    }
     return res;
 }
 

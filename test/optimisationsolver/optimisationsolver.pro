@@ -4,11 +4,16 @@ CONFIG      += testcase
 QT           = core testlib
 SOURCES     += tst_optimisationsolver.cpp
 
+
+HEADERS     += $$PWD/dummysolver.h
+SOURCES     += $$PWD/dummysolver.cpp
+
 # Include:
 INCLUDEPATH += ../../include
 
 # Dependancies:
 include($$PWD/../../src/core/core.pri)
+
 
 #-------------------------------------------------
 # Boost
