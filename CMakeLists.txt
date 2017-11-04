@@ -11,6 +11,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(FastenerPattern)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 ##############################################################################
 ## Versioning
 ##############################################################################
@@ -168,11 +170,12 @@ install (
     COMPONENT release_docs
     )
 
-## Examples
+## Example files
 set(MY_RELEASE_EXAMPLES
     ./src/examples/4BoltJoint.splice
     ./src/examples/PatternJoint.splice
     ./src/examples/RandomJoint.splice
+    ./src/examples/Optimize_4BoltJoint.splice
     )
 install (
     FILES ${MY_RELEASE_EXAMPLES}
@@ -181,25 +184,30 @@ install (
     )
 
 
-## Qt Libraries
-get_target_property(QtCore_LOCATION Qt5::Core LOCATION)
-get_filename_component(QT_DLL_DIR ${QtCore_LOCATION} PATH)
+## 3rd-party libraries
+if (MSVC OR MSYS OR MINGW) # for detecting Windows compilers
 
-install(FILES
-    ${QT_DLL_DIR}/libgcc_s_dw2-1.dll
-    ${QT_DLL_DIR}/libstdc++-6.dll
-    ${QT_DLL_DIR}/libwinpthread-1.dll
-    ${QT_DLL_DIR}/Qt5Core.dll
-    ${QT_DLL_DIR}/Qt5Gui.dll
-    ${QT_DLL_DIR}/Qt5Widgets.dll
-    DESTINATION ${CMAKE_INSTALL_PREFIX}
-)
+    ## Qt Libraries
+    get_target_property(QtCore_LOCATION Qt5::Core LOCATION)
+    get_filename_component(QT_DLL_DIR ${QtCore_LOCATION} PATH)
 
-## Qt Platform Plugin
-install(FILES
-    ${QT_DLL_DIR}/../plugins/platforms/qwindows.dll
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/platforms
-)
+    install(FILES
+        ${QT_DLL_DIR}/libgcc_s_dw2-1.dll
+        ${QT_DLL_DIR}/libstdc++-6.dll
+        ${QT_DLL_DIR}/libwinpthread-1.dll
+        ${QT_DLL_DIR}/Qt5Core.dll
+        ${QT_DLL_DIR}/Qt5Gui.dll
+        ${QT_DLL_DIR}/Qt5Widgets.dll
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+    )
+
+    ## Qt Platform Plugin
+    install(FILES
+        ${QT_DLL_DIR}/../plugins/platforms/qwindows.dll
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/platforms
+    )
+
+endif(MSVC OR MSYS OR MINGW)
 
 
 ##############################################################################
