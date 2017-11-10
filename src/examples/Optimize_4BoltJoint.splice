@@ -7,27 +7,27 @@
             "name": "Splice (design space)",
             "points": [
                 [
-                    -40.0,
+                    -0.04,
                     0.0
                 ],
                 [
-                    -40.0,
-                    20.0
+                    -0.04,
+                    0.02
                 ],
                 [
-                    -20.0,
-                    20.0
+                    -0.02,
+                    0.02
                 ],
                 [
-                    -10.0,
-                    10.0
+                    -0.01,
+                    0.01
                 ],
                 [
-                    20.0,
-                    10.0
+                    0.02,
+                    0.01
                 ],
                 [
-                    20.0,
+                    0.02,
                     0.0
                 ]
             ]
@@ -40,7 +40,7 @@
             "diameter": 0.00478,
             "name": "Bolt 1",
             "position_x": -0.010,
-            "position_y": 0.005,
+            "position_y": -0.005,
             "thickness": 0.003
         },
         {
@@ -49,7 +49,7 @@
             "diameter": 0.00478,
             "name": "Bolt 2",
             "position_x": -0.017,
-            "position_y": 0.005,
+            "position_y": -0.005,
             "thickness": 0.003
         },
         {
@@ -58,7 +58,7 @@
             "diameter": 0.00478,
             "name": "Bolt 3",
             "position_x": -0.024,
-            "position_y": 0.005,
+            "position_y": -0.005,
             "thickness": 0.003
         },
         {
@@ -67,7 +67,7 @@
             "diameter": 0.00478,
             "name": "Bolt 4",
             "position_x": -0.031,
-            "position_y": 0.005,
+            "position_y": -0.005,
             "thickness": 0.003
         }
     ],
