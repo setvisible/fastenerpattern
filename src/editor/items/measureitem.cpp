@@ -43,7 +43,7 @@
  * \sa ArrowItem, ArcArrowItem
  */
 MeasureItem::MeasureItem(QGraphicsItem *parent) : QGraphicsLineItem(parent)
-  , m_endSpace(0)
+  , m_endSpaceInPixel(0)
   , m_color(Qt::black)
   , m_label(new QGraphicsSimpleTextItem(this))
 {
@@ -65,14 +65,14 @@ void MeasureItem::setColor(const QColor &color)
 
 /******************************************************************************
  ******************************************************************************/
-qreal MeasureItem::endSpace() const /* in millimeters */
+qreal MeasureItem::endSpace() const /* in meters */
 {
-    return m_endSpace / C_DEFAULT_SCREEN_DPI;
+    return m_endSpaceInPixel / (C_DEFAULT_SCREEN_DPI * 1000.);
 }
 
-void MeasureItem::setEndSpace(qreal space) /* in millimeters */
+void MeasureItem::setEndSpace(qreal spaceInMeter) /* in meters */
 {
-    m_endSpace = space * C_DEFAULT_SCREEN_DPI;
+    m_endSpaceInPixel = spaceInMeter * (C_DEFAULT_SCREEN_DPI * 1000.);
     QGraphicsItem::update();
 }
 
@@ -128,14 +128,14 @@ void MeasureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
         QLineF modline = this->line();
         QLineF space = modline.unitVector();
 
-        if (modline.length() > 2 * m_endSpace ) {
-            space.setLength( m_endSpace );
+        if (modline.length() > 2 * m_endSpaceInPixel ) {
+            space.setLength( m_endSpaceInPixel );
             QPointF offset = space.p2() - space.p1();
             modline.setP1(modline.p1() + offset);
             modline.setP2(modline.p2() - offset);
         }
 
-        if (modline.length() > 2 * m_endSpace && !m_label->text().isEmpty()) {
+        if (modline.length() > 2 * m_endSpaceInPixel && !m_label->text().isEmpty()) {
 
             qreal width = m_label->boundingRect().width();
             qreal height = m_label->boundingRect().height();

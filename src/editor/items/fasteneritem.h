@@ -25,9 +25,9 @@ class TensorItem;
 class SymbolItem;
 class FastenerItem : public QGraphicsObject
 {
-    Q_PROPERTY(qreal truePositionX READ truePositionX)
-    Q_PROPERTY(qreal truePositionY READ truePositionY)
-    Q_PROPERTY(qreal trueDiameter READ trueDiameter WRITE setTrueDiameter)
+    Q_PROPERTY(qreal positionXInMeter READ positionXInMeter)
+    Q_PROPERTY(qreal positionYInMeter READ positionYInMeter)
+    Q_PROPERTY(qreal diameterInMeter READ diameterInMeter WRITE setDiameterInMeter)
     Q_PROPERTY(Tensor result READ result WRITE setResult)
     Q_PROPERTY(bool componentVisible READ isComponentVisible WRITE setComponentVisible)
     Q_PROPERTY(bool resultantVisible READ isResultantVisible WRITE setResultantVisible)
@@ -41,12 +41,12 @@ public:
     QPainterPath shape() const Q_DECL_OVERRIDE;
     void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
 
-    qreal truePositionX() const;
-    qreal truePositionY() const;
-    void setTruePosition(qreal x, qreal y);
+    qreal positionXInMeter() const;
+    qreal positionYInMeter() const;
+    void setPositionInMeter(qreal x_in_meter, qreal y_in_meter);
 
-    qreal trueDiameter() const;
-    void setTrueDiameter(qreal trueDiameter);
+    qreal diameterInMeter() const;
+    void setDiameterInMeter(qreal diameter_in_meter);
 
     Tensor result() const;
     void setResult(const Tensor &tensor);

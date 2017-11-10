@@ -56,8 +56,8 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    QPolygonF truePolygon() const;
-    void setTruePolygon(const QPolygonF &polygon);
+    QPolygonF polygonInMeter() const;
+    void setPolygonInMeter(const QPolygonF &polygonInMeter);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;

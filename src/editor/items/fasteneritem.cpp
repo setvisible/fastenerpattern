@@ -51,33 +51,33 @@ void FastenerItem::paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *
 {
 }
 
-qreal FastenerItem::truePositionX() const
+qreal FastenerItem::positionXInMeter() const
 {
-    return (this->x() / C_DEFAULT_SCREEN_DPI);
+    return (this->x() / (C_DEFAULT_SCREEN_DPI * 1000.));
 }
 
-qreal FastenerItem::truePositionY() const
+qreal FastenerItem::positionYInMeter() const
 {
-    return (-1 * this->y() / C_DEFAULT_SCREEN_DPI);
+    return (-1 * this->y() / (C_DEFAULT_SCREEN_DPI * 1000.));
 }
 
-void FastenerItem::setTruePosition(qreal x, qreal y)
+void FastenerItem::setPositionInMeter(qreal x_in_meter, qreal y_in_meter)
 {
-    QGraphicsItem::setPos( x * C_DEFAULT_SCREEN_DPI,
-                           -1 * y * C_DEFAULT_SCREEN_DPI);
+    QGraphicsItem::setPos( x_in_meter * (C_DEFAULT_SCREEN_DPI * 1000.),
+                           -1 * y_in_meter * (C_DEFAULT_SCREEN_DPI * 1000.));
     QGraphicsItem::update();
 }
 
-qreal FastenerItem::trueDiameter() const
+qreal FastenerItem::diameterInMeter() const
 {
     Q_ASSERT(m_symbolItem);
-    return (m_symbolItem->diameter() / C_DEFAULT_SCREEN_DPI);
+    return (m_symbolItem->diameter() / (C_DEFAULT_SCREEN_DPI * 1000.));
 }
 
-void FastenerItem::setTrueDiameter(qreal diameter)
+void FastenerItem::setDiameterInMeter(qreal diameter_in_meter)
 {
     Q_ASSERT(m_symbolItem);
-    m_symbolItem->setDiameter(diameter * C_DEFAULT_SCREEN_DPI);
+    m_symbolItem->setDiameter(diameter_in_meter * (C_DEFAULT_SCREEN_DPI * 1000.));
     QGraphicsItem::update();
 }
 

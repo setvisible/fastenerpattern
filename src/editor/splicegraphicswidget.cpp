@@ -119,8 +119,8 @@ void SpliceGraphicsWidget::onFastenerItemPositionChanged()
 
     int index = m_fastenerItems.indexOf(item);
     Fastener fastener = model()->fastenerAt(index);
-    fastener.positionX = item->truePositionX() *_mm;
-    fastener.positionY = item->truePositionY() *_mm;
+    fastener.positionX = item->positionXInMeter() *m;
+    fastener.positionY = item->positionYInMeter() *m;
     model()->setFastener(index, fastener);
 }
 
@@ -133,7 +133,7 @@ void SpliceGraphicsWidget::onDesignSpaceItemChanged()
     int index = m_designSpaceItems.indexOf(item);
     DesignSpace designSpace = model()->designSpaceAt(index);
     designSpace.name = item->name();
-    designSpace.polygon = item->truePolygon();
+    designSpace.polygon = item->polygonInMeter();
     model()->setDesignSpace(index, designSpace);
 }
 
@@ -148,9 +148,8 @@ void SpliceGraphicsWidget::onFastenerInserted(const int index, const Fastener &f
     m_backgroundWidget->scene()->addItem(item);
     m_fastenerItems.insert(index, item);
 
-    item->setTruePosition(fastener.positionX.value() *1000,
-                          fastener.positionY.value() *1000);
-    item->setTrueDiameter(fastener.diameter.value() *1000);
+    item->setPositionInMeter(fastener.positionX.value(), fastener.positionY.value());
+    item->setDiameterInMeter(fastener.diameter.value());
 
     item->setResultantVisible(m_resultantVisible);
     item->setComponentVisible(m_componentVisible);
@@ -164,9 +163,8 @@ void SpliceGraphicsWidget::onFastenerChanged(const int index, const Fastener &fa
 {
     if (index >= 0 && index < m_fastenerItems.count()) {
         FastenerItem *item = m_fastenerItems[index];
-        item->setTruePosition(fastener.positionX.value() *1000,
-                              fastener.positionY.value() *1000);
-        item->setTrueDiameter(fastener.diameter.value() *1000);
+        item->setPositionInMeter(fastener.positionX.value(), fastener.positionY.value());
+        item->setDiameterInMeter(fastener.diameter.value());
     }
     this->updateDistanceItemPositions();
 }
@@ -194,7 +192,7 @@ void SpliceGraphicsWidget::onDesignSpaceInserted(const int index, const DesignSp
     m_designSpaceItems.insert(index, item);
 
     item->setName(designSpace.name);
-    item->setTruePolygon(designSpace.polygon);
+    item->setPolygonInMeter(designSpace.polygon);
 }
 
 void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
@@ -202,7 +200,7 @@ void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpa
     if (index >= 0 && index < m_designSpaceItems.count()) {
         DesignSpaceItem *item = m_designSpaceItems[index];
         item->setName(designSpace.name);
-        item->setTruePolygon(designSpace.polygon);
+        item->setPolygonInMeter(designSpace.polygon);
     }
 }
 
@@ -398,11 +396,11 @@ void SpliceGraphicsWidget::updateDistanceItemPositions()
         const QList<QLineF> lines = Maths::delaunayTriangulation( points );
         foreach (auto &line, lines) {
             MeasureItem *item = new MeasureItem();
-            qreal trueLength = line.length() / C_DEFAULT_SCREEN_DPI;
+            qreal lengthInMeter = line.length() / (C_DEFAULT_SCREEN_DPI * 1000.);
             item->setLine(line);
-            item->setEndSpace( 2.5 );
+            item->setEndSpace( 0.0025 ); // around diameter/2 = 5/2 = 2.5mm
             item->setColor( QColor(136, 0, 21) ); /* Brown */
-            item->setText(QString("%0mm").arg(trueLength, 0, 'f', 1));
+            item->setText(QString("%0mm").arg(lengthInMeter * 1000., 0, 'f', 1));
             m_backgroundWidget->scene()->addItem(item);
             m_measureItems << item;
         }

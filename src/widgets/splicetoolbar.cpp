@@ -433,7 +433,7 @@ void SpliceToolbar::fastenerRemove()
  ******************************************************************************/
 void SpliceToolbar::designSpaceAdd()
 {
-    const qreal halfwidth = 10.0; // mm
+    const qreal halfwidth = 0.010; // meters
     DesignSpace ds;
     ds.polygon << QPointF( -halfwidth, -halfwidth)
                << QPointF( -halfwidth,  halfwidth)

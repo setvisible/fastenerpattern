@@ -325,39 +325,52 @@ void DesignSpaceItem::setName(const QString &name)
 
 /******************************************************************************
  ******************************************************************************/
-/*!
- * \brief Return the polygon, in the coordinates of the scene.
+/*! \brief Returns the item's polygon, or an empty polygon
+ * if no polygon has been set.
+ *
+ * \remark The polygon is given in meters, instead of pixels.
+ * To get the polygon in pixel unit, use polygon().
+ *
+ * \sa setPolygonInMeter(), polygon()
  */
-QPolygonF DesignSpaceItem::truePolygon() const
+QPolygonF DesignSpaceItem::polygonInMeter() const
 {
-    QPolygonF scaled = this->polygon();
-    for (int i = 0; i < scaled.count(); ++i) {
-        QPointF truePoint = scaled.at(i);
-        truePoint /= C_DEFAULT_SCREEN_DPI;
-        scaled.replace(i, truePoint);
+    const QPolygonF polygon = this->polygon();
+    QPolygonF polygonInMeter;
+    for (int i = 0; i < polygon.count(); ++i) {
+        QPointF pointInMeter = polygon.at(i) / (C_DEFAULT_SCREEN_DPI * 1000.);
+        pointInMeter.setY( -1 * pointInMeter.y() ); /* invert the Y */
+        polygonInMeter << pointInMeter;
     }
-    return scaled;
-}
-
-/*!
- * \brief Set the \a polygon, in the coordinates of the scene.
- */
-void DesignSpaceItem::setTruePolygon(const QPolygonF &polygon)
-{
-    QPolygonF scaled = polygon;
-    for (int i = 0; i < scaled.count(); ++i) {
-        QPointF truePoint = scaled.at(i);
-        truePoint *= C_DEFAULT_SCREEN_DPI;
-        scaled.replace(i, truePoint);
-    }
-    setPolygon(scaled);
+    return polygonInMeter;
 }
 
 /******************************************************************************
  ******************************************************************************/
+/*! \brief Sets the item's polygon to be the given \a polygonInMeter.
+ *
+ * \remark The polygon is given in meters, instead of pixels.
+ * To set the polygon in pixel unit, use setPolygon().
+ *
+ * \sa polygonInMeter(), setPolygon()
+ */
+void DesignSpaceItem::setPolygonInMeter(const QPolygonF &polygonInMeter)
+{
+    QPolygonF polygonInPixel;
+    for (int i = 0; i < polygonInMeter.count(); ++i) {
+        QPointF pointInPixel = polygonInMeter.at(i) * (C_DEFAULT_SCREEN_DPI * 1000.);
+        pointInPixel.setY( -1 * pointInPixel.y() ); /* invert the Y */
+        polygonInPixel << pointInPixel;
+    }
+    this->setPolygon(polygonInPixel);
+}
 
-/*!
- * \brief Return the polygon, in the coordinates of the scene.
+/******************************************************************************
+ ******************************************************************************/
+/*! \brief Returns the item's polygon, or an empty polygon
+ * if no polygon has been set.
+ *
+ * \remark The polygon is given in pixel, in the global coordinates of the scene.
  */
 QPolygonF DesignSpaceItem::polygon() const
 {
@@ -366,8 +379,11 @@ QPolygonF DesignSpaceItem::polygon() const
     return polygon;
 }
 
-/*!
- * \brief Set the \a polygon, in the coordinates of the scene.
+/******************************************************************************
+ ******************************************************************************/
+/*! \brief Sets the item's polygon to be the given \a polygon.
+ *
+ * \remark The polygon is given in pixel, in the global coordinates of the scene.
  */
 void DesignSpaceItem::setPolygon(const QPolygonF &polygon)
 {

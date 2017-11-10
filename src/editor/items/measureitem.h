@@ -26,7 +26,7 @@ public:
     explicit MeasureItem(QGraphicsItem *parent = Q_NULLPTR);
 
     qreal endSpace() const;
-    void setEndSpace(qreal space);
+    void setEndSpace(qreal spaceInMeter);
 
     QColor color() const;
     void setColor(const QColor &color);
@@ -39,7 +39,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
 
 private:
-    qreal m_endSpace;
+    qreal m_endSpaceInPixel;
     QColor m_color;
     QGraphicsSimpleTextItem *m_label;
 };

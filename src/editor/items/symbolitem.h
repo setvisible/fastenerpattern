@@ -34,7 +34,7 @@ public:
     void setDiameter(qreal diameter);
 
 private:
-    qreal m_diameter;
+    qreal m_diameter; /// \todo Convert in meter or pixel ?
 
 };
 
