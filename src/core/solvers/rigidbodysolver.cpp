@@ -76,7 +76,7 @@ QList<Tensor> RigidBodySolver::calculate(const Splice *splice)
 
     for (int i = 0 ; i < count ; ++i) {
         const Fastener f = splice->fastenerAt(i);
-    //foreach(const Fastener &f, splice->fasteners()) {
+        //foreach(const Fastener &f, splice->fasteners()) {
 
         Data d { 0.*m_2, 0.*m_2, 0.*m_3, 0.*m_3 };
 
