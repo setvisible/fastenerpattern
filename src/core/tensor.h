@@ -38,6 +38,7 @@ public:
     bool operator!=(const Tensor &other) const;
 
     Tensor around(const int precision = 3) const;
+    Force resultantFxy() const;
 
     Force force_x;
     Force force_y;

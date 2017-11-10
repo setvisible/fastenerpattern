@@ -3,7 +3,6 @@ set(MY_SOURCES ${MY_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/solvers/isolver.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/units/unit_system.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/units/area_moment_of_inertia.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/global.h
     )
 
 set(MY_SOURCES ${MY_SOURCES}

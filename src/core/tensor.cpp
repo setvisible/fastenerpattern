@@ -15,12 +15,13 @@
  */
 
 #include "tensor.h"
-#include "global.h"
+#include <Maths/Utils>
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>
-#include <QtCore/QtMath>   /* qPow() */
+
+#include <boost/units/cmath.hpp> /* pow(), sqrt() */
 
 #ifdef QT_DEBUG
 #include <QtCore/QDebug>
@@ -46,19 +47,8 @@ Tensor::Tensor(const Force &fx,
 {
 }
 
-bool Tensor::operator==(const Tensor &other) const
-{
-    return fuzzyCompare((*this).force_x.value(), other.force_x.value())
-            && fuzzyCompare((*this).force_y.value(), other.force_y.value())
-            && fuzzyCompare((*this).torque_z.value(), other.torque_z.value());
-
-}
-bool Tensor::operator!=(const Tensor &other) const
-{
-    return ((*this) == other) ? false : true;
-}
-
-
+/******************************************************************************
+ ******************************************************************************/
 /* JSON Serialization */
 /*! \brief Assign the Tensor's members values from the given \a json object.
  */
@@ -78,24 +68,41 @@ void Tensor::write(QJsonObject &json) const
     json["mz"] = torque_z.value();
 }
 
-static qreal round(qreal f, int precision)
+/******************************************************************************
+ ******************************************************************************/
+bool Tensor::operator==(const Tensor &other) const
 {
-    if (precision < 0) precision = 0;
-    if (precision > 9) precision = 9;
-    qreal significantDigits = qPow(10, precision);
-    qreal round = qFloor((f * significantDigits) + 0.5) / significantDigits;
-    return round;
+    return Maths::Utils::fuzzyCompare((*this).force_x.value(), other.force_x.value())
+            && Maths::Utils::fuzzyCompare((*this).force_y.value(), other.force_y.value())
+            && Maths::Utils::fuzzyCompare((*this).torque_z.value(), other.torque_z.value());
+
+}
+bool Tensor::operator!=(const Tensor &other) const
+{
+    return ((*this) == other) ? false : true;
 }
 
+
+/******************************************************************************
+ ******************************************************************************/
 Tensor Tensor::around(const int precision) const
 {
     Tensor t;
-    t.force_x = round(this->force_x.value(), precision) *N;
-    t.force_y = round(this->force_y.value(), precision) *N;
-    t.torque_z = round(this->torque_z.value(), precision) *N_m;
+    t.force_x = Maths::Utils::round(this->force_x.value(), precision) *N;
+    t.force_y = Maths::Utils::round(this->force_y.value(), precision) *N;
+    t.torque_z = Maths::Utils::round(this->torque_z.value(), precision) *N_m;
     return t;
 }
 
+Force Tensor::resultantFxy() const
+{
+    return boost::units::sqrt(
+                boost::units::pow<2>(this->force_x) +
+                boost::units::pow<2>(this->force_y));
+}
+
+/******************************************************************************
+ ******************************************************************************/
 #ifdef QT_TESTLIB_LIB
 /// This function is used by QCOMPARE() to output verbose information in case of a test failure.
 char *toString(const Tensor &load)
@@ -104,24 +111,22 @@ char *toString(const Tensor &load)
     using QTest::toString;
 
     // delegate char* handling to QTest::toString(QByteArray):
-    return toString( QString("Load<%0 %1 %2>")
+    return toString( QString("<Tensor Fx=%0N Fy=%1N Mz=%2Nm>")
                      .arg( load.force_x.value() , 0, 'f', 3)
                      .arg( load.force_y.value() , 0, 'f', 3)
-                     .arg( load.torque_z.value(), 0, 'f', 3));
+                     .arg( load.torque_z.value(), 0, 'f', 6));
 }
 #endif
-
 
 #ifdef QT_DEBUG
 /// Custom Types to a Stream
 QDebug operator<<(QDebug dbg, const Tensor &load)
 {
-    dbg.nospace() << QString("Load<%0 %1 %2>")
+    dbg.nospace() << QString("<Tensor Fx=%0N Fy=%1N Mz=%2Nm>")
                      .arg( load.force_x.value() , 0, 'f', 3)
                      .arg( load.force_y.value() , 0, 'f', 3)
-                     .arg( load.torque_z.value(), 0, 'f', 3);
+                     .arg( load.torque_z.value(), 0, 'f', 6);
     return dbg.maybeSpace();
 }
 #endif
-
 

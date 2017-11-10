@@ -8,7 +8,6 @@ HEADERS  += \
     $$PWD/abstractsplicemodel.h \
     $$PWD/designspace.h \
     $$PWD/fastener.h \
-    $$PWD/global.h \
     $$PWD/splice.h \
     $$PWD/splicecalculator.h \
     $$PWD/tensor.h
