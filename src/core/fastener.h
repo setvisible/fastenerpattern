@@ -19,7 +19,9 @@
 
 #include "units/unit_system.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QList>
+#include <QtCore/QMetaType>
 #include <QtCore/QString>
 
 class QJsonObject;
@@ -55,5 +57,17 @@ public:
     static DOF boolToDOF(bool value);
     static bool DOFtoBool(DOF value);
 };
+
+#ifdef QT_TESTLIB_LIB
+char *toString(const Fastener &fastener);
+#endif
+
+Q_DECLARE_METATYPE(Fastener)
+
+#ifdef QT_DEBUG
+QT_BEGIN_NAMESPACE
+QDebug operator<<(QDebug dbg, const Fastener &fastener);
+QT_END_NAMESPACE
+#endif
 
 #endif // CORE_FASTENER_H

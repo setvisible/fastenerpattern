@@ -17,6 +17,8 @@
 #ifndef CORE_DESIGN_SPACE_H
 #define CORE_DESIGN_SPACE_H
 
+#include <QtCore/QDebug>
+#include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtGui/QPolygonF>
 
@@ -35,8 +37,21 @@ public:
     bool operator!=(const DesignSpace &other) const;
 
     QString name;
-    QPolygonF polygon;
+    QPolygonF polygon; // Hack: QPointF are expressed in meters
+    /// \todo DesignSpace: replace QPointF with a quantity in meters.
 
 };
+
+#ifdef QT_TESTLIB_LIB
+char *toString(const DesignSpace &space);
+#endif
+
+Q_DECLARE_METATYPE(DesignSpace)
+
+#ifdef QT_DEBUG
+QT_BEGIN_NAMESPACE
+QDebug operator<<(QDebug dbg, const DesignSpace &space);
+QT_END_NAMESPACE
+#endif
 
 #endif // CORE_DESIGN_SPACE_H

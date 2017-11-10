@@ -24,9 +24,11 @@
 #include "fastener.h"
 #include "tensor.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
 
 
 /*! \class SpliceCalculator
@@ -44,12 +46,16 @@ SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent
     this->clear();
 }
 
+/******************************************************************************
+ ******************************************************************************/
 /*!
  * \fn void SpliceCalculator::changed()
  * \brief This signal is emitted whenever the SpliceCalculator input data
  * (i.e. Splice's data, like the applied load or the fasteners) is changed.
  */
 
+/******************************************************************************
+ ******************************************************************************/
 /*! \brief Clear and emit the change, in order to update the views,
  * that derive from AbstractSpliceView.
  */
@@ -272,7 +278,6 @@ bool SpliceCalculator::removeFastener(const int index)
     return false;
 }
 
-
 /******************************************************************************
  ******************************************************************************/
 bool SpliceCalculator::insertDesignSpace(const int index, const DesignSpace &designSpace)
@@ -367,7 +372,9 @@ bool SpliceCalculator::setSolverParameters(SolverParameters params)
     }
 
     case SolverParameters::FiniteElementSolver:
-        /* TO DO */
+
+        /// \todo implement SolverParameters::FiniteElementSolver
+
         break;
     case SolverParameters::NoSolver:
     default:

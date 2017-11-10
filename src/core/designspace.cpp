@@ -15,10 +15,15 @@
  */
 
 #include "designspace.h"
-#include "global.h"
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
+#ifdef QT_TESTLIB_LIB
+#  include <QtTest/QTest>
+#endif
 
 DesignSpace::DesignSpace()
     : name(QStringLiteral("New Design Space"))
@@ -60,4 +65,46 @@ bool DesignSpace::operator!=(const DesignSpace &other) const
 {
     return ((*this) == other) ? false : true;
 }
+
+/******************************************************************************
+ ******************************************************************************/
+#ifdef QT_TESTLIB_LIB
+/// This function is used by QCOMPARE() to output verbose information in case of a test failure.
+char *toString(const DesignSpace &space)
+{
+    QString str;
+    str += QString("<DesignSpace '%0' at").arg( space.name );
+    foreach (const QPointF &point, space.polygon) {
+        str += QString(" (%0, %1)")
+                .arg(point.x()*1000. , 0, 'f', 1)
+                .arg(point.y()*1000. , 0, 'f', 1);
+    }
+    str += QLatin1String(" (mm,mm)>");
+
+    // bring QTest::toString overloads into scope:
+    using QTest::toString;
+
+    // delegate char* handling to QTest::toString(QByteArray):
+    return toString( str );
+
+}
+#endif
+
+#ifdef QT_DEBUG
+/// Custom Types to a Stream
+QDebug operator<<(QDebug dbg, const DesignSpace &space)
+{
+    QString str;
+    str += QString("<DesignSpace '%0' at").arg( space.name );
+    foreach (const QPointF &point, space.polygon) {
+        str += QString(" (%0, %1)")
+                .arg(point.x()*1000. , 0, 'f', 1)
+                .arg(point.y()*1000. , 0, 'f', 1);
+    }
+    str += QLatin1String(" (mm,mm)>");
+
+    dbg.nospace() << str;
+    return dbg.maybeSpace();
+}
+#endif
 

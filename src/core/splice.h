@@ -21,6 +21,7 @@
 #include <Core/Fastener>
 #include <Core/Tensor>
 
+#include <QtCore/QDebug>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
@@ -68,6 +69,10 @@ public:
     void removeDesignSpaceAt(const int index);
     void removeAllDesignSpaces();
 
+    bool operator==(const Splice &other) const;
+    bool operator!=(const Splice &other) const;
+    bool isEquivalentTo(const Splice &other) const;
+
 private:
     QString m_title;
     QString m_author;
@@ -78,5 +83,15 @@ private:
     QList<DesignSpace> m_designSpaces;
 
 };
+
+#ifdef QT_TESTLIB_LIB
+char *toString(const Splice &splice);
+#endif
+
+#ifdef QT_DEBUG
+QT_BEGIN_NAMESPACE
+QDebug operator<<(QDebug dbg, const Splice &splice);
+QT_END_NAMESPACE
+#endif
 
 #endif // CORE_SPLICE_H

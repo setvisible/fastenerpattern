@@ -18,6 +18,12 @@
 #include "global.h"
 
 #include <QtCore/QJsonObject>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
+#ifdef QT_TESTLIB_LIB
+#  include <QtTest/QTest>
+#endif
 
 Fastener::Fastener()
     : name(QStringLiteral("New fastener"))
@@ -46,6 +52,8 @@ Fastener::Fastener(const Length& _position_x,
 {
 }
 
+/******************************************************************************
+ ******************************************************************************/
 /* JSON Serialization */
 /*! \brief Assign the Fastener's members values from the given \a json object.
  */
@@ -73,6 +81,8 @@ void Fastener::write(QJsonObject &json) const
     json["DoF_Y"] = DOFtoBool( DoF_Y );
 }
 
+/******************************************************************************
+ ******************************************************************************/
 bool Fastener::operator==(const Fastener &other) const
 {
     return (*this).name == other.name
@@ -97,3 +107,44 @@ bool Fastener::DOFtoBool(Fastener::DOF value)
 {
     return (value == Fastener::Fixed) ? true : false;
 }
+
+/******************************************************************************
+ ******************************************************************************/
+#ifdef QT_TESTLIB_LIB
+/// This function is used by QCOMPARE() to output verbose information in case of a test failure.
+char *toString(const Fastener &fastener)
+{
+    // bring QTest::toString overloads into scope:
+    using QTest::toString;
+
+    // delegate char* handling to QTest::toString(QByteArray):
+    return toString( QString("<Fastener '%0' at Point(%1,%2)(mm,mm) t=%3mm d=%4mm X=%5 Y=%6>")
+                     .arg( fastener.name )
+                     .arg( fastener.positionX.value()*1000. , 0, 'f', 1)
+                     .arg( fastener.positionY.value()*1000. , 0, 'f', 1)
+                     .arg( fastener.thickness.value()*1000. , 0, 'f', 3)
+                     .arg( fastener.diameter.value()*1000. , 0, 'f', 3)
+                     .arg( Fastener::DOFtoBool(fastener.DoF_X) ?
+                               QLatin1String("fixed") : QLatin1String("free"))
+                     .arg( Fastener::DOFtoBool(fastener.DoF_Y) ?
+                               QLatin1String("fixed") : QLatin1String("free")) );
+}
+#endif
+
+#ifdef QT_DEBUG
+/// Custom Types to a Stream
+QDebug operator<<(QDebug dbg, const Fastener &fastener)
+{
+    dbg.nospace() << QString("<Fastener '%0' at Point(%1,%2)(mm,mm) t=%3mm d=%4mm X=%5 Y=%6>")
+                     .arg( fastener.name )
+                     .arg( fastener.positionX.value()*1000. , 0, 'f', 1)
+                     .arg( fastener.positionY.value()*1000. , 0, 'f', 1)
+                     .arg( fastener.thickness.value()*1000. , 0, 'f', 3)
+                     .arg( fastener.diameter.value()*1000. , 0, 'f', 3)
+                     .arg( Fastener::DOFtoBool(fastener.DoF_X) ?
+                               QLatin1String("fixed") : QLatin1String("free"))
+                     .arg( Fastener::DOFtoBool(fastener.DoF_Y) ?
+                               QLatin1String("fixed") : QLatin1String("free"));
+    return dbg.maybeSpace();
+}
+#endif

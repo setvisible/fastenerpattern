@@ -20,6 +20,12 @@
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
+#ifdef QT_TESTLIB_LIB
+#  include <QtTest/QTest>
+#endif
 
 
 /*! \class Splice
@@ -37,6 +43,8 @@ Splice::Splice(QObject *parent) : QObject(parent)
 {
 }
 
+/******************************************************************************
+ ******************************************************************************/
 /* JSON Serialization */
 /*! \brief Assign the Splice's members values from the given \a json object.
  */
@@ -242,4 +250,104 @@ void Splice::removeAllDesignSpaces()
 {
     m_designSpaces.clear();
 }
+
+
+/******************************************************************************
+ ******************************************************************************/
+bool Splice::operator==(const Splice &other) const
+{
+    return (*this).m_title == other.m_title
+            && (*this).m_author == other.m_author
+            && (*this).m_date == other.m_date
+            && (*this).m_description == other.m_description
+            && (*this).m_appliedLoad == other.m_appliedLoad
+            && (*this).m_fasteners == other.m_fasteners
+            && (*this).m_designSpaces == other.m_designSpaces;
+
+}
+bool Splice::operator!=(const Splice &other) const
+{
+    return ((*this) == other) ? false : true;
+}
+
+/******************************************************************************
+ ******************************************************************************/
+/*! \brief Equivalent means that the splices are equal,
+ *   however the order of the fasteners and design spaces
+ *   stored in their containers can be different.
+ */
+bool Splice::isEquivalentTo(const Splice &other) const
+{
+    /* Compare the fasteners */
+    if ((*this).m_fasteners.count() != other.m_fasteners.count()) {
+        return false;
+    }
+    {
+        QList<Fastener> list = other.m_fasteners;
+        for (int i = 0; i < (*this).m_fasteners.count(); ++i) {
+            const Fastener &item = (*this).m_fasteners.at(i);
+            if (!list.removeOne(item)) {
+                return false;
+            }
+        }
+        Q_ASSERT(list.count() == 0);
+    }
+
+    /* Compare the design spaces */
+    if ((*this).m_designSpaces.count() != other.m_designSpaces.count()) {
+        return false;
+    }
+    {
+        QList<DesignSpace> list = other.m_designSpaces;
+        for (int i = 0; i < (*this).m_designSpaces.count(); ++i) {
+            const DesignSpace &item = (*this).m_designSpaces.at(i);
+            if (!list.removeOne(item)) {
+                return false;
+            }
+        }
+        Q_ASSERT(list.count() == 0);
+    }
+
+    /* Compare the other properties */
+    return (*this).m_title == other.m_title
+            && (*this).m_author == other.m_author
+            && (*this).m_date == other.m_date
+            && (*this).m_description == other.m_description
+            && (*this).m_appliedLoad == other.m_appliedLoad;
+}
+
+/******************************************************************************
+ ******************************************************************************/
+#ifdef QT_TESTLIB_LIB
+/// This function is used by QCOMPARE() to output verbose information in case of a test failure.
+char *toString(const Splice &splice)
+{
+    // bring QTest::toString overloads into scope:
+    using QTest::toString;
+
+    // delegate char* handling to QTest::toString(QByteArray):
+    return toString( QString("<Splice '%0' applied=(%1N, %2N, %3Nm) fCount=%4 dCount=%5 ... >")
+                     .arg(splice.title())
+                     .arg(splice.appliedLoad().force_x.value() , 0, 'f', 1)
+                     .arg(splice.appliedLoad().force_y.value() , 0, 'f', 1)
+                     .arg(splice.appliedLoad().torque_z.value() , 0, 'f', 1)
+                     .arg(splice.fastenerCount())
+                     .arg(splice.designSpaceCount()) );
+}
+#endif
+
+#ifdef QT_DEBUG
+/// Custom Types to a Stream
+QDebug operator<<(QDebug dbg, const Splice &splice)
+{
+    dbg.nospace() << QString("<Splice '%0' applied=(%1N, %2N, %3Nm) fCount=%4 dCount=%5 ... >")
+                     .arg(splice.title())
+                     .arg(splice.appliedLoad().force_x.value() , 0, 'f', 1)
+                     .arg(splice.appliedLoad().force_y.value() , 0, 'f', 1)
+                     .arg(splice.appliedLoad().torque_z.value() , 0, 'f', 1)
+                     .arg(splice.fastenerCount())
+                     .arg(splice.designSpaceCount());
+    return dbg.maybeSpace();
+}
+#endif
 
