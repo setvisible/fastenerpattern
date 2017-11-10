@@ -24,6 +24,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QVector>
 
 class QJsonObject;
 
@@ -55,7 +56,7 @@ public:
     const Fastener& fastenerAt(const int index) const;
     void insertFastener(const int index, const Fastener &fastener);
     void addFastener(const Fastener &fastener);
-    void addFastener(const QList<Fastener> &fasteners);
+    void addFastener(const QVector<Fastener> &fasteners);
     void setFastenerAt(const int index, const Fastener &fastener);
     void removeFastenerAt(const int index);
     void removeAllFasteners();
@@ -64,7 +65,7 @@ public:
     const DesignSpace& designSpaceAt(const int index) const;
     void insertDesignSpace(const int index, const DesignSpace &designSpace);
     void addDesignSpace(const DesignSpace &designSpace);
-    void addDesignSpace(const QList<DesignSpace> &designSpaces);
+    void addDesignSpace(const QVector<DesignSpace> &designSpaces);
     void setDesignSpaceAt(const int index, const DesignSpace &designSpace);
     void removeDesignSpaceAt(const int index);
     void removeAllDesignSpaces();
@@ -79,8 +80,8 @@ private:
     QString m_date;
     QString m_description;
     Tensor m_appliedLoad;
-    QList<Fastener> m_fasteners;
-    QList<DesignSpace> m_designSpaces;
+    QVector<Fastener> m_fasteners;
+    QVector<DesignSpace> m_designSpaces;
 
 };
 

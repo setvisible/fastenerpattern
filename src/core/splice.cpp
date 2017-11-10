@@ -181,7 +181,13 @@ const Fastener& Splice::fastenerAt(const int index) const
 
 void Splice::insertFastener(const int index, const Fastener &fastener)
 {
-    m_fasteners.insert(index, fastener);
+    if (index <= 0) {
+        m_fasteners.insert(0, fastener);
+    } else if (index >= m_fasteners.size()) {
+        m_fasteners.insert(m_fasteners.size(), fastener);
+    } else {
+        m_fasteners.insert(index, fastener);
+    }
 }
 
 void Splice::addFastener(const Fastener &fastener)
@@ -189,7 +195,7 @@ void Splice::addFastener(const Fastener &fastener)
     m_fasteners.append(fastener);
 }
 
-void Splice::addFastener(const QList<Fastener> &fasteners)
+void Splice::addFastener(const QVector<Fastener> &fasteners)
 {
     m_fasteners.append(fasteners);
 }
@@ -223,7 +229,13 @@ const DesignSpace &Splice::designSpaceAt(const int index) const
 
 void Splice::insertDesignSpace(const int index, const DesignSpace &designSpace)
 {
-    m_designSpaces.insert(index, designSpace);
+    if (index <= 0) {
+        m_designSpaces.insert(0, designSpace);
+    } else if (index >= m_designSpaces.size()) {
+        m_designSpaces.insert(m_designSpaces.size(), designSpace);
+    } else {
+        m_designSpaces.insert(index, designSpace);
+    }
 }
 
 void Splice::addDesignSpace(const DesignSpace &designSpace)
@@ -231,7 +243,7 @@ void Splice::addDesignSpace(const DesignSpace &designSpace)
     m_designSpaces.append(designSpace);
 }
 
-void Splice::addDesignSpace(const QList<DesignSpace> &designSpaces)
+void Splice::addDesignSpace(const QVector<DesignSpace> &designSpaces)
 {
     m_designSpaces.append(designSpaces);
 }
@@ -283,7 +295,7 @@ bool Splice::isEquivalentTo(const Splice &other) const
         return false;
     }
     {
-        QList<Fastener> list = other.m_fasteners;
+        QVector<Fastener> list = other.m_fasteners;
         for (int i = 0; i < (*this).m_fasteners.count(); ++i) {
             const Fastener &item = (*this).m_fasteners.at(i);
             if (!list.removeOne(item)) {
@@ -298,7 +310,7 @@ bool Splice::isEquivalentTo(const Splice &other) const
         return false;
     }
     {
-        QList<DesignSpace> list = other.m_designSpaces;
+        QVector<DesignSpace> list = other.m_designSpaces;
         for (int i = 0; i < (*this).m_designSpaces.count(); ++i) {
             const DesignSpace &item = (*this).m_designSpaces.at(i);
             if (!list.removeOne(item)) {
