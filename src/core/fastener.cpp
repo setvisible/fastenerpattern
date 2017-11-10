@@ -15,7 +15,7 @@
  */
 
 #include "fastener.h"
-#include "global.h"
+#include <Maths/Utils>
 
 #include <QtCore/QJsonObject>
 #ifdef QT_DEBUG
@@ -86,10 +86,10 @@ void Fastener::write(QJsonObject &json) const
 bool Fastener::operator==(const Fastener &other) const
 {
     return (*this).name == other.name
-            && fuzzyCompare((*this).positionX.value(), other.positionX.value())
-            && fuzzyCompare((*this).positionY.value(), other.positionY.value())
-            && fuzzyCompare((*this).diameter.value(), other.diameter.value())
-            && fuzzyCompare((*this).thickness.value(), other.thickness.value())
+            && Maths::Utils::fuzzyCompare((*this).positionX.value(), other.positionX.value())
+            && Maths::Utils::fuzzyCompare((*this).positionY.value(), other.positionY.value())
+            && Maths::Utils::fuzzyCompare((*this).diameter.value(), other.diameter.value())
+            && Maths::Utils::fuzzyCompare((*this).thickness.value(), other.thickness.value())
             && (*this).DoF_X == other.DoF_X
             && (*this).DoF_Y == other.DoF_Y;
 
