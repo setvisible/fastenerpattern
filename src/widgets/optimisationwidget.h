@@ -17,33 +17,58 @@
 #ifndef WIDGETS_OPTIMISATION_WIDGET_H
 #define WIDGETS_OPTIMISATION_WIDGET_H
 
-#include <Widgets/AbstractSpliceView>
+#include <QtCore/QThread>
+#include <QtWidgets/QWidget>
+
+class Splice;
+class SpliceCalculator;
+class OptimisationSolver;
 
 namespace Ui {
 class OptimisationWidget;
 }
 
-class OptimisationWidget : public AbstractSpliceView
+class OptimisationWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit OptimisationWidget(QWidget *parent = Q_NULLPTR);
     virtual ~OptimisationWidget();
 
-public Q_SLOTS:
-    virtual void onFastenerInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void onFastenerChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual void onFastenerRemoved(const int index) Q_DECL_OVERRIDE;
-    virtual void onSelectionFastenerChanged() Q_DECL_OVERRIDE;
-    virtual void onSelectionDesignSpaceChanged() Q_DECL_OVERRIDE;
-    virtual void onResultsChanged() Q_DECL_OVERRIDE;
+    void setSpliceCalculator(SpliceCalculator *calculator);
 
-protected Q_SLOTS:
-    void onItemSelectionChanged();
+    Splice* initialSplice() const { return m_initialSplice; }
+    Splice* currentSplice() const { return m_currentSplice; }
+
+
+Q_SIGNALS:
+    void showInitialToggled(bool checked);
+    void showSolutionToggled(bool checked);
+
+private Q_SLOTS:
+    void solverStarted();
+    void solverProcessed(int percent);
+    void solverStopped();
+    void solverMessageInfo(qint64 timestamp, QString message);
+    void solverMessageWarning(qint64 timestamp, QString message);
+    void solverMessageFatal(qint64 timestamp, QString message);
+
+    void startOptimisation();
+    void stopOptimisation();
+
+    //temp
+    void onShowInitialToggled(bool checked);
+    void onShowSolutionToggled(bool checked);
 
 private:
     Ui::OptimisationWidget *ui;
+    SpliceCalculator *m_calculator;
+    Splice* m_initialSplice;
+    Splice* m_currentSplice;
+    OptimisationSolver *m_solver;
+    QThread m_workerThread;
 
+    void appendMessage(int type, qint64 timestamp, const QString &message);
 };
 
 #endif // WIDGETS_OPTIMISATION_WIDGET_H

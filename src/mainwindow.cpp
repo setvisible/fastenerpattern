@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->mainWidget->designOptionWidget()->setModel(m_calculator);
     ui->mainWidget->designSpaceWidget()->setModel(m_calculator);
     ui->mainWidget->designVariableWidget()->setModel(m_calculator);
-    ui->mainWidget->optimisationWidget()->setModel(m_calculator);
+    /// \todo ui->mainWidget->optimisationWidget()->setModel(m_calculator);
     ui->mainWidget->resultWidget()->setModel(m_calculator);
     ui->mainWidget->tableWidget()->setModel(m_calculator);
 
@@ -90,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     /* Connect the Calculator to the MainWindow. */
     /* In fact, the Calculator centralizes the changes. */
     QObject::connect(m_calculator, SIGNAL(changed()), this, SLOT(setDirty()));
+
 
     /* [3] */
     /* Internally, the Calculator updates the Splice, and
@@ -126,6 +127,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QObject::connect(ui->spliceToolBar, SIGNAL(distanceVisibilityChanged(bool)),
                      ui->spliceGraphicsWidget, SLOT(setDistanceVisible(bool)));
 
+
+    /* For the OptimisationWidget, the connections are different... */
+    /// \todo reimplement OptimisationWidget
+    ui->mainWidget->optimisationWidget()->setSpliceCalculator(m_calculator);
 
     createActions();
     createMenus();

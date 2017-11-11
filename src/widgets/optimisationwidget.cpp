@@ -17,162 +17,198 @@
 #include "optimisationwidget.h"
 #include "ui_optimisationwidget.h"
 
+#include <Core/SpliceCalculator>
+#include <Core/Optimizer/OptimisationSolver>
 #include <boost/units/cmath.hpp> /* pow<>() */
 
 #include <QtCore/QDebug>
+#include <QtCore/QDateTime>
 
-OptimisationWidget::OptimisationWidget(QWidget *parent) : AbstractSpliceView(parent)
+/*! \class OptimisationWidget
+ * \brief The class OptimisationWidget is the GUI that start and stops the
+ * optimisation analysis.
+ *
+ * The OptimisationSolver::start() method is an expensive task.
+ * This is why it's run by another thread than the GUI.
+ *
+ * The OptimisationWidget controls the OptimisationSolver's thread.
+ */
+OptimisationWidget::OptimisationWidget(QWidget *parent) : QWidget(parent)
   , ui(new Ui::OptimisationWidget)
+  , m_calculator(Q_NULLPTR)
+  , m_initialSplice(new Splice(this))
+  , m_currentSplice(new Splice(this))
+  , m_solver(Q_NULLPTR)
 {
     ui->setupUi(this);
 
-    ui->treeWidget->setExpandsOnDoubleClick(false);
-    ui->treeWidget->setRootIsDecorated(false);
-    ui->treeWidget->expandAll();
+    this->solverStopped();
 
-    /*
-    QObject::connect(ui->treeWidget, SIGNAL(itemSelectionChanged()),
-                     this, SLOT(onItemSelectionChanged()));
-*/
+    /* Create the solver and attach it to a separated thread worker */
+    m_solver = new OptimisationSolver(); /* rem: Must have no parent! */
+    m_solver->moveToThread(&m_workerThread);
+    connect(&m_workerThread, &QThread::finished, m_solver, &QObject::deleteLater);
 
+    connect(m_solver, SIGNAL(started()), this, SLOT(solverStarted()));
+    connect(m_solver, SIGNAL(stopped()), this, SLOT(solverStopped()));
+    connect(m_solver, SIGNAL(processed(int)), this, SLOT(solverProcessed(int)));
+    connect(m_solver, SIGNAL(messageInfo(qint64,QString)),
+            this, SLOT(solverMessageInfo(qint64,QString)));
+    connect(m_solver, SIGNAL(messageWarning(qint64,QString)),
+            this, SLOT(solverMessageWarning(qint64,QString)));
+    connect(m_solver, SIGNAL(messageFatal(qint64,QString)),
+            this, SLOT(solverMessageFatal(qint64,QString)));
+
+    //  connect(ui->stopButton, SIGNAL(released()), m_solver, SLOT(stop());
+
+    // connect(m_solver, &OptimisationSolver::resultReady, this, &OptimisationWidget::handleResults);
+
+    m_workerThread.start();
+
+
+    /* Connect the GUI */
+    connect(ui->startButton, SIGNAL(released()), this, SLOT(startOptimisation()));
+    connect(ui->stopButton, SIGNAL(released()), this, SLOT(stopOptimisation()));
+    /// \todo connect(ui->showInitialCheckBox, SIGNAL(toggled(bool)), SIGNAL(showInitialToggled(bool)));
+    /// \todo connect(ui->showSolutionCheckBox, SIGNAL(toggled(bool)), SIGNAL(showSolutionToggled(bool)));
+    connect(ui->showInitialCheckBox, SIGNAL(toggled(bool)),  this, SLOT(onShowInitialToggled(bool)));
+    connect(ui->showSolutionCheckBox, SIGNAL(toggled(bool)), this, SLOT(onShowSolutionToggled(bool)));
+
+    ui->console->setWordWrapMode(QTextOption::NoWrap);
+    ui->console->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    ui->console->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 }
 
 OptimisationWidget::~OptimisationWidget()
 {
+    m_workerThread.quit();
+    m_workerThread.wait();
     delete ui;
 }
 
+
 /******************************************************************************
  ******************************************************************************/
-void OptimisationWidget::onItemSelectionChanged()
+void OptimisationWidget::setSpliceCalculator(SpliceCalculator *calculator)
 {
-  //  qDebug() << Q_FUNC_INFO;
-    /*  QSet<int> set;
-    QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
+    m_calculator = calculator;
+}
 
-    if (!rootItem)
-        return;
+/* TEMPO */
+void OptimisationWidget::onShowInitialToggled(bool checked)
+{
 
-    int i = rootItem->childCount();
-    while (i>0) {
-        i--;
-        QTreeWidgetItem *item = rootItem->child(i);
-        if (item->isSelected())
-            set << i;
+}
+
+void OptimisationWidget::onShowSolutionToggled(bool checked)
+{
+    Splice *splice = (!checked ? m_initialSplice : m_currentSplice );
+    for (int i = 0; i < splice->fastenerCount(); ++i) {
+        m_calculator->setFastener(i, splice->fastenerAt(i));
     }
-    model()->setSelection(set);*/
 }
 
 /******************************************************************************
  ******************************************************************************/
-void OptimisationWidget::onFastenerInserted(const int index, const Fastener &fastener)
+void OptimisationWidget::solverStarted()
 {
-  //  qDebug() << Q_FUNC_INFO;
-    /*  QTreeWidgetItem* item = new QTreeWidgetItem();
-    ui->treeWidget->insertTopLevelItem(index, item);
-    item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
-
-    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
-    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
-    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
-    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
-    item->setText(4, DOFToString(fastener.DoF_X));
-    item->setText(5, DOFToString(fastener.DoF_Y));
-
-    this->resizeColumnToContents();*/
+    qDebug() << Q_FUNC_INFO;
+    ui->startButton->setEnabled(false);
+    ui->stopButton->setEnabled(true);
+    ui->showTimestampCheckBox->setEnabled(false);
+    repaint();
 }
 
-void OptimisationWidget::onFastenerChanged(const int index, const Fastener &fastener)
+void OptimisationWidget::solverProcessed(int /*percent*/)
 {
-   // qDebug() << Q_FUNC_INFO;
-    /*  QTreeWidgetItem* item = ui->treeWidget->topLevelItem(index);
-    if (!item)
-        return;
-
-    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
-    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
-    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
-    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
-    item->setText(4, DOFToString(fastener.DoF_X));
-    item->setText(5, DOFToString(fastener.DoF_Y));
-
-    this->resizeColumnToContents();*/
+    qDebug() << Q_FUNC_INFO;
+    /// \todo
 }
 
-void OptimisationWidget::onFastenerRemoved(const int index)
+void OptimisationWidget::solverStopped()
 {
-  //  qDebug() << Q_FUNC_INFO;
-    /* QTreeWidgetItem* item = ui->treeWidget->takeTopLevelItem(index);
-    if (item)
-        delete item;
-    this->resizeColumnToContents();*/
+    qDebug() << Q_FUNC_INFO;
+    ui->startButton->setEnabled(true);
+    ui->stopButton->setEnabled(false);
+    ui->showTimestampCheckBox->setEnabled(true);
+}
 
+void OptimisationWidget::solverMessageInfo(qint64 timestamp, QString message)
+{
+    this->appendMessage(0, timestamp, message);
+}
+
+void OptimisationWidget::solverMessageWarning(qint64 timestamp, QString message)
+{
+    this->appendMessage(1, timestamp, message);
+}
+
+void OptimisationWidget::solverMessageFatal(qint64 timestamp, QString message)
+{
+    this->appendMessage(2, timestamp, message);
 }
 
 /******************************************************************************
  ******************************************************************************/
-void OptimisationWidget::onSelectionFastenerChanged()
+void OptimisationWidget::appendMessage(int type, qint64 timestamp, const QString &message)
 {
-  //  qDebug() << Q_FUNC_INFO;
-    /* QSet<int> set = model()->selectedIndexes();
-    QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
-
-    if (!rootItem)
-        return;
-
-    int i = rootItem->childCount();
-    while (i>0) {
-        i--;
-        QTreeWidgetItem *item = rootItem->child(i);
-        if (item)
-            ui->treeWidget->setItemSelected(item, set.contains(i));
-    }*/
-}
-
-void OptimisationWidget::onSelectionDesignSpaceChanged()
-{
-  //  qDebug() << Q_FUNC_INFO;
-    /* QSet<int> set = model()->selectedIndexes();
-    QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
-
-    if (!rootItem)
-        return;
-
-    int i = rootItem->childCount();
-    while (i>0) {
-        i--;
-        QTreeWidgetItem *item = rootItem->child(i);
-        if (item)
-            ui->treeWidget->setItemSelected(item, set.contains(i));
-    }*/
-}
-
-/******************************************************************************
- ******************************************************************************/
-void OptimisationWidget::onResultsChanged()
-{
- //   qDebug() << Q_FUNC_INFO;
-
-    Force maxAbs = 0.0*N;
-    const int count = model()->fastenerCount();
-    for (int index = 0; index < count; ++index) {
-        Tensor res = model()->resultAt(index);
-        Force resultant =
-                boost::units::root<2>(
-                    boost::units::pow<2>(res.force_x)
-                    + boost::units::pow<2>(res.force_y));
-
-        maxAbs = boost::units::fmax(maxAbs, resultant);
+    switch (type) {
+    case 0: ui->console->setTextColor(Qt::black); break;
+    case 1: ui->console->setTextColor(Qt::blue); break;
+    case 2: ui->console->setTextColor(Qt::red); break;
+    default:
+        Q_UNREACHABLE();
+        break;
     }
-    QString params = toString(model()->solverParameters());
 
-    QTreeWidgetItem *item1 = ui->treeWidget->topLevelItem(0); // "Pattern"
-    QTreeWidgetItem *item2 = item1->child(0);   // "Solver"
-    item2->setText(0, QString("Solver: %0").arg(params));
-
-    QTreeWidgetItem *item3 = item1->child(1);   // "Results"
-    QTreeWidgetItem *item4 = item3->child(0);
-    item4->setText(0, QString("MAX(ABS(Fxy)) = %0 N").arg( maxAbs.value(), 0, 'f', 1));
-
+    if (ui->showTimestampCheckBox->isChecked()) {
+        QDateTime datetime = QDateTime::fromMSecsSinceEpoch(timestamp);
+        QString str = datetime.toString("yyyy-mm-dd_hh:mm:ss.zzz");
+        QString text = QString("[%0] %1").arg(str).arg(message);
+        ui->console->append(text);
+    } else {
+        ui->console->append(message);
+    }
 }
 
+
+/******************************************************************************
+ ******************************************************************************/
+void OptimisationWidget::startOptimisation()
+{
+    Q_ASSERT(m_calculator);
+
+    qDebug() << Q_FUNC_INFO;
+
+    /* Save the initial splice */
+    m_initialSplice->removeAllFasteners();
+    m_initialSplice->removeAllDesignSpaces();
+
+    m_initialSplice->setTitle( QString() );
+    m_initialSplice->setAuthor(QString());
+    m_initialSplice->setDate(QString());
+    m_initialSplice->setDescription(QString());
+    m_initialSplice->setAppliedLoad( m_calculator->appliedLoad() );
+    for (int i = 0; i < m_calculator->designSpaceCount(); ++i) {
+        m_initialSplice->addDesignSpace( m_calculator->designSpaceAt(i) );
+    }
+    for (int i = 0; i < m_calculator->fastenerCount(); ++i) {
+        m_initialSplice->addFastener( m_calculator->fastenerAt(i) );
+    }
+
+    /* Prepare the solver */
+    ISolver *solver = m_calculator->solver();
+    m_solver->setSolver( solver );
+    m_solver->setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
+    m_solver->setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
+    m_solver->setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    m_solver->setInput( m_initialSplice );
+    m_solver->setOutput( m_currentSplice );
+
+    m_solver->start();
+}
+
+void OptimisationWidget::stopOptimisation()
+{
+    m_solver->stop();
+}
