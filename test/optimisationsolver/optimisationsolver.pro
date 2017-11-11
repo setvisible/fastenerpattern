@@ -1,7 +1,7 @@
 #isEmpty(TEMPLATE):TEMPLATE=app
 TARGET       = tst_optimisationsolver
 CONFIG      += testcase
-QT           = core testlib
+QT           = core gui testlib
 SOURCES     += tst_optimisationsolver.cpp
 
 

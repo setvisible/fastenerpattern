@@ -3,6 +3,10 @@ set(MY_TEST_TARGET tst_optimisationsolver)
 
 set(MY_TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/optimizer/optimisationsolver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/designspace.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/fastener.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/splice.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/tensor.cpp
     )
 
 add_executable(${MY_TEST_TARGET} WIN32
@@ -12,5 +16,5 @@ add_executable(${MY_TEST_TARGET} WIN32
     )
 
 # Qt
-qt5_use_modules(${MY_TEST_TARGET} Core Test )
+qt5_use_modules(${MY_TEST_TARGET} Core Gui Test )
 
