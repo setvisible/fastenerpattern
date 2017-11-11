@@ -16,7 +16,7 @@
 
 #include "dummysolver.h"
 
-#include <boost/units/cmath.hpp> // pow()
+#include <boost/units/cmath.hpp> /* pow(), sqrt() */
 
 /*! \class DummySolver
  * \brief The class DummySolver is a mock solver, that is used to
@@ -46,26 +46,8 @@ QList<Tensor> DummySolver::calculate(const Splice *splice)
     QList<Tensor> res;
 
     Length maxDistance = 0.0 *m;
-    const int count = splice->fastenerCount();
 
-    for (int i = 0 ; i < count ; ++i) {
-        const Fastener f = splice->fastenerAt(i);
-
-        Length squaredDistance =
-                boost::units::sqrt(
-                    boost::units::pow<2>(f.positionX) +
-                    boost::units::pow<2>(f.positionY));
-
-        if (maxDistance < squaredDistance) {
-            maxDistance = squaredDistance;
-        }
-    }
-
-    if (maxDistance < 0.001 *m) {
-        maxDistance = 0.001 *m;
-    }
-
-    for (int i = 0 ; i < count ; ++i) {
+    for (int i = 0 ; i < splice->fastenerCount() ; ++i) {
         const Fastener f = splice->fastenerAt(i);
 
         Length distance =
@@ -73,9 +55,27 @@ QList<Tensor> DummySolver::calculate(const Splice *splice)
                     boost::units::pow<2>(f.positionX) +
                     boost::units::pow<2>(f.positionY));
 
-        /* k is between 1. (closest) and 0.000001 (farthest). */
-        qreal k = (maxDistance - 0.99 * distance) / maxDistance;
-        Q_ASSERT((1. >= k) && (k > 0.));
+        if (maxDistance < distance) {
+            maxDistance = distance;
+        }
+    }
+
+    if (maxDistance < 0.001 *m) {
+        maxDistance = 0.001 *m;
+    }
+
+    for (int i = 0 ; i < splice->fastenerCount() ; ++i) {
+        const Fastener f = splice->fastenerAt(i);
+
+        Length distance =
+                boost::units::sqrt(
+                    boost::units::pow<2>(f.positionX) +
+                    boost::units::pow<2>(f.positionY));
+
+        /*  0 <= distance < infinite */
+
+        qreal k = 1.0 / (distance.value() + 1.0);
+        Q_ASSERT((0.0 < k) && (k <= 1.0));
 
         Tensor t;
         t.force_x = k * splice->appliedLoad().force_x;
