@@ -435,4 +435,5 @@ void MainWindow::on_action_RandomPattern_triggered()
 void MainWindow::on_action_Optimize4Bolt_triggered()
 {
     loadFile(":/examples/Optimize_4BoltJoint.splice");
+    ui->mainWidget->setCurrentIndex(3);
 }

@@ -52,6 +52,11 @@ public:
     SolverWidget* solverWidget() const;
     TableWidget* tableWidget() const;
 
+    int currentIndex() const;
+
+public Q_SLOTS:
+    void setCurrentIndex(int index);
+
 private:
     Ui::MainWidget *ui;
 };

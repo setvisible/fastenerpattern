@@ -89,3 +89,13 @@ TableWidget* MainWidget::tableWidget() const
 {
     return ui->tableWidget;
 }
+
+int MainWidget::currentIndex() const
+{
+    return ui->tabWidget->currentIndex();
+}
+
+void MainWidget::setCurrentIndex(int index)
+{
+    ui->tabWidget->setCurrentIndex(index);
+}
