@@ -70,6 +70,9 @@ public:
     virtual QSet<int> selectedFastenerIndexes() const Q_DECL_OVERRIDE;
     virtual QSet<int> selectedDesignSpaceIndexes() const Q_DECL_OVERRIDE;
 
+
+    ISolver* solver() const { return m_solver; } /// \todo This is a hack!
+
 Q_SIGNALS:
     void changed();
 
