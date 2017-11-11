@@ -23,10 +23,29 @@ DesignOptionWidget::DesignOptionWidget(QWidget *parent) : AbstractSpliceView(par
   , ui(new Ui::DesignOptionWidget)
 {
     ui->setupUi(this);
-
 }
 
 DesignOptionWidget::~DesignOptionWidget()
 {
     delete ui;
+}
+
+int DesignOptionWidget::randomIterations() const
+{
+    return ui->randomSpinBox->value();
+}
+
+void DesignOptionWidget::setRandomIterations(const int iterations)
+{
+    ui->randomSpinBox->setValue(iterations);
+}
+
+int DesignOptionWidget::localIterations() const
+{
+    return ui->localSpinBox->value();
+}
+
+void DesignOptionWidget::setLocalIterations(const int iterations)
+{
+    ui->localSpinBox->setValue(iterations);
 }

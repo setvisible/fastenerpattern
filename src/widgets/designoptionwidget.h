@@ -31,6 +31,12 @@ public:
     ~DesignOptionWidget();
 
 public Q_SLOTS:
+    int randomIterations() const;
+    void setRandomIterations(const int iterations);
+
+    int localIterations() const;
+    void setLocalIterations(const int iterations);
+
 
 private:
     Ui::DesignOptionWidget *ui;
