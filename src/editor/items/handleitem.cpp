@@ -71,7 +71,7 @@ void HandleItem::onPosChanged()
     QString text =
             QString("(%0,%1)")
             .arg(this->scenePos().x() / C_DEFAULT_SCREEN_DPI, 0, 'f', 1)
-            .arg(this->scenePos().y() / C_DEFAULT_SCREEN_DPI, 0, 'f', 1);
+            .arg(-1 * this->scenePos().y() / C_DEFAULT_SCREEN_DPI, 0, 'f', 1);
     m_labelItem->setText(text);
 }
 
