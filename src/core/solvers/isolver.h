@@ -39,7 +39,7 @@ class ISolver : public QObject
 {
 public:
     explicit ISolver(QObject *parent = Q_NULLPTR) : QObject(parent) {}
-    virtual ~ISolver() {}
+    virtual ~ISolver() Q_DECL_NOEXCEPT {}
 
     virtual QList<Tensor> calculate(const Splice *splice) = 0;
 
