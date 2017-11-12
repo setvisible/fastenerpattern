@@ -26,7 +26,7 @@ class AbstractSpliceView : public QWidget
     Q_OBJECT
 public:
     explicit AbstractSpliceView(QWidget *parent = Q_NULLPTR);
-    virtual ~AbstractSpliceView() {}
+    virtual ~AbstractSpliceView() Q_DECL_NOEXCEPT {}
 
     virtual void setModel(AbstractSpliceModel *model);
     AbstractSpliceModel *model() const;
