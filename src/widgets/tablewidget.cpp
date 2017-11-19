@@ -22,6 +22,11 @@
 
 #include <QtCore/QDebug>
 
+static inline QString DOFToString(Fastener::DOF dof)
+{
+    return (dof == Fastener::Fixed) ? QObject::tr("fixed") : QObject::tr("free");
+}
+
 
 TableWidget::TableWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::TableWidget)
@@ -125,9 +130,4 @@ void TableWidget::onSelectionFastenerChanged()
         if (item)
             ui->treeWidget->setItemSelected(item, set.contains(i));
     }
-}
-
-inline QString TableWidget::DOFToString(Fastener::DOF dof) const
-{
-    return (dof == Fastener::Fixed) ? tr("fixed") : tr("free");
 }
