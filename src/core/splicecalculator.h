@@ -18,15 +18,20 @@
 #define CORE_SPLICE_CALCULATOR_H
 
 #include <Core/AbstractSpliceModel>
-#include <Core/Splice>
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
+#include <QtCore/QSet>
 
+QT_BEGIN_NAMESPACE
+class QDebug;
 class QJsonObject;
+class QObject;
+class QString;
+QT_END_NAMESPACE
 
 class ISolver;
 class Splice;
+enum class SolverParameters;
+
 class SpliceCalculator : public AbstractSpliceModel
 {
     Q_OBJECT

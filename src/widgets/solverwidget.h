@@ -17,8 +17,9 @@
 #ifndef WIDGETS_SOLVER_WIDGET_H
 #define WIDGETS_SOLVER_WIDGET_H
 
-#include <Core/Solvers/Parameters>
 #include <QtWidgets/QWidget>
+
+enum class SolverParameters;
 
 namespace Ui {
 class SolverWidget;

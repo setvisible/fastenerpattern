@@ -17,14 +17,15 @@
 #ifndef CORE_FASTENER_H
 #define CORE_FASTENER_H
 
-#include "units/unit_system.h"
+#include <Core/Units/UnitSystem>
 
-#include <QtCore/QDebug>
-#include <QtCore/QList>
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 
+QT_BEGIN_NAMESPACE
+class QDebug;
 class QJsonObject;
+QT_END_NAMESPACE
 
 class Fastener
 {

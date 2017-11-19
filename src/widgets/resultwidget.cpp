@@ -17,6 +17,10 @@
 #include "resultwidget.h"
 #include "ui_resultwidget.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/Fastener>
+#include <Core/Tensor>
+
 #include <QtCore/QDebug>
 #include <QtWidgets/QTableWidget>
 

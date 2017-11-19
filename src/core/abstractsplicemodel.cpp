@@ -16,6 +16,8 @@
 
 #include "abstractsplicemodel.h"
 
+#include <QtCore/QSet>
+
 /*! \class AbstractSpliceModel
  *  \brief The class AbstractSpliceModel is a model (MVC paradigm).
  *

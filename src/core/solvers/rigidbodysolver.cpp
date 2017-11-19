@@ -16,6 +16,9 @@
 
 #include "rigidbodysolver.h"
 
+#include <Core/Splice>
+#include <Core/Tensor>
+#include <Core/Solvers/Parameters>
 #include <Core/Units/UnitSystem>
 #include <Core/Units/AreaMomentOfInertia>
 

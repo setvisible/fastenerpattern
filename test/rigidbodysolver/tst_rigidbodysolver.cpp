@@ -15,6 +15,8 @@
  */
 
 #include <Core/Solvers/RigidBodySolver>
+#include <Core/Solvers/Parameters>
+#include <Core/Splice>
 
 #include <QtTest/QtTest>
 #include <QtCore/QDebug>
@@ -22,9 +24,9 @@
 
 #include <iostream>
 
-using namespace boost;
-using namespace units;
-using namespace si;
+// using namespace boost;
+// using namespace units;
+// using namespace si;
 
 
 class tst_RigidBodySolver : public QObject

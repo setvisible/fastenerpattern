@@ -17,6 +17,7 @@
 #include "appliedloadwidget.h"
 #include "ui_appliedloadwidget.h"
 
+#include <Core/AbstractSpliceModel>
 
 AppliedLoadWidget::AppliedLoadWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::AppliedLoadWidget)

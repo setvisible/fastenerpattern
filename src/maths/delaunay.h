@@ -17,9 +17,12 @@
 #ifndef MATHS_DELAUNAY_H
 #define MATHS_DELAUNAY_H
 
-#include <QtCore/QList>
-#include <QtCore/QLineF>
-#include <QtCore/QPointF>
+#include <QtCore/QtContainerFwd> /* Forward Declarations of the Qt's Containers */
+
+QT_BEGIN_NAMESPACE
+class QLineF;
+class QPointF;
+QT_END_NAMESPACE
 
 namespace Maths {
 

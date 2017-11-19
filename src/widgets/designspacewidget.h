@@ -19,7 +19,11 @@
 
 #include <Widgets/AbstractSpliceView>
 
+QT_BEGIN_NAMESPACE
 class QTableWidgetItem;
+QT_END_NAMESPACE
+
+class DesignSpace;
 
 namespace Ui {
 class DesignSpaceWidget;

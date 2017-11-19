@@ -20,9 +20,9 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 
-#ifdef QT_DEBUG
-#  include <QtCore/QDebug>
-#endif
+QT_BEGIN_NAMESPACE
+class QDebug;
+QT_END_NAMESPACE
 
 enum class SolverParameters {
     NoSolver,

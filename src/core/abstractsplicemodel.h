@@ -17,13 +17,18 @@
 #ifndef CORE_ABSTRACT_SPLICE_MODEL_H
 #define CORE_ABSTRACT_SPLICE_MODEL_H
 
-#include <QtCore/QObject>
-#include <QtCore/QSet>
-
-#include <Core/Tensor>
-#include <Core/Fastener>
 #include <Core/DesignSpace>
+#include <Core/Fastener>
+#include <Core/Tensor>
 #include <Core/Solvers/Parameters>
+
+#include <QtCore/QObject>
+#include <QtCore/QtContainerFwd> /* Forward Declarations of the Qt's Containers */
+
+class DesignSpace;
+class Fastener;
+class Tensor;
+enum class SolverParameters;
 
 class AbstractSpliceModel : public QObject
 {
@@ -108,12 +113,14 @@ public Q_SLOTS:
         return false;
     }
 
-    Q_INVOKABLE virtual bool setFastenerSelection(const QSet<int> indexes) {
+    Q_INVOKABLE virtual bool setFastenerSelection(const QSet<int> indexes)
+    {
         Q_UNUSED(indexes);
         return false;
     }
 
-    Q_INVOKABLE virtual bool setDesignSpaceSelection(const QSet<int> indexes) {
+    Q_INVOKABLE virtual bool setDesignSpaceSelection(const QSet<int> indexes)
+    {
         Q_UNUSED(indexes);
         return false;
     }

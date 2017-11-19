@@ -21,12 +21,13 @@
 #include <Core/Fastener>
 #include <Core/Tensor>
 
-#include <QtCore/QDebug>
 #include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QVector>
 
+QT_BEGIN_NAMESPACE
+class QDebug;
 class QJsonObject;
+class QString;
+QT_END_NAMESPACE
 
 class Splice : public QObject
 {

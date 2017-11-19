@@ -17,6 +17,8 @@
 #include "designoptionwidget.h"
 #include "ui_designoptionwidget.h"
 
+#include <Core/AbstractSpliceModel>
+
 #include <QtCore/QDebug>
 
 DesignOptionWidget::DesignOptionWidget(QWidget *parent) : AbstractSpliceView(parent)

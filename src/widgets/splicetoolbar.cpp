@@ -16,6 +16,11 @@
 
 #include "splicetoolbar.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/DesignSpace>
+#include <Core/Fastener>
+
+#include <QtCore/QSet>
 #include <QtGui/QIcon>
 #include <QtWidgets/QAction>
 

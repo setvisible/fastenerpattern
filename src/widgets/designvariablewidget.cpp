@@ -17,6 +17,9 @@
 #include "designvariablewidget.h"
 #include "ui_designvariablewidget.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/Fastener>
+
 #include <QtCore/QDebug>
 #include <QtWidgets/QTableWidget>
 

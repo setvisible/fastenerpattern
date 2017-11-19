@@ -17,6 +17,9 @@
 #include "designspacewidget.h"
 #include "ui_designspacewidget.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/DesignSpace>
+
 #include <QtCore/QDebug>
 #include <QtWidgets/QTableWidget>
 

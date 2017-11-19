@@ -23,6 +23,10 @@
 #include "items/measureitem.h"
 #include "items/utils_scale.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/Fastener>
+#include <Core/Tensor>
+#include <Core/DesignSpace>
 #include <Maths/Delaunay>
 
 #include <QtCore/QSet>
@@ -32,7 +36,6 @@
 
 /*! \class SpliceGraphicsWidget
  *  \brief The class SpliceGraphicsWidget is the main GUI Graphics View.
- *
  */
 
 SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView(parent)

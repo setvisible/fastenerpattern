@@ -34,9 +34,11 @@ extern "C" {
 /* END TRIANGLE DECLARATION */
 /* ************************************************************************** */
 
-
 #include <QtCore/QDebug>
 #include <QtCore/QString>
+#include <QtCore/QList>
+#include <QtCore/QLineF>
+#include <QtCore/QPointF>
 
 
 namespace Maths

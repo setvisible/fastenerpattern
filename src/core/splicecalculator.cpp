@@ -16,6 +16,8 @@
 
 #include "splicecalculator.h"
 
+#include <Core/Splice>
+#include <Core/Solvers/Parameters>
 #include <Core/Solvers/ISolver>
 #include <Core/Solvers/RigidBodySolver>
 

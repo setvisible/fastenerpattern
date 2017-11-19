@@ -17,6 +17,8 @@
 #include "solverwidget.h"
 #include "ui_solverwidget.h"
 
+#include <Core/Solvers/Parameters>
+
 #include <QtWidgets/QButtonGroup>
 
 SolverWidget::SolverWidget(QWidget *parent) : QWidget(parent)

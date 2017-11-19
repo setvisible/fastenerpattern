@@ -18,7 +18,6 @@
 #define EDITOR_ITEMS_DESIGN_SPACE_ITEM_H
 
 #include <QtCore/QObject>
-#include <QtCore/QList>
 #include <QtGui/QBrush>
 #include <QtWidgets/QGraphicsObject>
 

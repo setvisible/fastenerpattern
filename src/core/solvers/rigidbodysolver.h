@@ -18,9 +18,8 @@
 #define CORE_RIGID_BODY_SOLVER_H
 
 #include <Core/Solvers/ISolver>
-#include <Core/Solvers/Parameters>
 
-class QObject;
+enum class SolverParameters;
 
 class RigidBodySolver : public ISolver
 {

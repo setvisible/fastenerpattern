@@ -17,7 +17,9 @@
 #ifndef WIDGETS_APPLIED_LOAD_WIDGET_H
 #define WIDGETS_APPLIED_LOAD_WIDGET_H
 
+#include <Core/Tensor>
 #include <Widgets/AbstractSpliceView>
+
 
 namespace Ui {
 class AppliedLoadWidget;

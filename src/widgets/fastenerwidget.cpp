@@ -17,6 +17,8 @@
 #include "fastenerwidget.h"
 #include "ui_fastenerwidget.h"
 
+#include <Core/AbstractSpliceModel>
+
 FastenerWidget::FastenerWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::FastenerWidget)
   , m_currentIndex(-1)

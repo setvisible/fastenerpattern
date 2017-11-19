@@ -17,10 +17,11 @@
 #ifndef CORE_SOLVERS_ISOLVER_H
 #define CORE_SOLVERS_ISOLVER_H
 
-#include <Core/Tensor>
-#include <Core/Splice>
-
 #include <QtCore/QObject>
+#include <QtCore/QtContainerFwd> /* Forward Declarations of the Qt's Containers */
+
+class Tensor;
+class Splice;
 
 /*! \class ISolver
  *  \brief The class ISolver is an interface for the solvers.

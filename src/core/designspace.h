@@ -17,12 +17,14 @@
 #ifndef CORE_DESIGN_SPACE_H
 #define CORE_DESIGN_SPACE_H
 
-#include <QtCore/QDebug>
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtGui/QPolygonF>
 
+QT_BEGIN_NAMESPACE
+class QDebug;
 class QJsonObject;
+QT_END_NAMESPACE
 
 class DesignSpace
 {

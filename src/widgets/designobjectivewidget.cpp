@@ -17,6 +17,8 @@
 #include "designobjectivewidget.h"
 #include "ui_designobjectivewidget.h"
 
+#include <Core/AbstractSpliceModel>
+
 #include <QtCore/QDebug>
 
 DesignObjectiveWidget::DesignObjectiveWidget(QWidget *parent) : AbstractSpliceView(parent)

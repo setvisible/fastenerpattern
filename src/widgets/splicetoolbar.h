@@ -17,9 +17,9 @@
 #ifndef WIDGETS_SPLICE_TOOLBAR_H
 #define WIDGETS_SPLICE_TOOLBAR_H
 
-#include <QtWidgets/QToolBar>
 #include <Widgets/AbstractSpliceView>
 
+#include <QtWidgets/QToolBar>
 
 /******************************************************************************
  ******************************************************************************/

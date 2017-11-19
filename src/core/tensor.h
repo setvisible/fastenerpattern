@@ -17,12 +17,14 @@
 #ifndef CORE_TENSOR_H
 #define CORE_TENSOR_H
 
-#include "units/unit_system.h"
+#include <Core/Units/UnitSystem>
 
-#include <QtCore/QDebug>
 #include <QtCore/QMetaType>
 
+QT_BEGIN_NAMESPACE
+class QDebug;
 class QJsonObject;
+QT_END_NAMESPACE
 
 class Tensor
 {
@@ -44,6 +46,8 @@ public:
     Force force_y;
     Torque torque_z;
 };
+
+Q_DECLARE_TYPEINFO(Tensor, Q_PRIMITIVE_TYPE);
 
 #ifdef QT_TESTLIB_LIB
 char *toString(const Tensor &load);

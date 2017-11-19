@@ -17,6 +17,7 @@
 #ifndef WIDGETS_FASTENER_WIDGET_H
 #define WIDGETS_FASTENER_WIDGET_H
 
+#include <Core/Fastener>
 #include <Widgets/AbstractSpliceView>
 
 class QString;

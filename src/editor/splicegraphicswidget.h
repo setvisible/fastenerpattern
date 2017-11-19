@@ -18,16 +18,16 @@
 #define EDITOR_SPLICE_GRAPHICS_WIDGET_H
 
 #include <Widgets/AbstractSpliceView>
-#include <Core/Fastener>
-#include <Core/Tensor>
 
 #include <QtCore/QUrl>
 
 QT_BEGIN_NAMESPACE
-class QWidget;
 class QVBoxLayout;
+class QWidget;
 QT_END_NAMESPACE
 
+class DesignSpace;
+class Fastener;
 class BackgroundWidget;
 class DesignSpaceItem;
 class FastenerItem;

@@ -16,6 +16,10 @@
 
 #include "abstractspliceview.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/DesignSpace>
+#include <Core/Fastener>
+
 /*! \class AbstractSpliceView
  *  \brief The class AbstractSpliceView is a view of the AbstractSpliceModel.
  *

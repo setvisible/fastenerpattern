@@ -19,6 +19,8 @@
 
 #include <Widgets/AbstractSpliceView>
 
+class Fastener;
+
 namespace Ui {
 class TableWidget;
 }

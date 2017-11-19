@@ -17,9 +17,11 @@
 #ifndef WIDGETS_ABSTRACT_SPLICE_VIEW_H
 #define WIDGETS_ABSTRACT_SPLICE_VIEW_H
 
-#include <Core/AbstractSpliceModel>
-
 #include <QtWidgets/QWidget>
+
+class AbstractSpliceModel;
+class DesignSpace;
+class Fastener;
 
 class AbstractSpliceView : public QWidget
 {

@@ -16,6 +16,10 @@
 
 #include "parameters.h"
 
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
+
 QString toString(const SolverParameters param)
 {
     QString str;

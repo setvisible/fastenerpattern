@@ -16,7 +16,12 @@
 
 #include "dummysolver.h"
 
+#include <Core/Splice>
+#include <Core/Tensor>
+#include <Core/Units/UnitSystem>
+
 #include <boost/units/cmath.hpp> /* pow(), sqrt() */
+
 
 /*! \class DummySolver
  * \brief The class DummySolver is a mock solver, that is used to

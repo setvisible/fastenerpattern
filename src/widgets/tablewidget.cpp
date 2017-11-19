@@ -17,7 +17,11 @@
 #include "tablewidget.h"
 #include "ui_tablewidget.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/Fastener>
+
 #include <QtCore/QDebug>
+
 
 TableWidget::TableWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::TableWidget)
