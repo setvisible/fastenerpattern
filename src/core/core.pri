@@ -1,4 +1,6 @@
 HEADERS  += \
+    $$PWD/optimizer/controller.h \
+    $$PWD/optimizer/maxminload.h \
     $$PWD/optimizer/optimisationsolver.h \
     $$PWD/solvers/isolver.h \
     $$PWD/solvers/parameters.h \
@@ -13,6 +15,8 @@ HEADERS  += \
     $$PWD/tensor.h
 
 SOURCES += \
+    $$PWD/optimizer/controller.cpp \
+    $$PWD/optimizer/maxminload.cpp \
     $$PWD/optimizer/optimisationsolver.cpp \
     $$PWD/solvers/parameters.cpp \
     $$PWD/solvers/rigidbodysolver.cpp \

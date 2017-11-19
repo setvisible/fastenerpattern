@@ -6,6 +6,8 @@ set(MY_SOURCES ${MY_SOURCES}
     )
 
 set(MY_SOURCES ${MY_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/optimizer/controller.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/optimizer/maxminload.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/optimizer/optimisationsolver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/solvers/rigidbodysolver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/solvers/parameters.cpp
