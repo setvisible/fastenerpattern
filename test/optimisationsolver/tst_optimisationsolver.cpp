@@ -17,6 +17,8 @@
 #include <Core/Optimizer/OptimisationSolver>
 #include "dummysolver.h"
 
+#include <Core/Splice>
+
 #include <QtTest/QtTest>
 #include <QtCore/QDebug>
 
@@ -137,16 +139,16 @@ void tst_OptimisationSolver::test_null()
 {
     // Given
     OptimisationSolver target;
-    QSignalSpy spy( &target, SIGNAL(messageFatal(qint64,QString)));
+    QSignalSpy spy( &target, SIGNAL(errorDetected(OptimisationErrorType)));
 
     // When
-    target.start();
+    target.runSync();
 
     // Then
     QCOMPARE(spy.count(), 3);
-    QVERIFY(spy.at(0).at(1).toString() == "Error: the optimizer requires a solver.");
-    QVERIFY(spy.at(1).at(1).toString() == "Error: the optimizer requires an input splice.");
-    QVERIFY(spy.at(2).at(1).toString() == "Error: the optimizer requires an output splice.");
+    QVERIFY(spy.at(0).at(0) == (int)OptimisationErrorType::ERR_UNDEFINED_SOLVER);
+    QVERIFY(spy.at(1).at(0) == (int)OptimisationErrorType::ERR_UNDEFINED_INPUT_SPLICE);
+    QVERIFY(spy.at(2).at(0) == (int)OptimisationErrorType::ERR_UNDEFINED_OUTPUT_SPLICE);
 }
 
 /******************************************************************************
@@ -161,19 +163,19 @@ void tst_OptimisationSolver::test_null_input()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput( Q_NULLPTR ); /* No input */
     target.setOutput(&actual);
 
-    QSignalSpy spy( &target, SIGNAL(messageFatal(qint64,QString)));
+    QSignalSpy spy( &target, SIGNAL(errorDetected(OptimisationErrorType)));
 
-    target.start();
+    target.runSync();
 
     // Then
     QCOMPARE(spy.count(), 1);
-    QVERIFY(spy.at(0).at(1).toString() == "Error: the optimizer requires an input splice.");
+    QVERIFY(spy.at(0).at(0) == (int)OptimisationErrorType::ERR_UNDEFINED_INPUT_SPLICE);
 
     SPLICE_COMPARE(actual, Splice());
 }
@@ -199,19 +201,19 @@ void tst_OptimisationSolver::test_null_solver()
     // When
     OptimisationSolver target;
     target.setSolver( Q_NULLPTR ); /* No Solver */
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    QSignalSpy spy( &target, SIGNAL(messageFatal(qint64,QString)));
+    QSignalSpy spy( &target, SIGNAL(errorDetected(OptimisationErrorType)));
 
-    target.start();
+    target.runSync();
 
     // Then
     QCOMPARE(spy.count(), 1);
-    QVERIFY(spy.at(0).at(1).toString() == "Error: the optimizer requires a solver.");
+    QVERIFY(spy.at(0).at(0) == (int)OptimisationErrorType::ERR_UNDEFINED_SOLVER);
 
     SPLICE_COMPARE(actual, Splice());
 }
@@ -237,19 +239,19 @@ void tst_OptimisationSolver::test_null_applied_load()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    QSignalSpy spy( &target, SIGNAL(messageFatal(qint64,QString)));
+    QSignalSpy spy( &target, SIGNAL(errorDetected(OptimisationErrorType)));
 
-    target.start();
+    target.runSync();
 
     // Then
     QCOMPARE(spy.count(), 1);
-    QVERIFY(spy.at(0).at(1).toString() == "Error: the splice must have a non-zero applied load.");
+    QVERIFY(spy.at(0).at(0) == (int)OptimisationErrorType::ERR_NO_APPLIED_LOAD);
 
     SPLICE_COMPARE(actual, Splice());
 }
@@ -272,19 +274,19 @@ void tst_OptimisationSolver::test_null_design_space()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    QSignalSpy spy( &target, SIGNAL(messageFatal(qint64,QString)));
+    QSignalSpy spy( &target, SIGNAL(errorDetected(OptimisationErrorType)));
 
-    target.start();
+    target.runSync();
 
     // Then
     QCOMPARE(spy.count(), 1);
-    QVERIFY(spy.at(0).at(1).toString() == "Error: the splice must have a design space.");
+    QVERIFY(spy.at(0).at(0) == (int)OptimisationErrorType::ERR_NO_DESIGNSPACE);
 
     SPLICE_COMPARE(actual, Splice());
 
@@ -312,19 +314,19 @@ void tst_OptimisationSolver::test_null_fasteners()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    QSignalSpy spy( &target, SIGNAL(messageFatal(qint64,QString)));
+    QSignalSpy spy( &target, SIGNAL(errorDetected(OptimisationErrorType)));
 
-    target.start();
+    target.runSync();
 
     // Then
     QCOMPARE(spy.count(), 1);
-    QVERIFY(spy.at(0).at(1).toString() == "Error: the splice must have a fastener.");
+    QVERIFY(spy.at(0).at(0) == (int)OptimisationErrorType::ERR_NO_FASTENER);
 
     SPLICE_COMPARE(actual, Splice());
 
@@ -361,13 +363,13 @@ void tst_OptimisationSolver::test_point()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    target.start();
+    target.runSync();
 
     // Then
     SPLICE_COMPARE(actual, expected);
@@ -405,13 +407,13 @@ void tst_OptimisationSolver::test_line()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    target.start();
+    target.runSync();
 
     // Then
     SPLICE_COMPARE(actual, expected);
@@ -456,13 +458,13 @@ void tst_OptimisationSolver::test_triangle()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    target.start();
+    target.runSync();
 
     // Then
     QCOMPARE(actual.title()             , expected.title());
@@ -519,13 +521,13 @@ void tst_OptimisationSolver::test_square()
     // When
     OptimisationSolver target;
     target.setSolver( &dummy );
-    target.setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    target.setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    target.setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
+    target.setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
+    target.setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
+    target.setRandomIterations( 100 );
     target.setInput(&input);
     target.setOutput(&actual);
 
-    target.start();
+    target.runSync();
 
     // Then
     SPLICE_COMPARE(actual, expected);

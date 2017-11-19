@@ -17,87 +17,96 @@
 #ifndef CORE_OPTIMISATION_SOLVER_H
 #define CORE_OPTIMISATION_SOLVER_H
 
-#include <Core/Solvers/ISolver>
-#include <Core/Solvers/Parameters>
-#include <Core/Tensor>
-#include <Core/Splice>
-
 #include <QtCore/QObject>
-//#include <QtCore/QFlags>
+#include <QtCore/QReadWriteLock>
+#include <QtGui/QPolygonF>
+
+QT_BEGIN_NAMESPACE
+class QPointF;
+QT_END_NAMESPACE
+
+class ISolver;
+class Splice;
+
+enum class OptimisationErrorType {
+    ERR_UNDEFINED_SOLVER,
+    ERR_UNDEFINED_INPUT_SPLICE,
+    ERR_UNDEFINED_OUTPUT_SPLICE,
+    ERR_NO_APPLIED_LOAD,
+    ERR_NO_DESIGNSPACE,
+    ERR_NO_FASTENER
+};
+
+enum class OptimisationDesignObjective {
+    MinimizeMaxLoad,
+    MaximizeMinLoad
+};
+
+enum class OptimisationDesignConstraint {
+    NoConstraint           = 0x0000,
+    MinPitchDistance_4Phi  = 0x0001
+};
+
+/// \todo Q_DECLARE_FLAGS(OptimisationDesignConstraints, OptimisationDesignConstraint)
+/// \todo Q_DECLARE_OPERATORS_FOR_FLAGS(OptimisationDesignConstraints)
 
 
 class OptimisationSolver : public QObject
 {
     Q_OBJECT
 public:
-    enum DesignObjective {
-        MinimizeMaxLoad
-        // , MaximizeMinLoad // LOL
-    };
-
-    enum DesignConstraint {
-        NoConstraint           = 0x0000,
-        MinPitchDistance_4Phi  = 0x0001
-    };
-    //Q_DECLARE_FLAGS(DesignConstraints, DesignConstraint)
-
-    struct RandomHeuristic
-    {
-        explicit RandomHeuristic(int randomIter = 10, int localIter = 10)
-            : randomIterations(randomIter)
-            , localIterations(localIter)
-        {}
-        int randomIterations;
-        int localIterations;
-    };
-
-public:
     explicit OptimisationSolver(QObject *parent = Q_NULLPTR);
+    ~OptimisationSolver();
 
+    ISolver *solver() const;
     void setSolver(ISolver *solver);
-    void setDesignObjective(DesignObjective objective);
-    void setDesignConstraints(DesignConstraint constraints);
-    void setDesignOption(RandomHeuristic heuristic);
+
+    Splice *input() const;
     void setInput(Splice *input);
+
+    Splice *output() const;
     void setOutput(Splice *output);
 
-    void start();
-    void stop();
+    int randomIterations() const;
+    void setRandomIterations(const int iterations);
 
+    OptimisationDesignObjective objective() const;
+    void setDesignObjective(OptimisationDesignObjective objective);
+
+    /// \todo OptimisationDesignConstraint__*s*
+    OptimisationDesignConstraint constraints() const;
+    void setDesignConstraints(OptimisationDesignConstraint constraints);
+
+    void runSync();
+    void runAsync();
 
 Q_SIGNALS:
-    void started();
-    void processed(int percent);
-    void stopped();
+    void errorDetected(OptimisationErrorType code);
+    void finished();
+    void betterSolutionFound(const Splice &solution);
+    void completed(); /* successfully finished */
 
-    /* Logs */
-    void messageInfo(qint64 timestamp, QString message);
-    void messageWarning(qint64 timestamp, QString message);
-    void messageFatal(qint64 timestamp, QString message);
-
-public Q_SLOTS:
+protected:
+    friend class Controller;
+    bool sanitarize();
+    void precompute();
+    void postcompute();
 
 private:
+    QReadWriteLock m_lock;
     ISolver *m_solver;
     Splice *m_input;
     Splice *m_output;
-    DesignObjective m_objective;
-    DesignConstraint m_constraints;
-    RandomHeuristic m_heuristic;
-    bool m_isRunning;
+    OptimisationDesignObjective m_objective;
+    OptimisationDesignConstraint m_constraints;
+    int m_randomIterations;
+    int m_localIterations;
+
+    QPolygonF m_precomputedArea;
 
     bool randomizePosition(Splice *splice);
-    void sendMessage(const Force bestResultantForce, const Splice &bestSolution);
-
-
-    bool sanitaryChecks();
-    qint64 timestamp() const;
     QPolygonF createCircle(const QPointF pos, const qreal radius) const;
 
-    Force maxLoad(const QList<Tensor> result) const;
 };
-
-//Q_DECLARE_OPERATORS_FOR_FLAGS(OptimisationSolver::DesignConstraints)
-
 
 #endif // CORE_OPTIMISATION_SOLVER_H
