@@ -17,92 +17,102 @@
 #include "optimisationwidget.h"
 #include "ui_optimisationwidget.h"
 
+#include <Core/AbstractSpliceModel>
+#include <Core/Splice>
 #include <Core/SpliceCalculator>
+#include <Core/Optimizer/Controller>
 #include <Core/Optimizer/OptimisationSolver>
+
 #include <boost/units/cmath.hpp> /* pow<>() */
 
 #include <QtCore/QDebug>
 #include <QtCore/QDateTime>
 
 /*! \class OptimisationWidget
- * \brief The class OptimisationWidget is the GUI that start and stops the
- * optimisation analysis.
+ * \brief The class OptimisationWidget is the GUI that allows User
+ * to start, follow and stop the optimisation analysis.
  *
- * The OptimisationSolver::start() method is an expensive task.
- * This is why it's run by another thread than the GUI.
+ * \remark The OptimisationSolver::start() method is an expensive task.
+ * Then, the Controller runs another thread than the GUI.
  *
- * The OptimisationWidget controls the OptimisationSolver's thread.
+ * \remark Due to the limited width of the OptimisationWidget,
+ * try to keep the length of the messages less than 40 characters.
  */
 OptimisationWidget::OptimisationWidget(QWidget *parent) : QWidget(parent)
   , ui(new Ui::OptimisationWidget)
+  , m_controller(new Controller(this))
   , m_calculator(Q_NULLPTR)
-  , m_initialSplice(new Splice(this))
-  , m_currentSplice(new Splice(this))
-  , m_solver(Q_NULLPTR)
 {
     ui->setupUi(this);
-
-    this->solverStopped();
-
-    /* Create the solver and attach it to a separated thread worker */
-    m_solver = new OptimisationSolver(); /* rem: Must have no parent! */
-    m_solver->moveToThread(&m_workerThread);
-    connect(&m_workerThread, &QThread::finished, m_solver, &QObject::deleteLater);
-
-    connect(m_solver, SIGNAL(started()), this, SLOT(solverStarted()));
-    connect(m_solver, SIGNAL(stopped()), this, SLOT(solverStopped()));
-    connect(m_solver, SIGNAL(processed(int)), this, SLOT(solverProcessed(int)));
-    connect(m_solver, SIGNAL(messageInfo(qint64,QString)),
-            this, SLOT(solverMessageInfo(qint64,QString)));
-    connect(m_solver, SIGNAL(messageWarning(qint64,QString)),
-            this, SLOT(solverMessageWarning(qint64,QString)));
-    connect(m_solver, SIGNAL(messageFatal(qint64,QString)),
-            this, SLOT(solverMessageFatal(qint64,QString)));
-
-    //  connect(ui->stopButton, SIGNAL(released()), m_solver, SLOT(stop());
-
-    // connect(m_solver, &OptimisationSolver::resultReady, this, &OptimisationWidget::handleResults);
-
-    m_workerThread.start();
-
-
-    /* Connect the GUI */
-    connect(ui->startButton, SIGNAL(released()), this, SLOT(startOptimisation()));
-    connect(ui->stopButton, SIGNAL(released()), this, SLOT(stopOptimisation()));
-    /// \todo connect(ui->showInitialCheckBox, SIGNAL(toggled(bool)), SIGNAL(showInitialToggled(bool)));
-    /// \todo connect(ui->showSolutionCheckBox, SIGNAL(toggled(bool)), SIGNAL(showSolutionToggled(bool)));
-    connect(ui->showInitialCheckBox, SIGNAL(toggled(bool)),  this, SLOT(onShowInitialToggled(bool)));
-    connect(ui->showSolutionCheckBox, SIGNAL(toggled(bool)), this, SLOT(onShowSolutionToggled(bool)));
+    ui->console->clear();
+    ui->detailOutput->clear();
 
     ui->console->setWordWrapMode(QTextOption::NoWrap);
     ui->console->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     ui->console->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
+    ui->detailOutput->setWordWrapMode(QTextOption::NoWrap);
+    ui->detailOutput->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->detailOutput->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    const int maxlines = 5;
+    const QFontMetrics fm = ui->detailOutput->fontMetrics();
+    ui->detailOutput->setMinimumHeight( (fm.lineSpacing()+2) * maxlines + 10);
+    ui->detailOutput->setMaximumHeight( (fm.lineSpacing()+2) * maxlines + 10);
+    ui->detailOutput->setMaximumBlockCount( maxlines );
+
+
+    /* Connect the Controller */
+    connect(ui->startButton, SIGNAL(released()), this, SLOT(start()));
+    connect(ui->stopButton, SIGNAL(released()), this, SLOT(stop()));
+
+    connect(m_controller, SIGNAL(started()), this, SLOT(onControllerStarted()));
+    connect(m_controller, SIGNAL(progressed(int)), this, SLOT(onControllerProgressed(int)));
+    connect(m_controller, SIGNAL(stopped()), this, SLOT(onControllerStopped()));
+
+    connect(m_controller, SIGNAL(messageInfo(qint64,QString)),
+            this, SLOT(onControllerMessageInfo(qint64,QString)));
+
+    connect(m_controller, SIGNAL(messageWarning(qint64,QString)),
+            this, SLOT(onControllerMessageWarning(qint64,QString)));
+
+    connect(m_controller, SIGNAL(messageFatal(qint64,QString)),
+            this, SLOT(onControllerMessageFatal(qint64,QString)));
+
+    connect(m_controller, SIGNAL(messageDebug(QString)),
+            this, SLOT(onControllerMessageDebug(QString)));
+
+    /* Connect the GUI */
+    connect(ui->showResultCheckBox, SIGNAL(toggled(bool)),
+            this, SLOT(onShowResultToggled(bool)));
+
+    /* Reset the GUI */
+    onControllerStopped();
 }
 
 OptimisationWidget::~OptimisationWidget()
 {
-    m_workerThread.quit();
-    m_workerThread.wait();
     delete ui;
 }
 
-
 /******************************************************************************
  ******************************************************************************/
+SpliceCalculator *OptimisationWidget::spliceCalculator() const
+{
+    return m_calculator;
+}
+
 void OptimisationWidget::setSpliceCalculator(SpliceCalculator *calculator)
 {
     m_calculator = calculator;
 }
 
-/* TEMPO */
-void OptimisationWidget::onShowInitialToggled(bool checked)
+/******************************************************************************
+ ******************************************************************************/
+void OptimisationWidget::onShowResultToggled(bool checked)
 {
-
-}
-
-void OptimisationWidget::onShowSolutionToggled(bool checked)
-{
-    Splice *splice = (!checked ? m_initialSplice : m_currentSplice );
+    Splice *splice = (checked ? m_controller->output()
+                              : m_controller->input() );
     for (int i = 0; i < splice->fastenerCount(); ++i) {
         m_calculator->setFastener(i, splice->fastenerAt(i));
     }
@@ -110,47 +120,52 @@ void OptimisationWidget::onShowSolutionToggled(bool checked)
 
 /******************************************************************************
  ******************************************************************************/
-void OptimisationWidget::solverStarted()
+void OptimisationWidget::onControllerStarted()
 {
-    qDebug() << Q_FUNC_INFO;
     ui->startButton->setEnabled(false);
     ui->stopButton->setEnabled(true);
     ui->showTimestampCheckBox->setEnabled(false);
-    repaint();
+    ui->progressBar->setVisible(true);
 }
 
-void OptimisationWidget::solverProcessed(int /*percent*/)
+void OptimisationWidget::onControllerProgressed(int percent)
 {
-    qDebug() << Q_FUNC_INFO;
-    /// \todo
+    ui->progressBar->setValue(percent);
 }
 
-void OptimisationWidget::solverStopped()
+void OptimisationWidget::onControllerStopped()
 {
-    qDebug() << Q_FUNC_INFO;
     ui->startButton->setEnabled(true);
     ui->stopButton->setEnabled(false);
     ui->showTimestampCheckBox->setEnabled(true);
-}
-
-void OptimisationWidget::solverMessageInfo(qint64 timestamp, QString message)
-{
-    this->appendMessage(0, timestamp, message);
-}
-
-void OptimisationWidget::solverMessageWarning(qint64 timestamp, QString message)
-{
-    this->appendMessage(1, timestamp, message);
-}
-
-void OptimisationWidget::solverMessageFatal(qint64 timestamp, QString message)
-{
-    this->appendMessage(2, timestamp, message);
+    ui->progressBar->setVisible(false);
 }
 
 /******************************************************************************
  ******************************************************************************/
-void OptimisationWidget::appendMessage(int type, qint64 timestamp, const QString &message)
+void OptimisationWidget::onControllerMessageInfo(qint64 timestamp, QString message)
+{
+    log(0, timestamp, message);
+}
+
+void OptimisationWidget::onControllerMessageWarning(qint64 timestamp, QString message)
+{
+    log(1, timestamp, message);
+}
+
+void OptimisationWidget::onControllerMessageFatal(qint64 timestamp, QString message)
+{
+    log(2, timestamp, message);
+}
+
+void OptimisationWidget::onControllerMessageDebug(QString message)
+{
+    ui->detailOutput->appendPlainText(message);
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void OptimisationWidget::log(int type, qint64 timestamp, const QString &message)
 {
     switch (type) {
     case 0: ui->console->setTextColor(Qt::black); break;
@@ -171,44 +186,29 @@ void OptimisationWidget::appendMessage(int type, qint64 timestamp, const QString
     }
 }
 
-
 /******************************************************************************
  ******************************************************************************/
-void OptimisationWidget::startOptimisation()
+void OptimisationWidget::start()
 {
-    Q_ASSERT(m_calculator);
+    /// \todo Save the initial splice somewhere
 
-    qDebug() << Q_FUNC_INFO;
+    /// \bug memory leak !
+    Splice* input = new Splice();
 
-    /* Save the initial splice */
-    m_initialSplice->removeAllFasteners();
-    m_initialSplice->removeAllDesignSpaces();
-
-    m_initialSplice->setTitle( QString() );
-    m_initialSplice->setAuthor(QString());
-    m_initialSplice->setDate(QString());
-    m_initialSplice->setDescription(QString());
-    m_initialSplice->setAppliedLoad( m_calculator->appliedLoad() );
+    input->setAppliedLoad( m_calculator->appliedLoad() );
     for (int i = 0; i < m_calculator->designSpaceCount(); ++i) {
-        m_initialSplice->addDesignSpace( m_calculator->designSpaceAt(i) );
+        input->addDesignSpace( m_calculator->designSpaceAt(i) );
     }
     for (int i = 0; i < m_calculator->fastenerCount(); ++i) {
-        m_initialSplice->addFastener( m_calculator->fastenerAt(i) );
+        input->addFastener( m_calculator->fastenerAt(i) );
     }
 
-    /* Prepare the solver */
-    ISolver *solver = m_calculator->solver();
-    m_solver->setSolver( solver );
-    m_solver->setDesignObjective( OptimisationSolver::MinimizeMaxLoad );
-    m_solver->setDesignConstraints( OptimisationSolver::MinPitchDistance_4Phi );
-    m_solver->setDesignOption( OptimisationSolver::RandomHeuristic(100,10) );
-    m_solver->setInput( m_initialSplice );
-    m_solver->setOutput( m_currentSplice );
-
-    m_solver->start();
+    m_controller->setSolver( m_calculator->solver() );
+    m_controller->setInput(input);
+    m_controller->start();
 }
 
-void OptimisationWidget::stopOptimisation()
+void OptimisationWidget::stop()
 {
-    m_solver->stop();
+    m_controller->cancel();
 }

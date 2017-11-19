@@ -20,6 +20,9 @@
 #include <QtCore/QThread>
 #include <QtWidgets/QWidget>
 
+#include <Core/Optimizer/Controller>
+#include <Core/Optimizer/OptimisationSolver>
+
 class Splice;
 class SpliceCalculator;
 class OptimisationSolver;
@@ -28,6 +31,8 @@ namespace Ui {
 class OptimisationWidget;
 }
 
+/// \todo class OptimisationWidget : public AbstractSpliceView ?
+
 class OptimisationWidget : public QWidget
 {
     Q_OBJECT
@@ -35,40 +40,29 @@ public:
     explicit OptimisationWidget(QWidget *parent = Q_NULLPTR);
     virtual ~OptimisationWidget();
 
+    SpliceCalculator *spliceCalculator() const;
     void setSpliceCalculator(SpliceCalculator *calculator);
 
-    Splice* initialSplice() const { return m_initialSplice; }
-    Splice* currentSplice() const { return m_currentSplice; }
-
-
-Q_SIGNALS:
-    void showInitialToggled(bool checked);
-    void showSolutionToggled(bool checked);
-
 private Q_SLOTS:
-    void solverStarted();
-    void solverProcessed(int percent);
-    void solverStopped();
-    void solverMessageInfo(qint64 timestamp, QString message);
-    void solverMessageWarning(qint64 timestamp, QString message);
-    void solverMessageFatal(qint64 timestamp, QString message);
+    void onControllerStarted();
+    void onControllerProgressed(int percent);
+    void onControllerStopped();
+    void onControllerMessageInfo(qint64 timestamp, QString message);
+    void onControllerMessageWarning(qint64 timestamp, QString message);
+    void onControllerMessageFatal(qint64 timestamp, QString message);
+    void onControllerMessageDebug(QString message);
 
-    void startOptimisation();
-    void stopOptimisation();
+    void onShowResultToggled(bool checked);
 
-    //temp
-    void onShowInitialToggled(bool checked);
-    void onShowSolutionToggled(bool checked);
+    void start();
+    void stop();
 
 private:
     Ui::OptimisationWidget *ui;
+    Controller *m_controller;
     SpliceCalculator *m_calculator;
-    Splice* m_initialSplice;
-    Splice* m_currentSplice;
-    OptimisationSolver *m_solver;
-    QThread m_workerThread;
 
-    void appendMessage(int type, qint64 timestamp, const QString &message);
+    void log(int type, qint64 timestamp, const QString &message);
 };
 
 #endif // WIDGETS_OPTIMISATION_WIDGET_H
