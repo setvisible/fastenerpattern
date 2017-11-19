@@ -37,3 +37,15 @@
  * \sa AbstractSpliceView.
  */
 
+/* Public Setters */
+bool AbstractSpliceModel::setFastenerSelection(const QSet<int> indexes)
+{
+    Q_UNUSED(indexes);
+    return false;
+}
+
+bool AbstractSpliceModel::setDesignSpaceSelection(const QSet<int> indexes)
+{
+    Q_UNUSED(indexes);
+    return false;
+}

@@ -113,17 +113,9 @@ public Q_SLOTS:
         return false;
     }
 
-    Q_INVOKABLE virtual bool setFastenerSelection(const QSet<int> indexes)
-    {
-        Q_UNUSED(indexes);
-        return false;
-    }
+    Q_INVOKABLE virtual bool setFastenerSelection(const QSet<int> indexes);
 
-    Q_INVOKABLE virtual bool setDesignSpaceSelection(const QSet<int> indexes)
-    {
-        Q_UNUSED(indexes);
-        return false;
-    }
+    Q_INVOKABLE virtual bool setDesignSpaceSelection(const QSet<int> indexes);
 
     Q_INVOKABLE virtual bool setSolverParameters(SolverParameters params) {
         Q_UNUSED(params);
