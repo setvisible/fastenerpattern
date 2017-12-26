@@ -14,7 +14,7 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Maths/Delaunay>
+#include <Math/Delaunay>
 
 #include <QtTest/QtTest>
 #include <QtCore/QDebug>
@@ -48,7 +48,7 @@ void tst_Delaunay::test_empty()
     // Given, When
     QList<QPointF> points;
     QList<QLineF> expected;
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -65,7 +65,7 @@ void tst_Delaunay::test_one_point()
     QList<QLineF> expected;
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -82,7 +82,7 @@ void tst_Delaunay::test_coincident_points()
     QList<QLineF> expected;
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -99,7 +99,7 @@ void tst_Delaunay::test_coincident_points_2()
     QList<QLineF> expected;
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -118,7 +118,7 @@ void tst_Delaunay::test_coincident_points_3()
     expected << QLineF(10,20,5,0);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -136,7 +136,7 @@ void tst_Delaunay::test_two_points()
     expected << QLineF(0,0,10,0);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -154,7 +154,7 @@ void tst_Delaunay::test_three_points()
     expected << QLineF(-10,0,10,0) << QLineF(10,0,0,10) << QLineF(0,10,-10,0);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -172,7 +172,7 @@ void tst_Delaunay::test_collinear_points()
     expected << QLineF(0,0,10,0) << QLineF(10,0,20,0);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -190,7 +190,7 @@ void tst_Delaunay::test_collinear_points_along_x()
     expected << QLineF(-10,0,0,0) << QLineF(0,0,10,0);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -208,7 +208,7 @@ void tst_Delaunay::test_collinear_points_along_y()
     expected << QLineF(0,-10,0,0) << QLineF(0,0,0,10);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -226,7 +226,7 @@ void tst_Delaunay::test_collinear_points_along_y_2()
     expected << QLineF(0,-10,0,0) << QLineF(0,0,0,10);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);
@@ -244,7 +244,7 @@ void tst_Delaunay::test_collinear_points_along_xy()
     expected << QLineF(-10,2,0,0) << QLineF(0,0,10,-2);
 
     // When
-    QList<QLineF> actual = Maths::delaunayTriangulation(points);
+    QList<QLineF> actual = Math::delaunayTriangulation(points);
 
     // Then
     QCOMPARE(actual, expected);

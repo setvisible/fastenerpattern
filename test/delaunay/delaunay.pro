@@ -8,7 +8,7 @@ SOURCES     += tst_delaunay.cpp
 INCLUDEPATH += ../../include
 
 # Dependancies:
-include($$PWD/../../src/maths/maths.pri)
+include($$PWD/../../src/math/math.pri)
 
 #-------------------------------------------------
 # TRIANGLE

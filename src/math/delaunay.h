@@ -14,8 +14,8 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MATHS_DELAUNAY_H
-#define MATHS_DELAUNAY_H
+#ifndef MATH_DELAUNAY_H
+#define MATH_DELAUNAY_H
 
 #include <QtCore/QtContainerFwd> /* Forward Declarations of the Qt's Containers */
 
@@ -24,10 +24,10 @@ class QLineF;
 class QPointF;
 QT_END_NAMESPACE
 
-namespace Maths {
+namespace Math {
 
 QList<QLineF> delaunayTriangulation(const QList<QPointF> &points);
 
 }
 
-#endif // MATHS_DELAUNAY_H
+#endif // MATH_DELAUNAY_H

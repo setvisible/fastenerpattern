@@ -27,7 +27,7 @@
 #include <Core/Fastener>
 #include <Core/Tensor>
 #include <Core/DesignSpace>
-#include <Maths/Delaunay>
+#include <Math/Delaunay>
 
 #include <QtCore/QSet>
 #include <QtWidgets/QVBoxLayout>
@@ -396,7 +396,7 @@ void SpliceGraphicsWidget::updateDistanceItemPositions()
         foreach (auto &f, m_fastenerItems) {
             points << f->pos();
         }
-        const QList<QLineF> lines = Maths::delaunayTriangulation( points );
+        const QList<QLineF> lines = Math::delaunayTriangulation( points );
         foreach (auto &line, lines) {
             MeasureItem *item = new MeasureItem();
             qreal lengthInMeter = line.length() / (C_DEFAULT_SCREEN_DPI * 1000.);

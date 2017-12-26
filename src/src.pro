@@ -49,7 +49,7 @@ INCLUDEPATH += $$PWD/../include/
 include($$PWD/core/core.pri)
 include($$PWD/dialogs/dialogs.pri)
 include($$PWD/editor/editor.pri)
-include($$PWD/maths/maths.pri)
+include($$PWD/math/math.pri)
 include($$PWD/widgets/widgets.pri)
 
 HEADERS += \

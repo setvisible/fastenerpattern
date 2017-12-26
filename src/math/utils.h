@@ -14,14 +14,14 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MATHS_UTILS_H
-#define MATHS_UTILS_H
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
 
 #include <QtCore/QtGlobal> /* qFuzzyCompare() */
 #include <QtCore/QtMath>   /* qsrand(), qPow() */
 #include <time.h>
 
-namespace Maths {
+namespace Math {
 
 namespace Utils {
 
@@ -71,6 +71,6 @@ static inline qreal round(qreal f, int precision)
 
 } // end namespace Utils
 
-} // end namespace Maths
+} // end namespace Math
 
-#endif // MATHS_UTILS_H
+#endif // MATH_UTILS_H

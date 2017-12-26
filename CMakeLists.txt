@@ -99,7 +99,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/core/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/editor/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/maths/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/math/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/CMakeLists.txt)
 
 
@@ -147,6 +147,7 @@ if(ENABLE_TESTS)
 
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/boost/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/delaunay/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/test/math/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/optimisationsolver/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/rigidbodysolver/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/splicecalculator/CMakeLists.txt)

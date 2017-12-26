@@ -2,7 +2,7 @@
 set(MY_TEST_TARGET tst_delaunay)
 
 set(MY_TEST_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/maths/delaunay.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/math/delaunay.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/triangle/triangle.c
     )
 

@@ -41,7 +41,7 @@ extern "C" {
 #include <QtCore/QPointF>
 
 
-namespace Maths
+namespace Math
 {
 
 /* Reset all allocated arrays, including those allocated by Triangle. */
@@ -256,4 +256,4 @@ QList<QLineF> delaunayTriangulation(const QList<QPointF> &points)
     return res;
 }
 
-} // end namespace Maths
+} // end namespace Math

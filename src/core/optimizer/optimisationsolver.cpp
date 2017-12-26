@@ -20,7 +20,7 @@
 #include <Core/Solvers/ISolver>
 #include <Core/Tensor>
 #include <Core/Splice>
-#include <Maths/Utils>
+#include <Math/Utils>
 
 #include <QtCore/QDebug>
 #include <QtGui/QPainterPath>
@@ -388,8 +388,8 @@ void OptimisationSolver::runAsync()
                     Splice intSolution;
                     deepCopy( &bestSolution, &intSolution );
                     Fastener fss = intSolution.fastenerAt(k);
-                    fss.positionX = Maths::Utils::round( fss.positionX.value(), precision ) *m;
-                    fss.positionY = Maths::Utils::round( fss.positionY.value(), precision ) *m;
+                    fss.positionX = Math::Utils::round( fss.positionX.value(), precision ) *m;
+                    fss.positionY = Math::Utils::round( fss.positionY.value(), precision ) *m;
                     intSolution.setFastenerAt(k, fss);
 
                     QList<Tensor> result = m_solver->calculate( &intSolution );
@@ -462,8 +462,8 @@ bool OptimisationSolver::randomizePosition(Splice *splice)
         while (maxiter > 0) {
             maxiter--;
 
-            qreal rand_x = Maths::Utils::rand(); /* rand() is between 0.0 and 1.0 */
-            qreal rand_y = Maths::Utils::rand();
+            qreal rand_x = Math::Utils::rand(); /* rand() is between 0.0 and 1.0 */
+            qreal rand_y = Math::Utils::rand();
 
             proposedPoint = QPointF(
                         rand_x * boundingRect.width()  + boundingRect.x(),

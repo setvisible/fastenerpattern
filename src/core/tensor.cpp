@@ -15,7 +15,7 @@
  */
 
 #include "tensor.h"
-#include <Maths/Utils>
+#include <Math/Utils>
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QString>
@@ -72,9 +72,9 @@ void Tensor::write(QJsonObject &json) const
  ******************************************************************************/
 bool Tensor::operator==(const Tensor &other) const
 {
-    return Maths::Utils::fuzzyCompare((*this).force_x.value(), other.force_x.value())
-            && Maths::Utils::fuzzyCompare((*this).force_y.value(), other.force_y.value())
-            && Maths::Utils::fuzzyCompare((*this).torque_z.value(), other.torque_z.value());
+    return Math::Utils::fuzzyCompare((*this).force_x.value(), other.force_x.value())
+            && Math::Utils::fuzzyCompare((*this).force_y.value(), other.force_y.value())
+            && Math::Utils::fuzzyCompare((*this).torque_z.value(), other.torque_z.value());
 
 }
 bool Tensor::operator!=(const Tensor &other) const
@@ -88,9 +88,9 @@ bool Tensor::operator!=(const Tensor &other) const
 Tensor Tensor::around(const int precision) const
 {
     Tensor t;
-    t.force_x = Maths::Utils::round(this->force_x.value(), precision) *N;
-    t.force_y = Maths::Utils::round(this->force_y.value(), precision) *N;
-    t.torque_z = Maths::Utils::round(this->torque_z.value(), precision) *N_m;
+    t.force_x = Math::Utils::round(this->force_x.value(), precision) *N;
+    t.force_y = Math::Utils::round(this->force_y.value(), precision) *N;
+    t.torque_z = Math::Utils::round(this->torque_z.value(), precision) *N_m;
     return t;
 }
 
