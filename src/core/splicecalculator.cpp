@@ -100,7 +100,6 @@ void SpliceCalculator::read(const QJsonObject &json)
     }
     emit changed();
     recalculate();
-    emit resultsChanged();
 }
 
 /*! \brief Assigns the values from the SpliceCalculator to the given \a json object.
@@ -241,7 +240,6 @@ bool SpliceCalculator::insertFastener(const int index, const Fastener &fastener)
     emit fastenerInserted(index, fastener);
     emit changed();
     recalculate();
-    emit resultsChanged();
     return true;
 }
 
@@ -260,7 +258,6 @@ bool SpliceCalculator::setFastener(const int index, const Fastener &fastener)
     emit fastenerChanged(index, fastener);
     emit changed();
     recalculate();
-    emit resultsChanged();
     return true;
 }
 
@@ -274,7 +271,6 @@ bool SpliceCalculator::removeFastener(const int index)
         emit fastenerRemoved(index);
         emit changed();
         recalculate();
-        emit resultsChanged();
         return true;
     }
     return false;
@@ -292,7 +288,6 @@ bool SpliceCalculator::insertDesignSpace(const int index, const DesignSpace &des
     // Changing the design space does change the immediat results.
     // This is why the following methods are not called:
     //     recalculate();
-    //     emit resultsChanged();
     // ** Remark **
 
     return true;
@@ -312,7 +307,6 @@ bool SpliceCalculator::setDesignSpace(const int index, const DesignSpace &design
     emit designSpaceChanged(index, designSpace);
     emit changed();
     // recalculate();
-    // emit resultsChanged();
     return true;
 }
 
@@ -326,7 +320,6 @@ bool SpliceCalculator::removeDesignSpace(const int index)
         emit designSpaceRemoved(index);
         emit changed();
         // recalculate();
-        // emit resultsChanged();
         return true;
     }
     return false;
@@ -342,7 +335,6 @@ bool SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
     emit appliedLoadChanged();
     emit changed();
     recalculate();
-    emit resultsChanged();
     return true;
 }
 
@@ -384,7 +376,6 @@ bool SpliceCalculator::setSolverParameters(SolverParameters params)
     }
     m_params = params;
     recalculate();
-    emit resultsChanged();
     return true;
 }
 
@@ -395,6 +386,7 @@ bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
     if (m_selectedFastenerIndexes == indexes)
         return false;
     m_selectedFastenerIndexes = indexes;
+
     emit selectionFastenerChanged();
     return true;
 }
@@ -416,8 +408,9 @@ void SpliceCalculator::recalculate()
     /// \todo see  Mandelbrot Example  or  Blocking Fortune Client Example
     if (m_solver && m_splice) {
         m_results = m_solver->calculate( m_splice );
-        return;
+    } else {
+        m_results.clear();
     }
-    m_results.clear();
+    emit resultsChanged();
 }
 
