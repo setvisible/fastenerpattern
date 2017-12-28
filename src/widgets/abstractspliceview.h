@@ -20,6 +20,7 @@
 #include <QtWidgets/QWidget>
 
 class AbstractSpliceModel;
+class DelayTimer;
 class DesignSpace;
 class Fastener;
 
@@ -48,8 +49,13 @@ public Q_SLOTS:
     virtual void onSelectionFastenerChanged();
     virtual void onSelectionDesignSpaceChanged();
 
+protected:
+    int updateDelay() const;
+    void setUpdateDelay(const int msec);
+
 private:
     AbstractSpliceModel *m_model;
+    DelayTimer *m_delayTimer;
 };
 
 #endif // WIDGETS_ABSTRACT_SPLICE_VIEW_H

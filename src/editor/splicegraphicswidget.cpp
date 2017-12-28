@@ -74,6 +74,8 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
     /// \todo Auto resize instead ?
     m_backgroundWidget->scene()->setSceneRect(-1000, -1000, 2000, 2000);
 
+    /* No delay to ensure a quick GUI response for this widget. */
+    this->setUpdateDelay(0);
 }
 
 SpliceGraphicsWidget::~SpliceGraphicsWidget()

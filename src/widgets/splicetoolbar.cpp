@@ -30,6 +30,8 @@ SpliceToolbarPrivate::SpliceToolbarPrivate(QWidget *parent)
     : AbstractSpliceView(parent)
     , q_ptr((SpliceToolbar*)parent)
 {
+    /* No delay to ensure a quick GUI response for this widget. */
+    this->setUpdateDelay(0);
 }
 
 void SpliceToolbarPrivate::onSelectionFastenerChanged()
