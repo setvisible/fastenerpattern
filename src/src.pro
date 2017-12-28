@@ -50,6 +50,7 @@ include($$PWD/core/core.pri)
 include($$PWD/dialogs/dialogs.pri)
 include($$PWD/editor/editor.pri)
 include($$PWD/math/math.pri)
+include($$PWD/utils/utils.pri)
 include($$PWD/widgets/widgets.pri)
 
 HEADERS += \
