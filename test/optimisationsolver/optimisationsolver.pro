@@ -14,6 +14,7 @@ INCLUDEPATH += ../../include
 # Dependancies:
 include($$PWD/../../src/core/core.pri)
 
+HEADERS     += $$PWD/../../src/math/utils.h
 
 #-------------------------------------------------
 # Boost
