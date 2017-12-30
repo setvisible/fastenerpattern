@@ -34,6 +34,17 @@ class Splice : public QObject
 public:
     explicit Splice(QObject *parent = Q_NULLPTR);
 
+    /// \todo copy constructor to be added
+    /// Splice(const Splice& str);
+    /// Splice& operator=(const Splice& a);
+    /// Splice();
+    ///  virtual ~Splice();
+    ///
+    ///private::
+    ///  QSharedDataPointer<SpliceData> m_data; // ONLY MEMBER !
+    ///
+    /// must have default constructor, a copy constructor, and an assignment operator
+
     /* JSON Serialization */
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
