@@ -32,7 +32,6 @@ class BackgroundWidget;
 class DesignSpaceItem;
 class FastenerItem;
 class MeasureItem;
-class Splice;
 class TensorItem;
 
 class SpliceGraphicsWidget : public AbstractSpliceView
