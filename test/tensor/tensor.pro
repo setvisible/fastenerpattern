@@ -12,7 +12,8 @@ HEADERS  += \
     $$PWD/../../src/core/units/area_moment_of_inertia.h \
     $$PWD/../../src/core/units/unit_system.h \
     $$PWD/../../src/core/global.h \
-    $$PWD/../../src/core/tensor.h
+    $$PWD/../../src/core/tensor.h \
+    $$PWD/../../src/math/utils.h
 
 SOURCES += \
     $$PWD/../../src/core/tensor.cpp
