@@ -30,15 +30,25 @@
 
 DelayTimer::DelayTimer(QObject *parent)
     : QObject(parent)
-    , m_delay(200)
+    , m_delay(100)
+    , m_timer_onFastenerInserted(new QTimer(this))
     , m_timer_onFastenerChanged(new QTimer(this))
+    , m_timer_onFastenerRemoved(new QTimer(this))
     , m_timer_onSelectionFastenerChanged(new QTimer(this))
+    , m_timer_onResultsChanged(new QTimer(this))
 {
+    connect(m_timer_onFastenerInserted, SIGNAL(timeout()),
+            this, SLOT(shot_now_onFastenerInserted()));
     connect(m_timer_onFastenerChanged, SIGNAL(timeout()),
             this, SLOT(shot_now_onFastenerChanged()));
+    connect(m_timer_onFastenerRemoved, SIGNAL(timeout()),
+            this, SLOT(shot_now_onFastenerRemoved()));
 
     connect(m_timer_onSelectionFastenerChanged, SIGNAL(timeout()),
             this, SLOT(shot_now_onSelectionFastenerChanged()));
+
+    connect(m_timer_onResultsChanged, SIGNAL(timeout()),
+            this, SLOT(shot_now_onResultsChanged()));
 }
 
 /******************************************************************************
@@ -55,10 +65,26 @@ void DelayTimer::setUpdateDelay(const int msec)
 
 /******************************************************************************
  ******************************************************************************/
+void DelayTimer::onFastenerInserted_delayed(const int index, const Fastener &fastener)
+{
+    m_indexInserted = index;
+    m_fastenerInserted = fastener;
+    m_timer_onFastenerInserted->stop();
+    m_timer_onFastenerInserted->start(m_delay);
+}
+
+void DelayTimer::shot_now_onFastenerInserted()
+{
+    m_timer_onFastenerInserted->stop();
+    emit onFastenerInserted_timeout(m_indexInserted, m_fastenerInserted);
+}
+
+/******************************************************************************
+ ******************************************************************************/
 void DelayTimer::onFastenerChanged_delayed(const int index, const Fastener &fastener)
 {
-    m_index = index;
-    m_fastener = fastener;
+    m_indexChanged = index;
+    m_fastenerChanged = fastener;
     m_timer_onFastenerChanged->stop();
     m_timer_onFastenerChanged->start(m_delay);
 }
@@ -66,9 +92,23 @@ void DelayTimer::onFastenerChanged_delayed(const int index, const Fastener &fast
 void DelayTimer::shot_now_onFastenerChanged()
 {
     m_timer_onFastenerChanged->stop();
-    emit onFastenerChanged_timeout(m_index, m_fastener);
+    emit onFastenerChanged_timeout(m_indexChanged, m_fastenerChanged);
 }
 
+/******************************************************************************
+ ******************************************************************************/
+void DelayTimer::onFastenerRemoved_delayed(const int index)
+{
+    m_indexRemoved = index;
+    m_timer_onFastenerRemoved->stop();
+    m_timer_onFastenerRemoved->start(m_delay);
+}
+
+void DelayTimer::shot_now_onFastenerRemoved()
+{
+    m_timer_onFastenerRemoved->stop();
+    emit onFastenerRemoved_timeout(m_indexRemoved);
+}
 
 /******************************************************************************
  ******************************************************************************/
@@ -82,4 +122,18 @@ void DelayTimer::shot_now_onSelectionFastenerChanged()
 {
     m_timer_onSelectionFastenerChanged->stop();
     emit onSelectionFastenerChanged_timeout();
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void DelayTimer::onResultsChanged_delayed()
+{
+    m_timer_onResultsChanged->stop();
+    m_timer_onResultsChanged->start(m_delay);
+}
+
+void DelayTimer::shot_now_onResultsChanged()
+{
+    m_timer_onResultsChanged->stop();
+    emit onResultsChanged_timeout();
 }

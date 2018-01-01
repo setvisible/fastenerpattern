@@ -33,24 +33,39 @@ public:
     void setUpdateDelay(const int msec);
 
 Q_SIGNALS:
+    void onFastenerInserted_timeout(const int index, const Fastener &fastener);
     void onFastenerChanged_timeout(const int index, const Fastener &fastener);
+    void onFastenerRemoved_timeout(const int index);
     void onSelectionFastenerChanged_timeout();
+    void onResultsChanged_timeout();
 
 public Q_SLOTS:
+    void onFastenerInserted_delayed(const int index, const Fastener &fastener);
     void onFastenerChanged_delayed(const int index, const Fastener &fastener);
+    void onFastenerRemoved_delayed(const int index);
     void onSelectionFastenerChanged_delayed();
+    void onResultsChanged_delayed();
 
 private Q_SLOTS:
+    void shot_now_onFastenerInserted();
     void shot_now_onFastenerChanged();
+    void shot_now_onFastenerRemoved();
     void shot_now_onSelectionFastenerChanged();
+    void shot_now_onResultsChanged();
 
 private:
     int m_delay; // in msec
+    QTimer *m_timer_onFastenerInserted;
     QTimer *m_timer_onFastenerChanged;
+    QTimer *m_timer_onFastenerRemoved;
     QTimer *m_timer_onSelectionFastenerChanged;
+    QTimer *m_timer_onResultsChanged;
+    int m_indexInserted;
+    int m_indexChanged;
+    int m_indexRemoved;
+    Fastener m_fastenerInserted;
+    Fastener m_fastenerChanged;
 
-    int m_index;
-    Fastener m_fastener;
 };
 
 

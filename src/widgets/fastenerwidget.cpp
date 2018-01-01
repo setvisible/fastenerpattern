@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,6 +32,7 @@ FastenerWidget::FastenerWidget(QWidget *parent) : AbstractSpliceView(parent)
     QObject::connect(ui->diameter , SIGNAL(valueChanged(double)), this, SLOT(onValueChanged(double)));
     QObject::connect(ui->dof_X    , SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
     QObject::connect(ui->dof_Y    , SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
+
 }
 
 FastenerWidget::~FastenerWidget()
@@ -79,10 +80,8 @@ void FastenerWidget::onChanged()
 void FastenerWidget::onFastenerChanged(const int index, const Fastener &fastener)
 {
     /// \todo Add the other slots (fastenerRemoved and fastenerAdded) ?
-
     Q_UNUSED(index);
     Q_UNUSED(fastener);
-    /// \todo use these arguments ?
 
     if (m_currentIndex >= 0 && m_currentIndex < model()->fastenerCount()) {
         Fastener fastener = model()->fastenerAt(m_currentIndex);
@@ -98,10 +97,14 @@ void FastenerWidget::onSelectionFastenerChanged()
         m_currentIndex = it.next();
         Fastener fastener = model()->fastenerAt(m_currentIndex);
         this->setFastener(fastener);
+        ui->groupBox->setEnabled(true);
     } else {
         m_currentIndex = -1;
+        Fastener dummyfastener;
+        dummyfastener.name = QLatin1String("<Select a fastener>");
+        this->setFastener(dummyfastener);
+        ui->groupBox->setEnabled(false);
     }
-    ui->groupBox->setEnabled(set.count() == 1);
 }
 
 /******************************************************************************
