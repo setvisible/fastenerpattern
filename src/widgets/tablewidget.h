@@ -44,6 +44,7 @@ protected Q_SLOTS:
 private:
     Ui::TableWidget *ui;
     void resizeColumnToContents();
+    void updateTable();
 };
 
 #endif // WIDGETS_TABLE_WIDGET_H

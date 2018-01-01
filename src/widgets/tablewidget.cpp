@@ -35,10 +35,23 @@ TableWidget::TableWidget(QWidget *parent) : AbstractSpliceView(parent)
 
     QStringList labels;
     labels << tr("X") << tr("Y") << tr("d") << tr("t") << tr("dof X") << tr("dof Y");
-    ui->treeWidget->setColumnCount( 6 );
-    ui->treeWidget->setHeaderLabels(labels);
+    ui->tableWidget->setColumnCount( 6 );
+    ui->tableWidget->setHorizontalHeaderLabels(labels);
 
-    QObject::connect(ui->treeWidget, SIGNAL(itemSelectionChanged()),
+    ui->tableWidget->horizontalHeader()->setVisible(true);
+    ui->tableWidget->verticalHeader()->setVisible(false);
+    int size = ui->tableWidget->verticalHeader()->minimumSectionSize();
+    ui->tableWidget->verticalHeader()->setDefaultSectionSize(size);
+
+    ui->tableWidget->setAlternatingRowColors(false);
+    ui->tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
+    QObject::connect(ui->tableWidget, SIGNAL(itemSelectionChanged()),
                      this, SLOT(onItemSelectionChanged()));
 
     this->resizeColumnToContents();
@@ -52,82 +65,84 @@ TableWidget::~TableWidget()
 void TableWidget::resizeColumnToContents()
 {
     for(int i = 0; i < 6; i++)
-        ui->treeWidget->resizeColumnToContents(i);
+        ui->tableWidget->resizeColumnToContents(i);
 }
 
 void TableWidget::onFastenerInserted(const int index, const Fastener &fastener)
 {
-    QTreeWidgetItem* item = new QTreeWidgetItem();
-    ui->treeWidget->insertTopLevelItem(index, item);
-    item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
-
-    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
-    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
-    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
-    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
-    item->setText(4, DOFToString(fastener.DoF_X));
-    item->setText(5, DOFToString(fastener.DoF_Y));
-
-    this->resizeColumnToContents();
+    Q_UNUSED(index)
+    Q_UNUSED(fastener)
+    updateTable();
 }
 
 void TableWidget::onFastenerChanged(const int index, const Fastener &fastener)
 {
-    QTreeWidgetItem* item = ui->treeWidget->topLevelItem(index);
-    if (!item)
-        return;
-
-    item->setText(0, QString("%0").arg( 1000 * fastener.positionX.value(), 0, 'f', 1));
-    item->setText(1, QString("%0").arg( 1000 * fastener.positionY.value(), 0, 'f', 1));
-    item->setText(2, QString("%0").arg( 1000 * fastener.diameter.value() , 0, 'f', 2));
-    item->setText(3, QString("%0").arg( 1000 * fastener.thickness.value(), 0, 'f', 2));
-    item->setText(4, DOFToString(fastener.DoF_X));
-    item->setText(5, DOFToString(fastener.DoF_Y));
-
-    this->resizeColumnToContents();
+    Q_UNUSED(index)
+    Q_UNUSED(fastener)
+    updateTable();
 }
 
 void TableWidget::onFastenerRemoved(const int index)
 {
-    QTreeWidgetItem* item = ui->treeWidget->takeTopLevelItem(index);
-    if (item)
-        delete item;
-    this->resizeColumnToContents();
-
+    Q_UNUSED(index)
+    updateTable();
 }
 
 void TableWidget::onItemSelectionChanged()
 {
     QSet<int> set;
-    QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
-
-    if (!rootItem)
-        return;
-
-    int i = rootItem->childCount();
-    while (i>0) {
-        i--;
-        QTreeWidgetItem *item = rootItem->child(i);
-        if (item->isSelected())
-            set << i;
+    int row = ui->tableWidget->rowCount();
+    while (row>0) {
+        row--;
+        if ( ui->tableWidget->item(row,0)->isSelected() )
+            set << row;
     }
     model()->setFastenerSelection(set);
 }
 
-
 void TableWidget::onSelectionFastenerChanged()
 {
     QSet<int> set = model()->selectedFastenerIndexes();
-    QTreeWidgetItem *rootItem = ui->treeWidget->invisibleRootItem();
-
-    if (!rootItem)
-        return;
-
-    int i = rootItem->childCount();
-    while (i>0) {
-        i--;
-        QTreeWidgetItem *item = rootItem->child(i);
-        if (item)
-            ui->treeWidget->setItemSelected(item, set.contains(i));
+    int row = ui->tableWidget->rowCount();
+    while (row>0) {
+        row--;
+        bool selected = set.contains(row);
+        for (int col = 0; col < 6; ++col) {
+            ui->tableWidget->item(row, col)->setSelected( selected );
+        }
     }
+}
+
+void TableWidget::updateTable()
+{
+    const int count = model()->fastenerCount();
+    ui->tableWidget->setRowCount(count);
+
+    Q_ASSERT( ui->tableWidget->rowCount() == count );
+    for (int row = 0; row < count; ++row) {
+
+        const Fastener ft = model()->fastenerAt(row);
+        const double x = ft.positionX.value() *1000; // mm !
+        const double y = ft.positionY.value() *1000; // mm !
+        const double d = ft.diameter.value()  *1000; // mm !
+        const double t = ft.thickness.value() *1000; // mm !
+
+        QTableWidgetItem *item_0 = new QTableWidgetItem( ft.name );
+        QTableWidgetItem *item_1 = new QTableWidgetItem( QString("%0").arg( x, 0, 'f', 1) );
+        QTableWidgetItem *item_2 = new QTableWidgetItem( QString("%0").arg( y, 0, 'f', 1) );
+        QTableWidgetItem *item_3 = new QTableWidgetItem( QString("%0").arg( d, 0, 'f', 1) );
+        QTableWidgetItem *item_4 = new QTableWidgetItem( QString("%0").arg( t, 0, 'f', 1) );
+        QTableWidgetItem *item_5 = new QTableWidgetItem( DOFToString( ft.DoF_X ) );
+        QTableWidgetItem *item_6 = new QTableWidgetItem( DOFToString( ft.DoF_Y ) );
+
+        ui->tableWidget->setItem(row, 0, item_0);
+        ui->tableWidget->setItem(row, 1, item_1);
+        ui->tableWidget->setItem(row, 2, item_2);
+        ui->tableWidget->setItem(row, 3, item_3);
+        ui->tableWidget->setItem(row, 4, item_4);
+        ui->tableWidget->setItem(row, 5, item_5);
+        ui->tableWidget->setItem(row, 6, item_6);
+    }
+
+    this->resizeColumnToContents();
 }
