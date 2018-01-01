@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,8 +14,8 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tablewidget.h"
-#include "ui_tablewidget.h"
+#include "fastenertablewidget.h"
+#include "ui_fastenertablewidget.h"
 
 #include <Core/AbstractSpliceModel>
 #include <Core/Fastener>
@@ -30,8 +30,8 @@ static inline QString DOFToString(Fastener::DOF dof)
 }
 
 
-TableWidget::TableWidget(QWidget *parent) : AbstractSpliceView(parent)
-  , ui(new Ui::TableWidget)
+FastenerTableWidget::FastenerTableWidget(QWidget *parent) : AbstractSpliceView(parent)
+  , ui(new Ui::FastenerTableWidget)
 {
     ui->setupUi(this);
 
@@ -59,38 +59,18 @@ TableWidget::TableWidget(QWidget *parent) : AbstractSpliceView(parent)
     this->resizeColumnToContents();
 }
 
-TableWidget::~TableWidget()
+FastenerTableWidget::~FastenerTableWidget()
 {
     delete ui;
 }
 
-void TableWidget::resizeColumnToContents()
+void FastenerTableWidget::resizeColumnToContents()
 {
     for(int i = 0; i < C_COLUMN_COUNT; i++)
         ui->tableWidget->resizeColumnToContents(i);
 }
 
-void TableWidget::onFastenerInserted(const int index, const Fastener &fastener)
-{
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
-    updateTable();
-}
-
-void TableWidget::onFastenerChanged(const int index, const Fastener &fastener)
-{
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
-    updateTable();
-}
-
-void TableWidget::onFastenerRemoved(const int index)
-{
-    Q_UNUSED(index)
-    updateTable();
-}
-
-void TableWidget::onItemSelectionChanged()
+void FastenerTableWidget::onItemSelectionChanged()
 {
     QSet<int> set;
     int row = ui->tableWidget->rowCount();
@@ -102,7 +82,27 @@ void TableWidget::onItemSelectionChanged()
     model()->setFastenerSelection(set);
 }
 
-void TableWidget::onSelectionFastenerChanged()
+void FastenerTableWidget::onFastenerInserted(const int index, const Fastener &fastener)
+{
+    Q_UNUSED(index)
+    Q_UNUSED(fastener)
+    updateTable();
+}
+
+void FastenerTableWidget::onFastenerChanged(const int index, const Fastener &fastener)
+{
+    Q_UNUSED(index)
+    Q_UNUSED(fastener)
+    updateTable();
+}
+
+void FastenerTableWidget::onFastenerRemoved(const int index)
+{
+    Q_UNUSED(index)
+    updateTable();
+}
+
+void FastenerTableWidget::onSelectionFastenerChanged()
 {
     QSet<int> set = model()->selectedFastenerIndexes();
     int row = ui->tableWidget->rowCount();
@@ -115,7 +115,7 @@ void TableWidget::onSelectionFastenerChanged()
     }
 }
 
-void TableWidget::updateTable()
+void FastenerTableWidget::updateTable()
 {
     const int count = model()->fastenerCount();
     ui->tableWidget->setRowCount(count);

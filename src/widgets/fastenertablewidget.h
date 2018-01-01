@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,23 +14,23 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WIDGETS_TABLE_WIDGET_H
-#define WIDGETS_TABLE_WIDGET_H
+#ifndef WIDGETS_FASTENER_TABLE_WIDGET_H
+#define WIDGETS_FASTENER_TABLE_WIDGET_H
 
 #include <Widgets/AbstractSpliceView>
 
 class Fastener;
 
 namespace Ui {
-class TableWidget;
+class FastenerTableWidget;
 }
 
-class TableWidget : public AbstractSpliceView
+class FastenerTableWidget : public AbstractSpliceView
 {
     Q_OBJECT
 public:
-    explicit TableWidget(QWidget *parent = 0);
-    virtual ~TableWidget();
+    explicit FastenerTableWidget(QWidget *parent = 0);
+    virtual ~FastenerTableWidget();
 
 public Q_SLOTS:
     virtual void onFastenerInserted(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
@@ -42,9 +42,9 @@ protected Q_SLOTS:
     void onItemSelectionChanged();
 
 private:
-    Ui::TableWidget *ui;
+    Ui::FastenerTableWidget *ui;
     void resizeColumnToContents();
     void updateTable();
 };
 
-#endif // WIDGETS_TABLE_WIDGET_H
+#endif // WIDGETS_FASTENER_TABLE_WIDGET_H
