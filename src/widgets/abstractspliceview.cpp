@@ -59,12 +59,16 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
 
     if (m_model) {
         QObject::disconnect(m_model, SIGNAL(fastenerInserted(int,Fastener)),
+                            m_delayTimer, SLOT(onFastenerInserted_delayed(int,Fastener)));
+        QObject::disconnect(m_delayTimer, SIGNAL(onFastenerInserted_timeout(int,Fastener)),
                             this, SLOT(onFastenerInserted(int,Fastener)));
         QObject::disconnect(m_model, SIGNAL(fastenerChanged(int,Fastener)),
                             m_delayTimer, SLOT(onFastenerChanged_delayed(int,Fastener)));
         QObject::disconnect(m_delayTimer, SIGNAL(onFastenerChanged_timeout(int,Fastener)),
                             this, SLOT(onFastenerChanged(int,Fastener)));
         QObject::disconnect(m_model, SIGNAL(fastenerRemoved(int)),
+                            m_delayTimer, SLOT(onFastenerRemoved_delayed(int)));
+        QObject::disconnect(m_delayTimer, SIGNAL(onFastenerRemoved_timeout(int)),
                             this, SLOT(onFastenerRemoved(int)));
 
         QObject::disconnect(m_model, SIGNAL(designSpaceInserted(int,DesignSpace)),
@@ -77,6 +81,8 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
         QObject::disconnect(m_model, SIGNAL(appliedLoadChanged()),
                             this, SLOT(onAppliedLoadChanged()));
         QObject::disconnect(m_model, SIGNAL(resultsChanged()),
+                            m_delayTimer, SLOT(onResultsChanged_delayed()));
+        QObject::disconnect(m_delayTimer, SIGNAL(onResultsChanged_timeout()),
                             this, SLOT(onResultsChanged()));
 
         QObject::disconnect(m_model, SIGNAL(selectionFastenerChanged()),
@@ -89,12 +95,16 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
     m_model = model;
     if (m_model) {
         QObject::connect(m_model, SIGNAL(fastenerInserted(int,Fastener)),
+                         m_delayTimer, SLOT(onFastenerInserted_delayed(int,Fastener)));
+        QObject::connect(m_delayTimer, SIGNAL(onFastenerInserted_timeout(int,Fastener)),
                          this, SLOT(onFastenerInserted(int,Fastener)));
         QObject::connect(m_model, SIGNAL(fastenerChanged(int,Fastener)),
                          m_delayTimer, SLOT(onFastenerChanged_delayed(int,Fastener)));
         QObject::connect(m_delayTimer, SIGNAL(onFastenerChanged_timeout(int,Fastener)),
                          this, SLOT(onFastenerChanged(int,Fastener)));
         QObject::connect(m_model, SIGNAL(fastenerRemoved(int)),
+                         m_delayTimer, SLOT(onFastenerRemoved_delayed(int)));
+        QObject::connect(m_delayTimer, SIGNAL(onFastenerRemoved_timeout(int)),
                          this, SLOT(onFastenerRemoved(int)));
 
         QObject::connect(m_model, SIGNAL(designSpaceInserted(int,DesignSpace)),
@@ -107,6 +117,8 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
         QObject::connect(m_model, SIGNAL(appliedLoadChanged()),
                          this, SLOT(onAppliedLoadChanged()));
         QObject::connect(m_model, SIGNAL(resultsChanged()),
+                         m_delayTimer, SLOT(onResultsChanged_delayed()));
+        QObject::connect(m_delayTimer, SIGNAL(onResultsChanged_timeout()),
                          this, SLOT(onResultsChanged()));
 
         QObject::connect(m_model, SIGNAL(selectionFastenerChanged()),
