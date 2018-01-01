@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,10 +23,10 @@
 #include <Widgets/DesignSpaceWidget>
 #include <Widgets/DesignVariableWidget>
 #include <Widgets/FastenerWidget>
+#include <Widgets/FastenerTableWidget>
 #include <Widgets/OptimisationWidget>
 #include <Widgets/ResultWidget>
 #include <Widgets/SolverWidget>
-#include <Widgets/TableWidget>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -75,6 +75,11 @@ FastenerWidget* MainWidget::fastenerWidget() const
     return ui->fastenerWidget;
 }
 
+FastenerTableWidget* MainWidget::fastenerTableWidget() const
+{
+    return ui->fastenerTableWidget;
+}
+
 ResultWidget* MainWidget::resultWidget() const
 {
     return ui->resultWidget;
@@ -83,11 +88,6 @@ ResultWidget* MainWidget::resultWidget() const
 SolverWidget* MainWidget::solverWidget() const
 {
     return ui->solverWidget;
-}
-
-TableWidget* MainWidget::tableWidget() const
-{
-    return ui->tableWidget;
 }
 
 int MainWidget::currentIndex() const
