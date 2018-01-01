@@ -22,6 +22,8 @@
 
 #include <QtCore/QDebug>
 
+#define C_COLUMN_COUNT 6
+
 static inline QString DOFToString(Fastener::DOF dof)
 {
     return (dof == Fastener::Fixed) ? QObject::tr("fixed") : QObject::tr("free");
@@ -35,7 +37,7 @@ TableWidget::TableWidget(QWidget *parent) : AbstractSpliceView(parent)
 
     QStringList labels;
     labels << tr("X") << tr("Y") << tr("d") << tr("t") << tr("dof X") << tr("dof Y");
-    ui->tableWidget->setColumnCount( 6 );
+    ui->tableWidget->setColumnCount( C_COLUMN_COUNT );
     ui->tableWidget->setHorizontalHeaderLabels(labels);
 
     ui->tableWidget->horizontalHeader()->setVisible(true);
@@ -64,7 +66,7 @@ TableWidget::~TableWidget()
 
 void TableWidget::resizeColumnToContents()
 {
-    for(int i = 0; i < 6; i++)
+    for(int i = 0; i < C_COLUMN_COUNT; i++)
         ui->tableWidget->resizeColumnToContents(i);
 }
 
@@ -107,7 +109,7 @@ void TableWidget::onSelectionFastenerChanged()
     while (row>0) {
         row--;
         bool selected = set.contains(row);
-        for (int col = 0; col < 6; ++col) {
+        for (int col = 0; col < C_COLUMN_COUNT; ++col) {
             ui->tableWidget->item(row, col)->setSelected( selected );
         }
     }
