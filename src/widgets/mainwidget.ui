@@ -28,7 +28,7 @@
         <widget class="AppliedLoadWidget" name="appliedLoadWidget" native="true"/>
        </item>
        <item>
-        <widget class="TableWidget" name="tableWidget" native="true"/>
+        <widget class="FastenerTableWidget" name="fastenerTableWidget" native="true"/>
        </item>
        <item>
         <widget class="FastenerWidget" name="fastenerWidget" native="true"/>
@@ -133,9 +133,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>TableWidget</class>
+   <class>FastenerTableWidget</class>
    <extends>QWidget</extends>
-   <header>Widgets/TableWidget</header>
+   <header>Widgets/FastenerTableWidget</header>
    <container>1</container>
   </customwidget>
   <customwidget>

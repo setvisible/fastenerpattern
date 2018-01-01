@@ -26,12 +26,12 @@
 #include <Widgets/DesignOptionWidget>
 #include <Widgets/DesignSpaceWidget>
 #include <Widgets/DesignVariableWidget>
+#include <Widgets/FastenerTableWidget>
 #include <Widgets/FastenerWidget>
 #include <Widgets/MainWidget>
 #include <Widgets/OptimisationWidget>
 #include <Widgets/ResultWidget>
 #include <Widgets/SolverWidget>
-#include <Widgets/TableWidget>
 
 
 #include <QtCore/QFile>
@@ -59,15 +59,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     ui->spliceToolBar->setModel(m_calculator);
     ui->spliceGraphicsWidget->setModel(m_calculator);
-    ui->mainWidget->fastenerWidget()->setModel(m_calculator);
     ui->mainWidget->appliedLoadWidget()->setModel(m_calculator);
     ui->mainWidget->designObjectiveWidget()->setModel(m_calculator);
     ui->mainWidget->designOptionWidget()->setModel(m_calculator);
     ui->mainWidget->designSpaceWidget()->setModel(m_calculator);
     ui->mainWidget->designVariableWidget()->setModel(m_calculator);
+    ui->mainWidget->fastenerTableWidget()->setModel(m_calculator);
+    ui->mainWidget->fastenerWidget()->setModel(m_calculator);
     /// \todo ui->mainWidget->optimisationWidget()->setModel(m_calculator);
     ui->mainWidget->resultWidget()->setModel(m_calculator);
-    ui->mainWidget->tableWidget()->setModel(m_calculator);
 
     /* [1] */
     /* Connect the GUI to the Calculator. */
