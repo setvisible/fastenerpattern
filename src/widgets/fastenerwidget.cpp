@@ -61,17 +61,19 @@ void FastenerWidget::setDecimals(int prec)
 
 /******************************************************************************
  ******************************************************************************/
-void FastenerWidget::onTextChanged(QString /*text*/)
+void FastenerWidget::onTextChanged(QString)
 {
-    this->onChanged();
+    onChanged();
 }
-void FastenerWidget::onValueChanged(double /*value*/)
+
+void FastenerWidget::onValueChanged(double)
 {
-    this->onChanged();
+    onChanged();
 }
-void FastenerWidget::onStateChanged(int /*value*/)
+
+void FastenerWidget::onStateChanged(int)
 {
-    this->onChanged();
+    onChanged();
 }
 
 void FastenerWidget::onChanged()
@@ -82,10 +84,8 @@ void FastenerWidget::onChanged()
 
 /******************************************************************************
  ******************************************************************************/
-void FastenerWidget::onFastenerChanged(const int index, const Fastener &fastener)
+void FastenerWidget::onFastenerChanged(const int, const Fastener &)
 {
-    Q_UNUSED(index);
-    Q_UNUSED(fastener);
     updateInfoLater(C_SHORT_DELAY_MSEC);
 }
 

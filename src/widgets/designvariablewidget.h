@@ -52,7 +52,6 @@ private:
     void resizeColumnToContents();
     void updateTableLater(int msec = 100);
     void updateSelectionLater(int msec = 100);
-
 };
 
 #endif // WIDGETS_DESIGN_VARIABLE_WIDGET_H

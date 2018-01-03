@@ -21,9 +21,11 @@
 #include <Core/Fastener>
 #include <Core/Tensor>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QtWidgets/QTableWidget>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
 
 #include <boost/units/cmath.hpp> /* pow<>() */
 
@@ -68,6 +70,8 @@ ResultWidget::~ResultWidget()
     delete ui;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void ResultWidget::resizeColumnToContents()
 {
     for(int i = 0; i < C_COLUMN_COUNT; i++)
@@ -86,6 +90,8 @@ void ResultWidget::onItemSelectionChanged()
     model()->setFastenerSelection(set);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void ResultWidget::onSelectionFastenerChanged()
 {
     updateSelectionLater(C_SHORT_DELAY_MSEC);
@@ -96,6 +102,8 @@ void ResultWidget::onResultsChanged()
     updateResultLater(C_LONG_DELAY_MSEC);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void ResultWidget::updateSelectionLater(int msec)
 {
     m_selectionTimer->stop();
@@ -125,6 +133,8 @@ void ResultWidget::updateSelection()
 }
 
 
+/******************************************************************************
+ ******************************************************************************/
 void ResultWidget::updateResultLater(int msec)
 {
     m_resultTimer->stop();

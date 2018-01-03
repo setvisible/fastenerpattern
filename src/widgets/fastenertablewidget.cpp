@@ -20,8 +20,10 @@
 #include <Core/AbstractSpliceModel>
 #include <Core/Fastener>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
 
 #define C_COLUMN_COUNT 6
 
@@ -29,7 +31,6 @@ static inline QString DOFToString(Fastener::DOF dof)
 {
     return (dof == Fastener::Fixed) ? QObject::tr("fixed") : QObject::tr("free");
 }
-
 
 FastenerTableWidget::FastenerTableWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::FastenerTableWidget)
@@ -70,6 +71,8 @@ FastenerTableWidget::~FastenerTableWidget()
     delete ui;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void FastenerTableWidget::resizeColumnToContents()
 {
     for(int i = 0; i < C_COLUMN_COUNT; i++)
@@ -88,23 +91,20 @@ void FastenerTableWidget::onItemSelectionChanged()
     model()->setFastenerSelection(set);
 }
 
-void FastenerTableWidget::onFastenerInserted(const int index, const Fastener &fastener)
+/******************************************************************************
+ ******************************************************************************/
+void FastenerTableWidget::onFastenerInserted(const int, const Fastener &)
 {
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
     updateTableLater(C_SHORT_DELAY_MSEC);
 }
 
-void FastenerTableWidget::onFastenerChanged(const int index, const Fastener &fastener)
+void FastenerTableWidget::onFastenerChanged(const int, const Fastener &)
 {
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
     updateTableLater(C_LONG_DELAY_MSEC);
 }
 
-void FastenerTableWidget::onFastenerRemoved(const int index)
+void FastenerTableWidget::onFastenerRemoved(const int)
 {
-    Q_UNUSED(index)
     updateTableLater(C_SHORT_DELAY_MSEC);
 }
 
@@ -113,6 +113,8 @@ void FastenerTableWidget::onSelectionFastenerChanged()
     updateSelectionLater(C_SHORT_DELAY_MSEC);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void FastenerTableWidget::updateTableLater(int msec)
 {
     m_tableTimer->stop();

@@ -20,11 +20,11 @@
 #include <Core/AbstractSpliceModel>
 #include <Core/Fastener>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QtWidgets/QTableWidget>
-
-
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
 
 #define C_COLUMN_COUNT 3
 
@@ -67,6 +67,8 @@ DesignVariableWidget::~DesignVariableWidget()
     delete ui;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void DesignVariableWidget::resizeColumnToContents()
 {
     for(int i = 0; i < C_COLUMN_COUNT; i++)
@@ -85,31 +87,32 @@ void DesignVariableWidget::onItemSelectionChanged()
     model()->setFastenerSelection(set);
 }
 
-void DesignVariableWidget::onFastenerInserted(const int index, const Fastener &fastener)
+
+/******************************************************************************
+ ******************************************************************************/
+void DesignVariableWidget::onFastenerInserted(const int, const Fastener &)
 {
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
     updateTableLater(C_SHORT_DELAY_MSEC);
 }
 
-void DesignVariableWidget::onFastenerChanged(const int index, const Fastener &fastener)
+void DesignVariableWidget::onFastenerChanged(const int, const Fastener &)
 {
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
     updateTableLater(C_LONG_DELAY_MSEC);
 }
 
-void DesignVariableWidget::onFastenerRemoved(const int index)
+void DesignVariableWidget::onFastenerRemoved(const int)
 {
-    Q_UNUSED(index)
     updateTableLater(C_SHORT_DELAY_MSEC);
 }
+
 
 void DesignVariableWidget::onSelectionFastenerChanged()
 {
     updateSelectionLater(C_SHORT_DELAY_MSEC);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void DesignVariableWidget::updateTableLater(int msec)
 {
     m_tableTimer->stop();
@@ -142,6 +145,8 @@ void DesignVariableWidget::updateTable()
     this->resizeColumnToContents();
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void DesignVariableWidget::updateSelectionLater(int msec)
 {
     m_selectionTimer->stop();

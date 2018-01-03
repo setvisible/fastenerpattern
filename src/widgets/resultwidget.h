@@ -48,7 +48,6 @@ private:
     void resizeColumnToContents();
     void updateSelectionLater(int msec = 100);
     void updateResultLater(int msec = 100);
-
 };
 
 #endif // WIDGETS_RESULT_WIDGET_H
