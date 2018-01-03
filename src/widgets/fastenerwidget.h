@@ -21,6 +21,7 @@
 #include <Widgets/AbstractSpliceView>
 
 class QString;
+class QTimer;
 
 namespace Ui {
 class FastenerWidget;
@@ -50,10 +51,13 @@ private Q_SLOTS:
     void onValueChanged(double);
     void onStateChanged(int);
     void onChanged();
+    void updateInfo();
 
 private:
     Ui::FastenerWidget *ui;
     int m_currentIndex;
+    QTimer *m_timer;
+    void updateInfoLater(int msec = 100);
 };
 
 #endif // WIDGETS_FASTENER_WIDGET_H

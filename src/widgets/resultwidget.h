@@ -19,6 +19,8 @@
 
 #include <Widgets/AbstractSpliceView>
 
+class QTimer;
+
 namespace Ui {
 class ResultWidget;
 }
@@ -36,10 +38,16 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void onItemSelectionChanged();
+    void updateSelection();
+    void updateResult();
 
 private:
     Ui::ResultWidget *ui;
+    QTimer *m_selectionTimer;
+    QTimer *m_resultTimer;
     void resizeColumnToContents();
+    void updateSelectionLater(int msec = 100);
+    void updateResultLater(int msec = 100);
 
 };
 
