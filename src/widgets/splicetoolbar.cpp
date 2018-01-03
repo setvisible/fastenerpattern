@@ -473,9 +473,11 @@ void SpliceToolbar::designSpaceRemove()
  ******************************************************************************/
 void SpliceToolbar::_q_selectionFastenerChanged()
 {
+    bool hasFastener = (model()->fastenerCount()>0);
     bool selected = (!model()->selectedFastenerIndexes().isEmpty());
     m_buttonFastenerDuplicate->setEnabled(selected);
     m_buttonFastenerRemove->setEnabled(selected);
+    m_buttonFastenerSelectAll->setEnabled(hasFastener);
 }
 
 void SpliceToolbar::_q_selectionDesignSpaceChanged()
