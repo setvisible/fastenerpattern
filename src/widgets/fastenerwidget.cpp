@@ -99,11 +99,13 @@ void FastenerWidget::onSelectionFastenerChanged()
         this->setFastener(fastener);
         ui->groupBox->setEnabled(true);
     } else {
-        m_currentIndex = -1;
-        Fastener dummyfastener;
-        dummyfastener.name = QLatin1String("<Select a fastener>");
-        this->setFastener(dummyfastener);
-        ui->groupBox->setEnabled(false);
+        if (ui->groupBox->isEnabled()) {
+            ui->groupBox->setEnabled(false);
+            m_currentIndex = -1;
+            Fastener dummyfastener;
+            dummyfastener.name = QLatin1String("<Select a fastener>");
+            this->setFastener(dummyfastener);
+        }
     }
 }
 
