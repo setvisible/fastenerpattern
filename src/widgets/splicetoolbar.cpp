@@ -30,8 +30,6 @@ SpliceToolbarPrivate::SpliceToolbarPrivate(QWidget *parent)
     : AbstractSpliceView(parent)
     , q_ptr((SpliceToolbar*)parent)
 {
-    /* No delay to ensure a quick GUI response for this widget. */
-    this->setUpdateDelay(0);
 }
 
 void SpliceToolbarPrivate::onSelectionFastenerChanged()
@@ -391,6 +389,9 @@ void SpliceToolbar::fastenerAdd()
     Fastener f(0.0*_mm, 0.0*_mm, 4.78*_mm, 3.*_mm);
     int count =  model()->fastenerCount();
     model()->insertFastener(count, f);
+    QSet<int> newSet;
+    newSet << count;
+    model()->setFastenerSelection(newSet);
 }
 
 void SpliceToolbar::fastenerDuplicate()
@@ -470,9 +471,11 @@ void SpliceToolbar::designSpaceRemove()
  ******************************************************************************/
 void SpliceToolbar::_q_selectionFastenerChanged()
 {
+    bool hasFastener = (model()->fastenerCount()>0);
     bool selected = (!model()->selectedFastenerIndexes().isEmpty());
     m_buttonFastenerDuplicate->setEnabled(selected);
     m_buttonFastenerRemove->setEnabled(selected);
+    m_buttonFastenerSelectAll->setEnabled(hasFastener);
 }
 
 void SpliceToolbar::_q_selectionDesignSpaceChanged()

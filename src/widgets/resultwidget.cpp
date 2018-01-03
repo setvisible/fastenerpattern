@@ -21,8 +21,11 @@
 #include <Core/Fastener>
 #include <Core/Tensor>
 
-#include <QtCore/QDebug>
+#include <QtCore/QTimer>
 #include <QtWidgets/QTableWidget>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
 
 #include <boost/units/cmath.hpp> /* pow<>() */
 
@@ -30,8 +33,13 @@
 
 ResultWidget::ResultWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::ResultWidget)
+  , m_selectionTimer(new QTimer(this))
+  , m_resultTimer(new QTimer(this))
 {
     ui->setupUi(this);
+
+    QObject::connect(m_selectionTimer, SIGNAL(timeout()), this, SLOT(updateSelection()));
+    QObject::connect(m_resultTimer, SIGNAL(timeout()), this, SLOT(updateResult()));
 
     QStringList labels;
     labels << tr("Name") <<  tr("FX") << tr("FY") << tr("Resultant");
@@ -62,6 +70,8 @@ ResultWidget::~ResultWidget()
     delete ui;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void ResultWidget::resizeColumnToContents()
 {
     for(int i = 0; i < C_COLUMN_COUNT; i++)
@@ -80,8 +90,36 @@ void ResultWidget::onItemSelectionChanged()
     model()->setFastenerSelection(set);
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void ResultWidget::onSelectionFastenerChanged()
 {
+    updateSelectionLater(C_SHORT_DELAY_MSEC);
+}
+
+void ResultWidget::onResultsChanged()
+{
+    updateResultLater(C_LONG_DELAY_MSEC);
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void ResultWidget::updateSelectionLater(int msec)
+{
+    m_selectionTimer->stop();
+    m_selectionTimer->start(msec);
+}
+
+void ResultWidget::updateSelection()
+{
+    while (m_resultTimer->isActive()) {
+        /* Ensure the table is updated before updating the selection. */
+        updateResult();
+    }
+    Q_ASSERT(!m_resultTimer->isActive());
+    m_selectionTimer->stop();
+
+    bool blocked = ui->tableWidget->blockSignals(true);
     QSet<int> set = model()->selectedFastenerIndexes();
     int row = ui->tableWidget->rowCount();
     while (row>0) {
@@ -91,10 +129,22 @@ void ResultWidget::onSelectionFastenerChanged()
             ui->tableWidget->item(row, col)->setSelected( selected );
         }
     }
+    ui->tableWidget->blockSignals(blocked);
 }
 
-void ResultWidget::onResultsChanged()
+
+/******************************************************************************
+ ******************************************************************************/
+void ResultWidget::updateResultLater(int msec)
 {
+    m_resultTimer->stop();
+    m_resultTimer->start(msec);
+}
+
+void ResultWidget::updateResult()
+{
+    m_resultTimer->stop();
+
     const int count = model()->fastenerCount();
     ui->tableWidget->setRowCount(count);
 

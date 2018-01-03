@@ -386,7 +386,6 @@ bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
     if (m_selectedFastenerIndexes == indexes)
         return false;
     m_selectedFastenerIndexes = indexes;
-
     emit selectionFastenerChanged();
     return true;
 }

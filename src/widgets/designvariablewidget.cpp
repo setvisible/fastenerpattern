@@ -20,15 +20,23 @@
 #include <Core/AbstractSpliceModel>
 #include <Core/Fastener>
 
-#include <QtCore/QDebug>
+#include <QtCore/QTimer>
 #include <QtWidgets/QTableWidget>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
 
 #define C_COLUMN_COUNT 3
 
 DesignVariableWidget::DesignVariableWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::DesignVariableWidget)
+  , m_tableTimer(new QTimer(this))
+  , m_selectionTimer(new QTimer(this))
 {
     ui->setupUi(this);
+
+    QObject::connect(m_tableTimer, SIGNAL(timeout()), this, SLOT(updateTable()));
+    QObject::connect(m_selectionTimer, SIGNAL(timeout()), this, SLOT(updateSelection()));
 
     QStringList labels;
     labels << tr("Name") <<  tr("Position X") << tr("Position Y");
@@ -59,6 +67,8 @@ DesignVariableWidget::~DesignVariableWidget()
     delete ui;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 void DesignVariableWidget::resizeColumnToContents()
 {
     for(int i = 0; i < C_COLUMN_COUNT; i++)
@@ -78,42 +88,41 @@ void DesignVariableWidget::onItemSelectionChanged()
 }
 
 
-void DesignVariableWidget::onFastenerInserted(const int index, const Fastener &fastener)
+/******************************************************************************
+ ******************************************************************************/
+void DesignVariableWidget::onFastenerInserted(const int, const Fastener &)
 {
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
-    updateTable();
+    updateTableLater(C_SHORT_DELAY_MSEC);
 }
 
-void DesignVariableWidget::onFastenerChanged(const int index, const Fastener &fastener)
+void DesignVariableWidget::onFastenerChanged(const int, const Fastener &)
 {
-    Q_UNUSED(index)
-    Q_UNUSED(fastener)
-    updateTable();
+    updateTableLater(C_LONG_DELAY_MSEC);
 }
 
-void DesignVariableWidget::onFastenerRemoved(const int index)
+void DesignVariableWidget::onFastenerRemoved(const int)
 {
-    Q_UNUSED(index)
-    updateTable();
+    updateTableLater(C_SHORT_DELAY_MSEC);
 }
 
 
 void DesignVariableWidget::onSelectionFastenerChanged()
 {
-    QSet<int> set = model()->selectedFastenerIndexes();
-    int row = ui->tableWidget->rowCount();
-    while (row>0) {
-        row--;
-        bool selected = set.contains(row);
-        for (int col = 0; col < C_COLUMN_COUNT; ++col) {
-            ui->tableWidget->item(row, col)->setSelected( selected );
-        }
-    }
+    updateSelectionLater(C_SHORT_DELAY_MSEC);
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void DesignVariableWidget::updateTableLater(int msec)
+{
+    m_tableTimer->stop();
+    m_tableTimer->start(msec);
 }
 
 void DesignVariableWidget::updateTable()
 {
+    m_tableTimer->stop();
+
     const int count = model()->fastenerCount();
     ui->tableWidget->setRowCount(count);
 
@@ -134,4 +143,34 @@ void DesignVariableWidget::updateTable()
     }
 
     this->resizeColumnToContents();
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void DesignVariableWidget::updateSelectionLater(int msec)
+{
+    m_selectionTimer->stop();
+    m_selectionTimer->start(msec);
+}
+
+void DesignVariableWidget::updateSelection()
+{
+    while (m_tableTimer->isActive()) {
+        /* Ensure the table is updated before updating the selection. */
+        updateTable();
+    }
+    Q_ASSERT(!m_tableTimer->isActive());
+    m_selectionTimer->stop();
+
+    bool blocked = ui->tableWidget->blockSignals(true);
+    QSet<int> set = model()->selectedFastenerIndexes();
+    int row = ui->tableWidget->rowCount();
+    while (row>0) {
+        row--;
+        bool selected = set.contains(row);
+        for (int col = 0; col < C_COLUMN_COUNT; ++col) {
+            ui->tableWidget->item(row, col)->setSelected( selected );
+        }
+    }
+    ui->tableWidget->blockSignals(blocked);
 }

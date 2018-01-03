@@ -19,11 +19,16 @@
 
 #include <Core/AbstractSpliceModel>
 
+#include <QtCore/QTimer>
+
 FastenerWidget::FastenerWidget(QWidget *parent) : AbstractSpliceView(parent)
   , ui(new Ui::FastenerWidget)
   , m_currentIndex(-1)
+  , m_timer(new QTimer(this))
 {
     ui->setupUi(this);
+
+    QObject::connect(m_timer, SIGNAL(timeout()), this, SLOT(updateInfo()));
 
     QObject::connect(ui->nameEdit , SIGNAL(textChanged(QString)), this, SLOT(onTextChanged(QString)));
     QObject::connect(ui->positionX, SIGNAL(valueChanged(double)), this, SLOT(onValueChanged(double)));
@@ -56,17 +61,19 @@ void FastenerWidget::setDecimals(int prec)
 
 /******************************************************************************
  ******************************************************************************/
-void FastenerWidget::onTextChanged(QString /*text*/)
+void FastenerWidget::onTextChanged(QString)
 {
-    this->onChanged();
+    onChanged();
 }
-void FastenerWidget::onValueChanged(double /*value*/)
+
+void FastenerWidget::onValueChanged(double)
 {
-    this->onChanged();
+    onChanged();
 }
-void FastenerWidget::onStateChanged(int /*value*/)
+
+void FastenerWidget::onStateChanged(int)
 {
-    this->onChanged();
+    onChanged();
 }
 
 void FastenerWidget::onChanged()
@@ -77,16 +84,9 @@ void FastenerWidget::onChanged()
 
 /******************************************************************************
  ******************************************************************************/
-void FastenerWidget::onFastenerChanged(const int index, const Fastener &fastener)
+void FastenerWidget::onFastenerChanged(const int, const Fastener &)
 {
-    /// \todo Add the other slots (fastenerRemoved and fastenerAdded) ?
-    Q_UNUSED(index);
-    Q_UNUSED(fastener);
-
-    if (m_currentIndex >= 0 && m_currentIndex < model()->fastenerCount()) {
-        Fastener fastener = model()->fastenerAt(m_currentIndex);
-        this->setFastener(fastener);
-    }
+    updateInfoLater(C_SHORT_DELAY_MSEC);
 }
 
 void FastenerWidget::onSelectionFastenerChanged()
@@ -99,11 +99,31 @@ void FastenerWidget::onSelectionFastenerChanged()
         this->setFastener(fastener);
         ui->groupBox->setEnabled(true);
     } else {
-        m_currentIndex = -1;
-        Fastener dummyfastener;
-        dummyfastener.name = QLatin1String("<Select a fastener>");
-        this->setFastener(dummyfastener);
-        ui->groupBox->setEnabled(false);
+        if (ui->groupBox->isEnabled()) {
+            ui->groupBox->setEnabled(false);
+            m_currentIndex = -1;
+            Fastener dummyfastener;
+            dummyfastener.name = QLatin1String("<Select a fastener>");
+            this->setFastener(dummyfastener);
+        }
+    }
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void FastenerWidget::updateInfoLater(int msec)
+{
+    m_timer->stop();
+    m_timer->start(msec);
+}
+
+void FastenerWidget::updateInfo()
+{
+    m_timer->stop();
+
+    if (m_currentIndex >= 0 && m_currentIndex < model()->fastenerCount()) {
+        Fastener fastener = model()->fastenerAt(m_currentIndex);
+        this->setFastener(fastener);
     }
 }
 
