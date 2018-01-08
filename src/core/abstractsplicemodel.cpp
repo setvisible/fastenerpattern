@@ -34,6 +34,9 @@
  * because the MainWindow is no more in charge of connecting the
  * GUI's signals & slots.
  *
+ * Moreover, this architecture simplifies the calls to the commands
+ * that derive from QUndoCommand.
+ *
  * \sa AbstractSpliceView.
  */
 
