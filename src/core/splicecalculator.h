@@ -82,19 +82,19 @@ Q_SIGNALS:
     void changed();
 
 public Q_SLOTS:
-    virtual bool insertFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual bool setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual bool removeFastener(const int index) Q_DECL_OVERRIDE;
+    virtual void insertFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void removeFastener(const int index) Q_DECL_OVERRIDE;
 
-    virtual bool insertDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
-    virtual bool setDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
-    virtual bool removeDesignSpace(const int index) Q_DECL_OVERRIDE;
+    virtual void insertDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void setDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void removeDesignSpace(const int index) Q_DECL_OVERRIDE;
 
-    virtual bool setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
-    virtual bool setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
+    virtual void setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
+    virtual void setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
 
-    virtual bool setFastenerSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
-    virtual bool setDesignSpaceSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
+    virtual void setFastenerSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
+    virtual void setDesignSpaceSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
 
 private:
     SolverParameters m_params;

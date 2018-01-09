@@ -41,14 +41,12 @@
  */
 
 /* Public Setters */
-bool AbstractSpliceModel::setFastenerSelection(const QSet<int> indexes)
+void AbstractSpliceModel::setFastenerSelection(const QSet<int> indexes)
 {
     Q_UNUSED(indexes);
-    return false;
 }
 
-bool AbstractSpliceModel::setDesignSpaceSelection(const QSet<int> indexes)
+void AbstractSpliceModel::setDesignSpaceSelection(const QSet<int> indexes)
 {
     Q_UNUSED(indexes);
-    return false;
 }
