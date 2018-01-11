@@ -16,15 +16,13 @@
 
 #include "splicecalculator.h"
 
+#include <Core/DesignSpace>
+#include <Core/Fastener>
 #include <Core/Splice>
-#include <Core/Solvers/Parameters>
+#include <Core/Tensor>
 #include <Core/Solvers/ISolver>
+#include <Core/Solvers/Parameters>
 #include <Core/Solvers/RigidBodySolver>
-
-#include "splice.h"
-#include "designspace.h"
-#include "fastener.h"
-#include "tensor.h"
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
@@ -45,7 +43,6 @@ SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent
   , m_solver(Q_NULLPTR)
   , m_splice(new Splice(this))
 {
-    this->clear();
 }
 
 /******************************************************************************
@@ -325,14 +322,14 @@ void SpliceCalculator::removeDesignSpace(const int index)
 
 /******************************************************************************
  ******************************************************************************/
-void SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
+void SpliceCalculator::setAppliedLoad(const Tensor &appliedLoad)
 {
-    if (m_splice->appliedLoad() == loadcase)
-        return;
-    m_splice->setAppliedLoad(loadcase);
-    emit appliedLoadChanged();
-    emit changed();
-    recalculate();
+    if (m_splice->appliedLoad() != appliedLoad) {
+        m_splice->setAppliedLoad(appliedLoad);
+        emit appliedLoadChanged();
+        emit changed();
+        recalculate();
+    }
 }
 
 void SpliceCalculator::setSolverParameters(SolverParameters params)
