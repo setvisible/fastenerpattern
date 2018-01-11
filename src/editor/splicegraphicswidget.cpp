@@ -193,16 +193,20 @@ void SpliceGraphicsWidget::onDesignSpaceInserted(const int index, const DesignSp
     m_backgroundWidget->scene()->addItem(item);
     m_designSpaceItems.insert(index, item);
 
+    bool blocked = item->blockSignals(true);
     item->setName(designSpace.name);
     item->setPolygonInMeter(designSpace.polygon);
+    item->blockSignals(blocked);
 }
 
 void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
 {
     if (index >= 0 && index < m_designSpaceItems.count()) {
         DesignSpaceItem *item = m_designSpaceItems[index];
+        bool blocked = item->blockSignals(true);
         item->setName(designSpace.name);
         item->setPolygonInMeter(designSpace.polygon);
+        item->blockSignals(blocked);
     }
 }
 
