@@ -90,20 +90,26 @@ void DesignSpaceWidget::onItemSelectionChanged()
 void DesignSpaceWidget::onDesignSpaceInserted(const int index, const DesignSpace &designSpace)
 {
     QTableWidgetItem *newItem = new QTableWidgetItem(designSpace.name);
+    bool blocked = ui->tableWidget->blockSignals(true);
     ui->tableWidget->insertRow(index);
     ui->tableWidget->setItem(index, 0, newItem);
+    ui->tableWidget->blockSignals(blocked);
 }
 
 void DesignSpaceWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
 {
     QTableWidgetItem *item = ui->tableWidget->item(index, 0);
+    bool blocked = ui->tableWidget->blockSignals(true);
     if (item)
         item->setText(designSpace.name);
+    ui->tableWidget->blockSignals(blocked);
 }
 
 void DesignSpaceWidget::onDesignSpaceRemoved(const int index)
 {
+    bool blocked = ui->tableWidget->blockSignals(true);
     ui->tableWidget->removeRow(index);
+    ui->tableWidget->blockSignals(blocked);
 }
 
 void DesignSpaceWidget::onSelectionDesignSpaceChanged()
