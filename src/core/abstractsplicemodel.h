@@ -28,6 +28,7 @@
 class DesignSpace;
 class Fastener;
 class Tensor;
+class ISolver;
 enum class SolverParameters;
 
 class AbstractSpliceModel : public QObject
@@ -52,6 +53,7 @@ public:
     Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
     Q_INVOKABLE virtual SolverParameters solverParameters() const = 0;
 
+    virtual ISolver* solver() const = 0;
 
 Q_SIGNALS:
 

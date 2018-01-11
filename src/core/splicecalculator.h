@@ -67,7 +67,7 @@ public:
     virtual QSet<int> selectedDesignSpaceIndexes() const Q_DECL_OVERRIDE;
 
 
-    ISolver* solver() const { return m_solver; } /// \todo This is a hack!
+    virtual ISolver* solver() const Q_DECL_OVERRIDE { return m_solver; }
 
 Q_SIGNALS:
     void changed();

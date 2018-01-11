@@ -19,7 +19,6 @@
 
 #include <Core/AbstractSpliceModel>
 #include <Core/Splice>
-#include <Core/SpliceCalculator>
 #include <Core/Optimizer/Controller>
 #include <Core/Optimizer/OptimisationSolver>
 
@@ -97,12 +96,12 @@ OptimisationWidget::~OptimisationWidget()
 
 /******************************************************************************
  ******************************************************************************/
-SpliceCalculator *OptimisationWidget::spliceCalculator() const
+AbstractSpliceModel *OptimisationWidget::model() const
 {
     return m_calculator;
 }
 
-void OptimisationWidget::setSpliceCalculator(SpliceCalculator *calculator)
+void OptimisationWidget::setModel(AbstractSpliceModel *calculator)
 {
     m_calculator = calculator;
 }
