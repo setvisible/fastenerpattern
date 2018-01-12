@@ -468,21 +468,29 @@ bool MainWindow::loadFile(const QString &path)
  ******************************************************************************/
 void MainWindow::on_action_4BoltJoint_triggered()
 {
-    loadFile(":/examples/4BoltJoint.splice");
+    if (maybeSave()) {
+        loadFile(":/examples/4BoltJoint.splice");
+    }
 }
 
 void MainWindow::on_action_PatternJoint_triggered()
 {
-    loadFile(":/examples/PatternJoint.splice");
+    if (maybeSave()) {
+        loadFile(":/examples/PatternJoint.splice");
+    }
 }
 
 void MainWindow::on_action_RandomPattern_triggered()
 {
-    loadFile(":/examples/RandomJoint.splice");
+    if (maybeSave()) {
+        loadFile(":/examples/RandomJoint.splice");
+    }
 }
 
 void MainWindow::on_action_Optimize4Bolt_triggered()
 {
-    loadFile(":/examples/Optimize_4BoltJoint.splice");
-    ui->mainWidget->setCurrentIndex(3);
+    if (maybeSave()) {
+        loadFile(":/examples/Optimize_4BoltJoint.splice");
+        ui->mainWidget->setCurrentIndex(3);
+    }
 }
