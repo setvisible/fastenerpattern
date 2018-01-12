@@ -19,7 +19,7 @@
 
 #include <QtWidgets/QDialog>
 
-class SpliceCalculator;
+class Calculator;
 
 namespace Ui {
 class PropertiesDialog;
@@ -30,7 +30,7 @@ class PropertiesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PropertiesDialog(SpliceCalculator *calculator, QWidget *parent = 0);
+    explicit PropertiesDialog(Calculator *calculator, QWidget *parent = 0);
     ~PropertiesDialog();
 
 public Q_SLOTS:
@@ -38,7 +38,7 @@ public Q_SLOTS:
 
 private:
     Ui::PropertiesDialog *ui;
-    SpliceCalculator *m_calculator;
+    Calculator *m_calculator;
 
 };
 
