@@ -16,6 +16,7 @@ set(MY_SOURCES ${MY_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/fastener.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/splice.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/splicecalculator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/splicecommand.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/tensor.cpp
     )
 

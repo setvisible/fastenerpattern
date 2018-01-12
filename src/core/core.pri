@@ -12,6 +12,7 @@ HEADERS  += \
     $$PWD/fastener.h \
     $$PWD/splice.h \
     $$PWD/splicecalculator.h \
+    $$PWD/splicecommand.h \
     $$PWD/tensor.h
 
 SOURCES += \
@@ -25,4 +26,5 @@ SOURCES += \
     $$PWD/fastener.cpp \
     $$PWD/splice.cpp \
     $$PWD/splicecalculator.cpp \
+    $$PWD/splicecommand.cpp \
     $$PWD/tensor.cpp
