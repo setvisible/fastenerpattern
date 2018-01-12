@@ -20,7 +20,9 @@
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QMainWindow>
 
-class SpliceCalculator;
+class Calculator;
+
+class QUndoView;
 
 namespace Ui {
 class MainWindow;
@@ -46,6 +48,7 @@ private Q_SLOTS:
     bool saveAs();
     void open();
     void showFileProperties();
+    void showUndoRedoPanel(bool toggled);
 
     void about();
 
@@ -59,9 +62,11 @@ private Q_SLOTS:
     void on_action_RandomPattern_triggered();
     void on_action_Optimize4Bolt_triggered();
 
+
 private:
     Ui::MainWindow *ui;
-    SpliceCalculator *m_calculator;
+    Calculator *m_calculator;
+    QUndoView *m_undoRedoPanel;
 
     bool m_dirty;
     bool m_physicalFile;

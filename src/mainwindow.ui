@@ -88,14 +88,26 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="action_Add"/>
+    <addaction name="action_Undo"/>
+    <addaction name="action_Redo"/>
+    <addaction name="separator"/>
+    <addaction name="action_AddFastener"/>
     <addaction name="action_Duplicate"/>
     <addaction name="action_Remove"/>
-    <addaction name="separator"/>
     <addaction name="action_SelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="action_AddDesignSpace"/>
+    <addaction name="action_RemoveDesignSpace"/>
+   </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="action_ShowUndoRedoPanel"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
+   <addaction name="menu_View"/>
    <addaction name="menuE_xamples"/>
    <addaction name="menu_Help"/>
   </widget>
@@ -113,6 +125,9 @@
    <addaction name="action_Open"/>
    <addaction name="action_Save"/>
    <addaction name="action_SaveAs"/>
+   <addaction name="separator"/>
+   <addaction name="action_Undo"/>
+   <addaction name="action_Redo"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="SpliceToolbar" name="spliceToolBar">
@@ -192,13 +207,16 @@
     <string>About &amp;Qt...</string>
    </property>
   </action>
-  <action name="action_Add">
+  <action name="action_AddFastener">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/icons/menu/bolt_add_24x24.png</normaloff>:/icons/menu/bolt_add_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Add new fastener</string>
+    <string>Add Fastener</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Fastener</string>
    </property>
   </action>
   <action name="action_Remove">
@@ -236,6 +254,47 @@
   <action name="action_Optimize4Bolt">
    <property name="text">
     <string>Optimize 4-Bolt Joint</string>
+   </property>
+  </action>
+  <action name="action_Undo">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/menu/edit_undo_24x24.png</normaloff>:/icons/menu/edit_undo_24x24.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="action_Redo">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/menu/edit_redo_24x24.png</normaloff>:/icons/menu/edit_redo_24x24.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
+  <action name="action_AddDesignSpace">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/menu/edit_design_space_add_24x24.png</normaloff>:/icons/menu/edit_design_space_add_24x24.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add Design Space</string>
+   </property>
+  </action>
+  <action name="action_RemoveDesignSpace">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/menu/edit_design_space_remove_24x24.png</normaloff>:/icons/menu/edit_design_space_remove_24x24.png</iconset>
+   </property>
+   <property name="text">
+    <string>Remove Design Space</string>
+   </property>
+  </action>
+  <action name="action_ShowUndoRedoPanel">
+   <property name="text">
+    <string>Show &amp;Undo/Redo Panel</string>
    </property>
   </action>
  </widget>
