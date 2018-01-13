@@ -23,6 +23,9 @@
 #include <QtCore/QDebug>
 #include <QtWidgets/QTableWidget>
 
+#define BLOCK_SIGNALS    bool blocked = ui->tableWidget->blockSignals(true)
+#define UNBLOCK_SIGNALS  ui->tableWidget->blockSignals(blocked)
+
 #define C_COLUMN_COUNT 1
 
 DesignSpaceWidget::DesignSpaceWidget(QWidget *parent) : AbstractSpliceView(parent)
@@ -89,31 +92,32 @@ void DesignSpaceWidget::onItemSelectionChanged()
  ******************************************************************************/
 void DesignSpaceWidget::onDesignSpaceInserted(const int index, const DesignSpace &designSpace)
 {
+    BLOCK_SIGNALS;
     QTableWidgetItem *newItem = new QTableWidgetItem(designSpace.name);
-    bool blocked = ui->tableWidget->blockSignals(true);
     ui->tableWidget->insertRow(index);
     ui->tableWidget->setItem(index, 0, newItem);
-    ui->tableWidget->blockSignals(blocked);
+    UNBLOCK_SIGNALS;
 }
 
 void DesignSpaceWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
 {
+    BLOCK_SIGNALS;
     QTableWidgetItem *item = ui->tableWidget->item(index, 0);
-    bool blocked = ui->tableWidget->blockSignals(true);
     if (item)
         item->setText(designSpace.name);
-    ui->tableWidget->blockSignals(blocked);
+    UNBLOCK_SIGNALS;
 }
 
 void DesignSpaceWidget::onDesignSpaceRemoved(const int index)
 {
-    bool blocked = ui->tableWidget->blockSignals(true);
+    BLOCK_SIGNALS;
     ui->tableWidget->removeRow(index);
-    ui->tableWidget->blockSignals(blocked);
+    UNBLOCK_SIGNALS;
 }
 
 void DesignSpaceWidget::onSelectionDesignSpaceChanged()
 {
+    BLOCK_SIGNALS;
     const QSet<int> set = model()->selectedDesignSpaceIndexes();
     int row = ui->tableWidget->rowCount();
     while (row>0) {
@@ -123,4 +127,5 @@ void DesignSpaceWidget::onSelectionDesignSpaceChanged()
         if (item)
             item->setSelected( selected );
     }
+    UNBLOCK_SIGNALS;
 }
