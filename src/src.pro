@@ -32,8 +32,13 @@ include($$PWD/../3rd/3rd.pri)
 #-------------------------------------------------
 # VERSION
 #-------------------------------------------------
-# Dummy version
-APP_VERSION = 9.99.999
+VERSION_FILENAME = $$PWD/../version
+
+!exists( $${VERSION_FILENAME} ) {
+    error( "Cannot find version file \"$${VERSION_FILENAME}\"" )
+}
+
+APP_VERSION = "$$cat($$VERSION_FILENAME)"
 DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
 
 
