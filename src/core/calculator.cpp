@@ -118,9 +118,7 @@ void Calculator::setAppliedLoad(const Tensor &appliedLoad)
 
 void Calculator::setSolverParameters(SolverParameters params)
 {
-    if (SpliceCalculator::solverParameters() != params) {
-        m_undoStack->push(new SpliceCommand::SetSolverParameters(this, params));
-    }
+    m_undoStack->push(new SpliceCommand::SetSolverParameters(this, params));
 }
 
 /******************************************************************************

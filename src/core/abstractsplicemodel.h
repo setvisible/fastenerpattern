@@ -50,8 +50,9 @@ public:
     Q_INVOKABLE virtual QSet<int> selectedDesignSpaceIndexes() const = 0;
 
     Q_INVOKABLE virtual Tensor appliedLoad() const = 0;
-    Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
     Q_INVOKABLE virtual SolverParameters solverParameters() const = 0;
+
+    Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
 
     virtual ISolver* solver() const = 0;
 
@@ -70,6 +71,8 @@ Q_SIGNALS:
     void selectionDesignSpaceChanged();
 
     void appliedLoadChanged();
+    void solverParamsChanged();
+
     void resultsChanged();
 
 
@@ -104,13 +107,13 @@ public Q_SLOTS:
         Q_UNUSED(index);
     }
 
-    Q_INVOKABLE virtual void setAppliedLoad(const Tensor &loadcase) {
-        Q_UNUSED(loadcase);
-    }
-
     Q_INVOKABLE virtual void setFastenerSelection(const QSet<int> indexes);
 
     Q_INVOKABLE virtual void setDesignSpaceSelection(const QSet<int> indexes);
+
+    Q_INVOKABLE virtual void setAppliedLoad(const Tensor &loadcase) {
+        Q_UNUSED(loadcase);
+    }
 
     Q_INVOKABLE virtual void setSolverParameters(SolverParameters params) {
         Q_UNUSED(params);

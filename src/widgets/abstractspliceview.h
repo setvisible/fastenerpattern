@@ -45,11 +45,13 @@ public Q_SLOTS:
     virtual void onDesignSpaceChanged(const int index, const DesignSpace &designSpace);
     virtual void onDesignSpaceRemoved(const int index);
 
-    virtual void onAppliedLoadChanged();
-    virtual void onResultsChanged();
-
     virtual void onSelectionFastenerChanged();
     virtual void onSelectionDesignSpaceChanged();
+
+    virtual void onAppliedLoadChanged();
+    virtual void onSolverParamsChanged();
+
+    virtual void onResultsChanged();
 
 private:
     AbstractSpliceModel *m_model;

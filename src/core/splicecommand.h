@@ -30,7 +30,6 @@
 #define C_COMMAND_ID_SET_FASTENER          20
 #define C_COMMAND_ID_SET_DESIGN_SPACE      30
 #define C_COMMAND_ID_SET_APPLIED_LOAD      40
-#define C_COMMAND_ID_SET_PARAMS            50
 
 
 namespace SpliceCommand {
@@ -332,14 +331,6 @@ public:
     { this->setText("Change Solver Parameters"); }
     virtual void undo() { m_calc->_q_setSolverParameters(m_previous); }
     virtual void redo() { m_calc->_q_setSolverParameters(m_params); }
-    virtual int id() const { return C_COMMAND_ID_SET_PARAMS; }
-    bool mergeWith(const QUndoCommand *other)
-    {
-        if (other->id() != id())
-            return false;
-        m_params = static_cast<const SetSolverParameters*>(other)->m_params;
-        return true;
-    }
 private:
     Calculator *m_calc;
     SolverParameters m_params;

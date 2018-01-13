@@ -59,15 +59,18 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
         QObject::disconnect(m_model, SIGNAL(designSpaceRemoved(int)),
                             this, SLOT(onDesignSpaceRemoved(int)));
 
-        QObject::disconnect(m_model, SIGNAL(appliedLoadChanged()),
-                            this, SLOT(onAppliedLoadChanged()));
-        QObject::disconnect(m_model, SIGNAL(resultsChanged()),
-                            this, SLOT(onResultsChanged()));
-
         QObject::disconnect(m_model, SIGNAL(selectionFastenerChanged()),
                             this, SLOT(onSelectionFastenerChanged()));
         QObject::disconnect(m_model, SIGNAL(selectionDesignSpaceChanged()),
                             this, SLOT(onSelectionDesignSpaceChanged()));
+
+        QObject::disconnect(m_model, SIGNAL(appliedLoadChanged()),
+                            this, SLOT(onAppliedLoadChanged()));
+        QObject::disconnect(m_model, SIGNAL(solverParamsChanged()),
+                            this, SLOT(onSolverParamsChanged()));
+
+        QObject::disconnect(m_model, SIGNAL(resultsChanged()),
+                            this, SLOT(onResultsChanged()));
     }
     m_model = model;
     if (m_model) {
@@ -85,18 +88,18 @@ void AbstractSpliceView::setModel(AbstractSpliceModel *model)
         QObject::connect(m_model, SIGNAL(designSpaceRemoved(int)),
                          this, SLOT(onDesignSpaceRemoved(int)));
 
-        QObject::connect(m_model, SIGNAL(appliedLoadChanged()),
-                         this, SLOT(onAppliedLoadChanged()));
-        QObject::connect(m_model, SIGNAL(resultsChanged()),
-                         this, SLOT(onResultsChanged()));
-
         QObject::connect(m_model, SIGNAL(selectionFastenerChanged()),
                          this, SLOT(onSelectionFastenerChanged()));
         QObject::connect(m_model, SIGNAL(selectionDesignSpaceChanged()),
                          this, SLOT(onSelectionDesignSpaceChanged()));
 
+        QObject::connect(m_model, SIGNAL(appliedLoadChanged()),
+                         this, SLOT(onAppliedLoadChanged()));
+        QObject::connect(m_model, SIGNAL(solverParamsChanged()),
+                         this, SLOT(onSolverParamsChanged()));
 
-
+        QObject::connect(m_model, SIGNAL(resultsChanged()),
+                         this, SLOT(onResultsChanged()));
     }
 }
 
@@ -130,20 +133,26 @@ void AbstractSpliceView::onDesignSpaceRemoved(const int)
 
 /******************************************************************************
  ******************************************************************************/
-void AbstractSpliceView::onAppliedLoadChanged()
-{
-}
-
-void AbstractSpliceView::onResultsChanged()
-{
-}
-
-/******************************************************************************
- ******************************************************************************/
 void AbstractSpliceView::onSelectionFastenerChanged()
 {
 }
 
 void AbstractSpliceView::onSelectionDesignSpaceChanged()
+{
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void AbstractSpliceView::onAppliedLoadChanged()
+{
+}
+
+void AbstractSpliceView::onSolverParamsChanged()
+{
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void AbstractSpliceView::onResultsChanged()
 {
 }

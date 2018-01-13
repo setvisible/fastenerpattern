@@ -39,7 +39,7 @@
 /*! \brief Constructor.
  */
 SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent)
-  , m_params(SolverParameters::NoSolver)
+  , m_params(SolverParameters::RigidBodySolverWithIsoBearing)
   , m_solver(Q_NULLPTR)
   , m_splice(new Splice(this))
 {
@@ -369,6 +369,8 @@ void SpliceCalculator::setSolverParameters(SolverParameters params)
         break;
     }
     m_params = params;
+    emit solverParamsChanged();
+    emit changed();
     recalculate();
 }
 

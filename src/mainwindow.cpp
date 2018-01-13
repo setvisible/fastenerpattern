@@ -60,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->splitter->setStretchFactor(1,10);
 
 
+    /* [1] */
+    /* Connect the GUI to the Calculator. */
     ui->spliceToolBar->setModel(m_calculator);
     ui->spliceGraphicsWidget->setModel(m_calculator);
     ui->mainWidget->appliedLoadWidget()->setModel(m_calculator);
@@ -71,13 +73,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->mainWidget->fastenerWidget()->setModel(m_calculator);
     /// \todo ui->mainWidget->optimisationWidget()->setModel(m_calculator);
     ui->mainWidget->resultWidget()->setModel(m_calculator);
-
-    /* [1] */
-    /* Connect the GUI to the Calculator. */
-    QObject::connect(ui->mainWidget->solverWidget(), SIGNAL(paramsChanged(SolverParameters)),
-                     m_calculator, SLOT(setSolverParameters(SolverParameters)));
-
-    m_calculator->setSolverParameters(ui->mainWidget->solverWidget()->params());
+    ui->mainWidget->solverWidget()->setModel(m_calculator);
 
 
     /* [2] */
