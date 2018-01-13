@@ -69,12 +69,17 @@ Tensor AppliedLoadWidget::appliedLoad() const
 
 void AppliedLoadWidget::setAppliedLoad(const Tensor &appliedLoad)
 {
-    bool blocked = this->signalsBlocked();
-    this->blockSignals(true);
+    bool fx_blocked = ui->fx->blockSignals(true);
+    bool fy_blocked = ui->fy->blockSignals(true);
+    bool tz_blocked = ui->tz->blockSignals(true);
+
     ui->fx->setValue( appliedLoad.force_x.value() );
     ui->fy->setValue( appliedLoad.force_y.value() );
     ui->tz->setValue( appliedLoad.torque_z.value() );
-    this->blockSignals(blocked);
+
+    ui->fx->blockSignals(fx_blocked);
+    ui->fy->blockSignals(fy_blocked);
+    ui->tz->blockSignals(tz_blocked);
 
     model()->setAppliedLoad(appliedLoad);
 }

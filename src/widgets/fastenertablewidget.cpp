@@ -174,7 +174,10 @@ void FastenerTableWidget::updateSelection()
     Q_ASSERT(!m_tableTimer->isActive());
     m_selectionTimer->stop();
 
-    bool blocked = ui->tableWidget->blockSignals(true);
+    bool blocked1 = ui->tableWidget->blockSignals(true);
+    bool blocked2 = m_selectionTimer->blockSignals(true);
+    bool blocked3 = m_tableTimer->blockSignals(true);
+
     QSet<int> set = model()->selectedFastenerIndexes();
     int row = ui->tableWidget->rowCount();
     while (row>0) {
@@ -184,5 +187,8 @@ void FastenerTableWidget::updateSelection()
             ui->tableWidget->item(row, col)->setSelected( selected );
         }
     }
-    ui->tableWidget->blockSignals(blocked);
+
+    ui->tableWidget->blockSignals(blocked1);
+    m_selectionTimer->blockSignals(blocked2);
+    m_tableTimer->blockSignals(blocked3);
 }

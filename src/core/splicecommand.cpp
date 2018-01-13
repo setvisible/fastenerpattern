@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2017 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,32 +14,10 @@
  * License along with this program; If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DIALOGS_PROPERTIES_DIALOG_H
-#define DIALOGS_PROPERTIES_DIALOG_H
+#include "splicecommand.h"
 
-#include <QtWidgets/QDialog>
+/*! \class SpliceCommand
+ *  \brief The class SpliceCalculator is the main manager for a splice document.
+ *
+ */
 
-class Calculator;
-
-namespace Ui {
-class PropertiesDialog;
-}
-
-class PropertiesDialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit PropertiesDialog(Calculator *calculator, QWidget *parent = 0);
-    ~PropertiesDialog();
-
-public Q_SLOTS:
-    virtual void accept()Q_DECL_OVERRIDE;
-
-private:
-    Ui::PropertiesDialog *ui;
-    Calculator *m_calculator;
-
-};
-
-#endif // DIALOGS_PROPERTIES_DIALOG_H

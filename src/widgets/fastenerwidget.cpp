@@ -144,8 +144,14 @@ Fastener FastenerWidget::fastener() const
 
 void FastenerWidget::setFastener(const Fastener &fastener)
 {
-    bool blocked = this->signalsBlocked();
-    this->blockSignals(true);
+    bool blocked_nameEdit  = ui->nameEdit->blockSignals(true);
+    bool blocked_positionX = ui->positionX->blockSignals(true);
+    bool blocked_positionY = ui->positionY->blockSignals(true);
+    bool blocked_thickness = ui->thickness->blockSignals(true);
+    bool blocked_diameter  = ui->diameter->blockSignals(true);
+    bool blocked_dof_X     = ui->dof_X->blockSignals(true);
+    bool blocked_dof_Y     = ui->dof_Y->blockSignals(true);
+
     ui->nameEdit->setText( fastener.name );
     ui->positionX->setValue( fastener.positionX.value() *1000); // mm !
     ui->positionY->setValue( fastener.positionY.value() *1000); // mm !
@@ -153,7 +159,14 @@ void FastenerWidget::setFastener(const Fastener &fastener)
     ui->diameter->setValue(  fastener.diameter.value() *1000);  // mm !
     ui->dof_X->setChecked( Fastener::DOFtoBool( fastener.DoF_X ));
     ui->dof_Y->setChecked( Fastener::DOFtoBool( fastener.DoF_Y ));
-    this->blockSignals(blocked);
+
+    ui->nameEdit->blockSignals(blocked_nameEdit);
+    ui->positionX->blockSignals(blocked_positionX);
+    ui->positionY->blockSignals(blocked_positionY);
+    ui->thickness->blockSignals(blocked_thickness);
+    ui->diameter->blockSignals(blocked_diameter);
+    ui->dof_X->blockSignals(blocked_dof_X);
+    ui->dof_Y->blockSignals(blocked_dof_Y);
 
     model()->setFastener(m_currentIndex, fastener);
 }

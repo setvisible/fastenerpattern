@@ -19,7 +19,7 @@
 
 #include "about.h"
 #include "version.h"
-#include <Core/SpliceCalculator>
+#include <Core/Calculator>
 #include <Dialogs/PropertiesDialog>
 #include <Widgets/AppliedLoadWidget>
 #include <Widgets/DesignObjectiveWidget>
@@ -44,11 +44,14 @@
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QUndoStack>
+#include <QtWidgets/QUndoView>
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
   , ui(new Ui::MainWindow)
-  , m_calculator(new SpliceCalculator(this))
+  , m_calculator(new Calculator(this))
+  , m_undoRedoPanel(Q_NULLPTR)
   , m_dirty(false)
   , m_physicalFile(false)
 {
@@ -71,15 +74,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     /* [1] */
     /* Connect the GUI to the Calculator. */
-    QObject::connect(ui->action_Add, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(fastenerAdd()));
-    QObject::connect(ui->action_Duplicate, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(fastenerDuplicate()));
-    QObject::connect(ui->action_Remove, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(fastenerRemove()));
-    QObject::connect(ui->action_SelectAll, SIGNAL(triggered(bool)),
-                     ui->spliceToolBar, SLOT(fastenerSelectAll()));
-
     QObject::connect(ui->mainWidget->solverWidget(), SIGNAL(paramsChanged(SolverParameters)),
                      m_calculator, SLOT(setSolverParameters(SolverParameters)));
 
@@ -127,10 +121,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QObject::connect(ui->spliceToolBar, SIGNAL(distanceVisibilityChanged(bool)),
                      ui->spliceGraphicsWidget, SLOT(setDistanceVisible(bool)));
 
-
-    /* For the OptimisationWidget, the connections are different... */
-    /// \todo reimplement OptimisationWidget
-    ui->mainWidget->optimisationWidget()->setSpliceCalculator(m_calculator);
 
     createActions();
     createMenus();
@@ -223,6 +213,21 @@ void MainWindow::showFileProperties()
 {
     PropertiesDialog dialog(m_calculator, this);
     dialog.exec();
+}
+
+/******************************************************************************
+ ******************************************************************************/
+void MainWindow::showUndoRedoPanel(bool toggled)
+{
+    Q_ASSERT(m_calculator->undoStack());
+    if (!m_undoRedoPanel) {
+        m_undoRedoPanel = new QUndoView(m_calculator->undoStack());
+        Qt::WindowFlags flags = Qt::Tool | Qt::WindowStaysOnTopHint;
+        flags ^= Qt::WindowCloseButtonHint;
+        m_undoRedoPanel->setWindowFlags(flags);
+        m_undoRedoPanel->setWindowTitle(QStringLiteral("Undo/Redo Panel"));
+    }
+    m_undoRedoPanel->setVisible(toggled);
 }
 
 /******************************************************************************
@@ -332,6 +337,37 @@ void MainWindow::createActions()
     ui->action_Exit->setStatusTip(tr("Quit FastenerPattern"));
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
 
+    {
+        QUndoStack *stack = m_calculator->undoStack();
+        Q_ASSERT(stack);
+
+        ui->action_Undo->setShortcuts(QKeySequence::Undo);
+        ui->action_Undo->setStatusTip(tr("Undo"));
+        connect(ui->action_Undo, SIGNAL(triggered()), stack, SLOT(undo()));
+        connect(stack, SIGNAL(canUndoChanged(bool)), ui->action_Undo, SLOT(setEnabled(bool)));
+        ui->action_Undo->setEnabled(false);
+
+        ui->action_Redo->setShortcuts(QKeySequence::Redo);
+        ui->action_Redo->setStatusTip(tr("Redo"));
+        connect(ui->action_Redo, SIGNAL(triggered()), stack, SLOT(redo()));
+        connect(stack, SIGNAL(canRedoChanged(bool)), ui->action_Redo, SLOT(setEnabled(bool)));
+        ui->action_Redo->setEnabled(false);
+
+        ui->action_ShowUndoRedoPanel->setStatusTip(tr("Show Undo/Redo Panel"));
+        ui->action_ShowUndoRedoPanel->setCheckable(true);
+        ui->action_ShowUndoRedoPanel->setChecked(false);
+        connect(ui->action_ShowUndoRedoPanel, SIGNAL(toggled(bool)), this, SLOT(showUndoRedoPanel(bool)));
+
+    }
+
+    connect(ui->action_AddFastener, SIGNAL(triggered(bool)), ui->spliceToolBar, SLOT(fastenerAdd()));
+    connect(ui->action_Duplicate, SIGNAL(triggered(bool)), ui->spliceToolBar, SLOT(fastenerDuplicate()));
+    connect(ui->action_Remove, SIGNAL(triggered(bool)), ui->spliceToolBar, SLOT(fastenerRemove()));
+    connect(ui->action_SelectAll, SIGNAL(triggered(bool)), ui->spliceToolBar, SLOT(fastenerSelectAll()));
+    connect(ui->action_AddDesignSpace, SIGNAL(triggered(bool)), ui->spliceToolBar, SLOT(designSpaceAdd()));
+    connect(ui->action_RemoveDesignSpace, SIGNAL(triggered(bool)), ui->spliceToolBar, SLOT(designSpaceRemove()));
+
+
     ui->action_About->setShortcuts(QKeySequence::HelpContents);
     ui->action_About->setStatusTip(tr("About FastenerPattern"));
     connect(ui->action_About, SIGNAL(triggered()), this, SLOT(about()));
@@ -419,21 +455,29 @@ bool MainWindow::loadFile(const QString &path)
  ******************************************************************************/
 void MainWindow::on_action_4BoltJoint_triggered()
 {
-    loadFile(":/examples/4BoltJoint.splice");
+    if (maybeSave()) {
+        loadFile(":/examples/4BoltJoint.splice");
+    }
 }
 
 void MainWindow::on_action_PatternJoint_triggered()
 {
-    loadFile(":/examples/PatternJoint.splice");
+    if (maybeSave()) {
+        loadFile(":/examples/PatternJoint.splice");
+    }
 }
 
 void MainWindow::on_action_RandomPattern_triggered()
 {
-    loadFile(":/examples/RandomJoint.splice");
+    if (maybeSave()) {
+        loadFile(":/examples/RandomJoint.splice");
+    }
 }
 
 void MainWindow::on_action_Optimize4Bolt_triggered()
 {
-    loadFile(":/examples/Optimize_4BoltJoint.splice");
-    ui->mainWidget->setCurrentIndex(3);
+    if (maybeSave()) {
+        loadFile(":/examples/Optimize_4BoltJoint.splice");
+        ui->mainWidget->setCurrentIndex(3);
+    }
 }

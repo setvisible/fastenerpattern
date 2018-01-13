@@ -17,9 +17,9 @@
 #include "propertiesdialog.h"
 #include "ui_propertiesdialog.h"
 
-#include <Core/SpliceCalculator>
+#include <Core/Calculator>
 
-PropertiesDialog::PropertiesDialog(SpliceCalculator *calculator, QWidget *parent) : QDialog(parent)
+PropertiesDialog::PropertiesDialog(Calculator *calculator, QWidget *parent) : QDialog(parent)
   , ui(new Ui::PropertiesDialog)
   , m_calculator(calculator)
 {

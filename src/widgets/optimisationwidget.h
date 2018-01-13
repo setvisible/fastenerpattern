@@ -24,7 +24,7 @@
 #include <Core/Optimizer/OptimisationSolver>
 
 class Splice;
-class SpliceCalculator;
+class AbstractSpliceModel;
 class OptimisationSolver;
 
 namespace Ui {
@@ -40,8 +40,8 @@ public:
     explicit OptimisationWidget(QWidget *parent = Q_NULLPTR);
     virtual ~OptimisationWidget();
 
-    SpliceCalculator *spliceCalculator() const;
-    void setSpliceCalculator(SpliceCalculator *calculator);
+    AbstractSpliceModel *model() const;
+    void setModel(AbstractSpliceModel *calculator);
 
 private Q_SLOTS:
     void onControllerStarted();
@@ -60,7 +60,7 @@ private Q_SLOTS:
 private:
     Ui::OptimisationWidget *ui;
     Controller *m_controller;
-    SpliceCalculator *m_calculator;
+    AbstractSpliceModel *m_calculator;
 
     void log(int type, qint64 timestamp, const QString &message);
 };
