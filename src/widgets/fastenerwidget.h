@@ -31,16 +31,12 @@ class FastenerWidget : public AbstractSpliceView
 {
     Q_OBJECT
     Q_PROPERTY(int decimals READ decimals WRITE setDecimals)
-    Q_PROPERTY(Fastener fastener READ fastener WRITE setFastener)
 public:
     explicit FastenerWidget(QWidget *parent = 0);
     ~FastenerWidget();
 
     int decimals() const;
     void setDecimals(int digits);
-
-    Fastener fastener() const;
-    void setFastener(const Fastener &fastener);
 
 public Q_SLOTS:
     virtual void onFastenerChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
@@ -58,6 +54,9 @@ private:
     int m_currentIndex;
     QTimer *m_timer;
     void updateInfoLater(int msec = 100);
+
+    Fastener fromGUI() const;
+    void toGUI(const Fastener &fastener);
 };
 
 #endif // WIDGETS_FASTENER_WIDGET_H

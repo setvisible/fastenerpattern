@@ -78,7 +78,7 @@ void FastenerWidget::onStateChanged(int)
 
 void FastenerWidget::onChanged()
 {
-    Fastener fastener = this->fastener();
+    Fastener fastener = fromGUI();
     model()->setFastener(m_currentIndex, fastener);
 }
 
@@ -96,15 +96,15 @@ void FastenerWidget::onSelectionFastenerChanged()
         QSetIterator<int> it(set);
         m_currentIndex = it.next();
         Fastener fastener = model()->fastenerAt(m_currentIndex);
-        this->setFastener(fastener);
+        toGUI(fastener);
         ui->groupBox->setEnabled(true);
     } else {
         if (ui->groupBox->isEnabled()) {
             ui->groupBox->setEnabled(false);
             m_currentIndex = -1;
             Fastener dummyfastener;
-            dummyfastener.name = QLatin1String("<Select a fastener>");
-            this->setFastener(dummyfastener);
+            dummyfastener.name = tr("<Select a fastener>");
+            toGUI(dummyfastener);
         }
     }
 }
@@ -123,13 +123,13 @@ void FastenerWidget::updateInfo()
 
     if (m_currentIndex >= 0 && m_currentIndex < model()->fastenerCount()) {
         Fastener fastener = model()->fastenerAt(m_currentIndex);
-        this->setFastener(fastener);
+        toGUI(fastener);
     }
 }
 
 /******************************************************************************
  ******************************************************************************/
-Fastener FastenerWidget::fastener() const
+Fastener FastenerWidget::fromGUI() const
 {
     Fastener fastener;
     fastener.name = ui->nameEdit->text();
@@ -142,7 +142,7 @@ Fastener FastenerWidget::fastener() const
     return fastener;
 }
 
-void FastenerWidget::setFastener(const Fastener &fastener)
+void FastenerWidget::toGUI(const Fastener &fastener)
 {
     bool blocked_nameEdit  = ui->nameEdit->blockSignals(true);
     bool blocked_positionX = ui->positionX->blockSignals(true);
@@ -167,6 +167,4 @@ void FastenerWidget::setFastener(const Fastener &fastener)
     ui->diameter->blockSignals(blocked_diameter);
     ui->dof_X->blockSignals(blocked_dof_X);
     ui->dof_Y->blockSignals(blocked_dof_Y);
-
-    model()->setFastener(m_currentIndex, fastener);
 }
