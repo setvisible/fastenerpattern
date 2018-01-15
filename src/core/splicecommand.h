@@ -107,7 +107,7 @@ class SetDescription : public QUndoCommand
 public:
     SetDescription(Calculator *calc, const QString &description, QUndoCommand *parent = Q_NULLPTR)
         : QUndoCommand(parent), m_calc(calc), m_description(description), m_previous(m_calc->description())
-    { this->setText("Change Author"); }
+    { this->setText("Change Description"); }
     virtual void undo() { m_calc->_q_setDescription(m_previous); }
     virtual void redo() { m_calc->_q_setDescription(m_description); }
     virtual int id() const { return C_COMMAND_ID_SET_DESCRIPTION; }
