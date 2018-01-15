@@ -40,10 +40,18 @@ PropertiesDialog::~PropertiesDialog()
 void PropertiesDialog::accept()
 {
     Q_ASSERT(m_calculator);
-    m_calculator->setTitle(ui->titleLineEdit->text());
-    m_calculator->setAuthor(ui->authorLineEdit->text());
-    m_calculator->setDate(ui->dateLineEdit->text());
-    m_calculator->setDescription(ui->descriptionTextEdit->toPlainText());
+    if (m_calculator->title() != ui->titleLineEdit->text()) {
+        m_calculator->setTitle(ui->titleLineEdit->text());
+    }
+    if (m_calculator->author() != ui->authorLineEdit->text()) {
+        m_calculator->setAuthor(ui->authorLineEdit->text());
+    }
+    if (m_calculator->date() != ui->dateLineEdit->text()) {
+        m_calculator->setDate(ui->dateLineEdit->text());
+    }
+    if (m_calculator->description() != ui->descriptionTextEdit->toPlainText()) {
+        m_calculator->setDescription(ui->descriptionTextEdit->toPlainText());
+    }
 
     QDialog::accept();
 }

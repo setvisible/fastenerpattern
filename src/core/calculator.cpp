@@ -50,30 +50,22 @@ void Calculator::clear()
  ******************************************************************************/
 void Calculator::setTitle(const QString &title)
 {
-    if (SpliceCalculator::title() != title) {
-        m_undoStack->push(new SpliceCommand::SetTitle(this, title));
-    }
+    m_undoStack->push(new SpliceCommand::SetTitle(this, title));
 }
 
 void Calculator::setAuthor(const QString &author)
 {
-    if (SpliceCalculator::author() != author) {
-        m_undoStack->push(new SpliceCommand::SetAuthor(this, author));
-    }
+    m_undoStack->push(new SpliceCommand::SetAuthor(this, author));
 }
 
 void Calculator::setDate(const QString &date)
 {
-    if (SpliceCalculator::date() != date) {
-        m_undoStack->push(new SpliceCommand::SetDate(this, date));
-    }
+    m_undoStack->push(new SpliceCommand::SetDate(this, date));
 }
 
 void Calculator::setDescription(const QString &description)
 {
-    if (SpliceCalculator::description() != description) {
-        m_undoStack->push(new SpliceCommand::SetDescription(this, description));
-    }
+    m_undoStack->push(new SpliceCommand::SetDescription(this, description));
 }
 
 // -----------------------------------------------------------------------------
