@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,26 +28,24 @@ class AppliedLoadWidget;
 class AppliedLoadWidget : public AbstractSpliceView
 {
     Q_OBJECT
-    Q_PROPERTY(int decimals READ decimals WRITE setDecimals)
-    Q_PROPERTY(Tensor appliedLoad READ appliedLoad WRITE setAppliedLoad)
 public:
-    explicit AppliedLoadWidget(QWidget *parent = 0);
+    explicit AppliedLoadWidget(QWidget *parent = Q_NULLPTR);
     ~AppliedLoadWidget();
 
     int decimals() const;
     void setDecimals(int digits);
 
-    Tensor appliedLoad() const;
-    void setAppliedLoad(const Tensor &appliedLoad);
-
 public Q_SLOTS:
     virtual void onAppliedLoadChanged() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
-    void onValueChanged(double);
+    void onValueChanged(double value);
 
 private:
     Ui::AppliedLoadWidget *ui;
+
+    Tensor fromGUI() const;
+    void toGUI(const Tensor &appliedLoad);
 };
 
 #endif // WIDGETS_APPLIED_LOAD_WIDGET_H

@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,17 +48,17 @@ void AppliedLoadWidget::setDecimals(int prec)
 
 void AppliedLoadWidget::onValueChanged(double /*value*/)
 {
-    Tensor lc = this->appliedLoad();
-    model()->setAppliedLoad(lc);
+    Tensor appliedLoad = this->fromGUI();
+    model()->setAppliedLoad(appliedLoad);
 }
 
 void AppliedLoadWidget::onAppliedLoadChanged()
 {
-    Tensor lc = model()->appliedLoad();
-    this->setAppliedLoad( lc );
+    Tensor appliedLoad = model()->appliedLoad();
+    this->toGUI(appliedLoad);
 }
 
-Tensor AppliedLoadWidget::appliedLoad() const
+Tensor AppliedLoadWidget::fromGUI() const
 {
     Tensor load;
     load.force_x  = ui->fx->value() *N;
@@ -67,7 +67,7 @@ Tensor AppliedLoadWidget::appliedLoad() const
     return load;
 }
 
-void AppliedLoadWidget::setAppliedLoad(const Tensor &appliedLoad)
+void AppliedLoadWidget::toGUI(const Tensor &appliedLoad)
 {
     bool fx_blocked = ui->fx->blockSignals(true);
     bool fy_blocked = ui->fy->blockSignals(true);
