@@ -41,7 +41,7 @@
 SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent)
   , m_params(SolverParameters::RigidBodySolverWithIsoBearing)
   , m_solver(Q_NULLPTR)
-  , m_splice(new Splice(this))
+  , m_splice(QSharedPointer<Splice>(new Splice))
 {
 }
 
@@ -399,7 +399,7 @@ void SpliceCalculator::recalculate()
     /// \todo Use worker thread here.
     /// \todo see  Mandelbrot Example  or  Blocking Fortune Client Example
     if (m_solver && m_splice) {
-        m_results = m_solver->calculate( m_splice );
+        m_results = m_solver->calculate( m_splice.data() );
     } else {
         m_results.clear();
     }

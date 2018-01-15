@@ -72,8 +72,8 @@ private:
 Controller::Controller(QObject *parent) : QObject(parent)
   , m_optimizer(new OptimisationSolver(this))
   , m_solver(Q_NULLPTR)
-  , m_input(Q_NULLPTR)
-  , m_output(new Splice(this))
+  , m_input(QSharedPointer<Splice>(new Splice))
+  , m_output(QSharedPointer<Splice>(new Splice))
   , m_iteration(0)
   , m_iterationCount(10000)
 {
@@ -98,21 +98,6 @@ Controller::~Controller()
 {
     /// \todo wait for the remaining tasks to finished ?
     waitForFinishing();
-
-    if (m_output)
-        delete m_output;
-}
-
-/******************************************************************************
- ******************************************************************************/
-Splice *Controller::input() const
-{
-    return m_input;
-}
-
-void Controller::setInput(Splice *splice)
-{
-    m_input = splice;
 }
 
 /******************************************************************************
@@ -127,13 +112,20 @@ void Controller::setSolver(ISolver *solver)
     m_solver = solver;
 }
 
-/******************************************************************************
- ******************************************************************************/
-Splice *Controller::output() const
+QSharedPointer<Splice> Controller::input() const
+{
+    return m_input;
+}
+
+void Controller::setInput(const QSharedPointer<Splice> &splice)
+{
+    m_input = splice;
+}
+
+QSharedPointer<Splice> Controller::output() const
 {
     return m_output;
 }
-
 
 /******************************************************************************
  ******************************************************************************/
@@ -224,8 +216,8 @@ void Controller::start()
     \*********************************************************************/
     Q_ASSERT(m_optimizer);
     Q_ASSERT(m_solver);
-    Q_ASSERT(m_input);
-    Q_ASSERT(m_output);
+    Q_ASSERT(!m_input.isNull());
+    Q_ASSERT(!m_output.isNull());
 
     emit started();
     emit progressed(0);
@@ -237,8 +229,8 @@ void Controller::start()
     m_optimizer->setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
     m_optimizer->setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
     m_optimizer->setRandomIterations( 1 );
-    m_optimizer->setInput( m_input );
-    m_optimizer->setOutput( m_output );
+    m_optimizer->setInput( m_input.data() );
+    m_optimizer->setOutput( m_output.data() );
 
     m_iteration = m_iterationCount;
 

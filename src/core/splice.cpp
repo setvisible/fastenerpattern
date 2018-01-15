@@ -34,8 +34,8 @@
  * Use read() and write() to serialize to JSON format.
  */
 
-Splice::Splice(QObject *parent) : QObject(parent)
-  , m_title(QString())
+Splice::Splice()
+  : m_title(QString())
   , m_author(QString())
   , m_date(QString())
   , m_description(QString())
@@ -262,7 +262,7 @@ void Splice::addDesignSpace(const QVector<DesignSpace> &designSpaces)
 
 void Splice::setDesignSpaceAt(const int index, const DesignSpace &designSpace)
 {
-    m_designSpaces[index] = designSpace;
+    m_designSpaces[index] = designSpace; // replace() ?
 }
 
 void Splice::removeDesignSpaceAt(const int index)

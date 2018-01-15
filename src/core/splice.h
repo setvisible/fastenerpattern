@@ -21,18 +21,16 @@
 #include <Core/Fastener>
 #include <Core/Tensor>
 
-#include <QtCore/QObject>
-
 QT_BEGIN_NAMESPACE
 class QDebug;
 class QJsonObject;
 class QString;
 QT_END_NAMESPACE
 
-class Splice : public QObject
+class Splice
 {
 public:
-    explicit Splice(QObject *parent = Q_NULLPTR);
+    explicit Splice();
 
     /// \todo copy constructor to be added
     /// Splice(const Splice& str);

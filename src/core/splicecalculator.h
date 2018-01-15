@@ -20,6 +20,7 @@
 #include <Core/AbstractSpliceModel>
 
 #include <QtCore/QSet>
+#include <QtCore/QSharedPointer>
 
 QT_BEGIN_NAMESPACE
 class QDebug;
@@ -66,7 +67,6 @@ public:
     virtual QSet<int> selectedFastenerIndexes() const Q_DECL_OVERRIDE;
     virtual QSet<int> selectedDesignSpaceIndexes() const Q_DECL_OVERRIDE;
 
-
     virtual ISolver* solver() const Q_DECL_OVERRIDE { return m_solver; }
 
 Q_SIGNALS:
@@ -97,7 +97,7 @@ public Q_SLOTS:
 private:
     SolverParameters m_params;
     ISolver *m_solver;
-    Splice* m_splice;
+    QSharedPointer<Splice> m_splice;
     QSet<int> m_selectedFastenerIndexes;
     QSet<int> m_selectedDesignSpaceIndexes;
     QList<Tensor> m_results;
