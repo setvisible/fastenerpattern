@@ -111,9 +111,7 @@ void Calculator::removeDesignSpace(const int index)
 // -----------------------------------------------------------------------------
 void Calculator::setAppliedLoad(const Tensor &appliedLoad)
 {
-    if (SpliceCalculator::appliedLoad() != appliedLoad) {
-        m_undoStack->push(new SpliceCommand::SetAppliedLoad(this, appliedLoad));
-    }
+    m_undoStack->push(new SpliceCommand::SetAppliedLoad(this, appliedLoad));
 }
 
 void Calculator::setSolverParameters(SolverParameters params)

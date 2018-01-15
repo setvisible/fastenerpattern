@@ -80,7 +80,5 @@ void AppliedLoadWidget::toGUI(const Tensor &appliedLoad)
     ui->fx->blockSignals(fx_blocked);
     ui->fy->blockSignals(fy_blocked);
     ui->tz->blockSignals(tz_blocked);
-
-    model()->setAppliedLoad(appliedLoad);
 }
 
