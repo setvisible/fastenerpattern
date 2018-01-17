@@ -39,7 +39,7 @@
 /*! \brief Constructor.
  */
 SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent)
-  , m_params(SolverParameters::RigidBodySolverWithIsoBearing)
+  , m_params(SolverParameters::NoSolver)
   , m_solver(Q_NULLPTR)
   , m_splice(QSharedPointer<Splice>(new Splice))
 {
@@ -70,6 +70,7 @@ void SpliceCalculator::clear()
     setDesignSpaceSelection(emptySet);
 
     setAppliedLoad(Tensor(0*N, 0*N, 0*N_m));
+    setSolverParameters(SolverParameters::RigidBodySolverWithIsoBearing);
 
     for (int i = fastenerCount()-1; i >=0; --i) {
         removeFastener(i);
@@ -77,6 +78,12 @@ void SpliceCalculator::clear()
     for (int i = designSpaceCount()-1; i >=0; --i) {
         removeDesignSpace(i);
     }
+
+    emit selectionFastenerChanged();
+    emit selectionDesignSpaceChanged();
+    emit appliedLoadChanged();
+    emit solverParamsChanged();
+    recalculate();
 }
 
 /******************************************************************************

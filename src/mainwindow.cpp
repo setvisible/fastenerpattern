@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->mainWidget->designVariableWidget()->setModel(m_calculator);
     ui->mainWidget->fastenerTableWidget()->setModel(m_calculator);
     ui->mainWidget->fastenerWidget()->setModel(m_calculator);
-    /// \todo ui->mainWidget->optimisationWidget()->setModel(m_calculator);
+    ui->mainWidget->optimisationWidget()->setModel(m_calculator);
     ui->mainWidget->resultWidget()->setModel(m_calculator);
     ui->mainWidget->solverWidget()->setModel(m_calculator);
 
