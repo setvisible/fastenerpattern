@@ -27,15 +27,20 @@
 
 
 /*! \class OptimisationSolver
- * \brief The class OptimisationSolver runs a synchronous or asynchronous
- * optimisation search.
+ * \brief The class OptimisationSolver is in charge of global optimum search.
  *
- * \remark OptimisationSolver methods MUST be thread-safe (and then reentrant).
+ * The search can be done in the current thread in a synchronous manner
+ * with runSync(), or in an asynchronous manner with runAsync()
+ * though an(some) other thread(s).
+ *
+ * OptimisationSolver methods MUST be thread-safe (and then reentrant).
  * Indeed, OptimisationSolver::runAsync() and OptimisationSolver::runSync()
  * can be run by several threads, at the same time.
  *
- * That is, class members are protected by mutexes
+ * That is, class members of OptimisationSolver are protected by mutexes
  * (\a QMutex or \a QReadWriteLock).
+ *
+ * \sa Controller
  */
 OptimisationSolver::OptimisationSolver(QObject *parent) : QObject(parent)
   , m_solver(Q_NULLPTR)
@@ -50,7 +55,8 @@ OptimisationSolver::OptimisationSolver(QObject *parent) : QObject(parent)
 
 /*! \brief Destructor.
  * OptimisationSolver is not responsible for the destruction
- * of those objects. Thus their pointers are just nulled, not deleted.
+ * of its children returned by \a solver(), \a input() and \a output().
+ * Thus their pointers are just nulled, not deleted.
  */
 OptimisationSolver::~OptimisationSolver()
 {
@@ -86,6 +92,7 @@ void OptimisationSolver::setInput(Splice *input)
 /******************************************************************************
  ******************************************************************************/
 /*! \brief Set the pointer to the output splice object.
+ * It represents the best solution found after the computation.
  */
 Splice *OptimisationSolver::output() const
 {
@@ -111,12 +118,12 @@ void OptimisationSolver::setDesignObjective(OptimisationDesignObjective objectiv
 
 /******************************************************************************
  ******************************************************************************/
-OptimisationDesignConstraint OptimisationSolver::constraints() const
+OptimisationDesignConstraints OptimisationSolver::constraints() const
 {
     return m_constraints;
 }
 
-void OptimisationSolver::setDesignConstraints(OptimisationDesignConstraint constraints)
+void OptimisationSolver::setDesignConstraints(OptimisationDesignConstraints constraints)
 {
     m_constraints = constraints;
 }
@@ -222,6 +229,13 @@ bool OptimisationSolver::sanitarize()
 /******************************************************************************
  ******************************************************************************/
 /*! \brief Precompute some invariants.
+ *
+ * Invariants are values that are needed by the solver, but can be computed
+ * only once (precomputed), so moved outside the solving loop.
+ *
+ * The Invariants don't change during the computation (e.g. design spaces...).
+ *
+ * \sa postcompute()
  */
 void OptimisationSolver::precompute()
 {
@@ -247,17 +261,30 @@ void OptimisationSolver::precompute()
 
 /******************************************************************************
  ******************************************************************************/
+/*! \brief Precompute some invariants.
+ *
+ * Basically, it clears the invariants.
+ *
+ * \sa precompute()
+ */
 void OptimisationSolver::postcompute()
 {
     m_lock.lockForWrite();
-
     m_precomputedArea.clear();
-
     m_lock.unlock();
 }
 
 /******************************************************************************
  ******************************************************************************/
+/*! \brief Start the entire global optimum search.
+ *
+ * This is a blocking method (synchronous).
+ *
+ * The implementation of this method was mainly driven
+ * for synchronous unit tests. Prefer \a runAsync().
+ *
+ * \sa runAsync()
+ */
 void OptimisationSolver::runSync()
 {
     if (!sanitarize()) {
@@ -270,11 +297,22 @@ void OptimisationSolver::runSync()
 
 /******************************************************************************
  ******************************************************************************/
-/*! \brief Start the solution exploration.
+/*! \brief Start the global optimum search.
  *
- * \remark This is a blocking method.
+ * This is a blocking method (synchronous).
+ *
+ * This method does the same as \a runSync(),
+ * but \a precompute() must be called before this method,
+ * and \a postcompute() must be called after this method.
+ *
+ * Note that this method performs one unique optimisation loop.
+ * This loop is just a part of the entire optimisation.
+ * We should call this method more than thousand times to perform the entire optimisation.
+ *
  * Since it's a expensive task, it's strongly recommanded
  * to start this method from another thread, e.g. a QThread worker thread.
+ *
+ * \sa runSync()
  */
 void OptimisationSolver::runAsync()
 {
@@ -500,7 +538,7 @@ bool OptimisationSolver::randomizePosition(Splice *splice)
 
 
 
-        if (m_constraints == OptimisationDesignConstraint::MinPitchDistance_4Phi) {
+        if (m_constraints.testFlag(OptimisationDesignConstraint::MinPitchDistance_4Phi)) {
 
             /* Remove the area occuped by the fastener's pitch */
             QPolygonF pitchArea;

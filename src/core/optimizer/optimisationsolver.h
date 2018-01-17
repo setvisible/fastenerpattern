@@ -17,6 +17,7 @@
 #ifndef CORE_OPTIMISATION_SOLVER_H
 #define CORE_OPTIMISATION_SOLVER_H
 
+#include <QtCore/QFlags>
 #include <QtCore/QObject>
 #include <QtCore/QReadWriteLock>
 #include <QtGui/QPolygonF>
@@ -43,13 +44,12 @@ enum class OptimisationDesignObjective {
 };
 
 enum class OptimisationDesignConstraint {
-    NoConstraint           = 0x0000,
-    MinPitchDistance_4Phi  = 0x0001
+    NoConstraint,
+    MinPitchDistance_4Phi
 };
 
-/// \todo Q_DECLARE_FLAGS(OptimisationDesignConstraints, OptimisationDesignConstraint)
-/// \todo Q_DECLARE_OPERATORS_FOR_FLAGS(OptimisationDesignConstraints)
-
+Q_DECLARE_FLAGS(OptimisationDesignConstraints, OptimisationDesignConstraint)
+Q_DECLARE_OPERATORS_FOR_FLAGS(OptimisationDesignConstraints)
 
 class OptimisationSolver : public QObject
 {
@@ -73,9 +73,8 @@ public:
     OptimisationDesignObjective objective() const;
     void setDesignObjective(OptimisationDesignObjective objective);
 
-    /// \todo OptimisationDesignConstraint__*s*
-    OptimisationDesignConstraint constraints() const;
-    void setDesignConstraints(OptimisationDesignConstraint constraints);
+    OptimisationDesignConstraints constraints() const;
+    void setDesignConstraints(OptimisationDesignConstraints constraints);
 
     void runSync();
     void runAsync();
@@ -98,7 +97,7 @@ private:
     Splice *m_input;
     Splice *m_output;
     OptimisationDesignObjective m_objective;
-    OptimisationDesignConstraint m_constraints;
+    OptimisationDesignConstraints m_constraints;
     int m_randomIterations;
     int m_localIterations;
 

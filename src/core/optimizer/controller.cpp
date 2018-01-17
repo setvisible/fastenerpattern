@@ -56,16 +56,25 @@ private:
 
 /*! \class Controller
  * \brief The class Controller manages the optimisation from A to Z.
+ *
  * In particular, Controller manages the creation and destruction of the threads
  * during the computation, in order to balance the computation load
  * on multiple CPUs.
  *
- * Note that OptimisationSolver::runAsync() performs one unique optimisation loop.
+ * Controller delegates the calculation to OptimisationSolver.
+ *
+ *
+ * \section under-the-hood Under the hood
  *
  * Controller launches OptimisationSolver::runAsync() one after one,
  * and emits signals to be eventually catched by the GUI.
  *
- * \remark OptimisationSolver MUST be thread-safe (and then reentrant).
+ *
+ * \section tasks-and-threads Tasks and Threads
+ *
+ * Controller manages the creation of Task objects.
+ * Each Task is an independant part of the whole optimisation process.
+ * The Controller distributes the optimisation through all the CPUs.
  *
  * \sa OptimisationSolver
  */
@@ -77,8 +86,8 @@ Controller::Controller(QObject *parent) : QObject(parent)
   , m_iteration(0)
   , m_iterationCount(10000)
 {
-
-    /* When a task is completed, the controller starts a new task directly,
+    /*
+     * When a task is completed, the controller starts a new task directly,
      * without waiting for the end of the other running tasks.
      * It's possible to run a slot immediately in the Qt's events queue
      * with 'Qt::DirectConnection'.
