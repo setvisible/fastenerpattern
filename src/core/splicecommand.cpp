@@ -16,8 +16,13 @@
 
 #include "splicecommand.h"
 
-/*! \class SpliceCommand
- *  \brief The class SpliceCalculator is the main manager for a splice document.
+/*! \namespace SpliceCommand
+ *  \brief The namespace SpliceCommand contains Undo/Redo classes.
+ *
+ * The SpliceCommand contains classes that inherit from QUndoCommand.
+ *
+ * These Undo/Redo Command classes are aimed to overload all the setters of
+ * SpliceCalculator.
  *
  */
 
