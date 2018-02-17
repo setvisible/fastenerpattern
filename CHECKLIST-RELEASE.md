@@ -10,10 +10,15 @@
 
 ### Pre-Building
 
+ - Check local branches with `git branch` and remote branches with `git branch -r`
+ - Merge (without fast-forward) with `git merge --no-ff feature#33-something` (or rebase with `git rebase feature#33-something`)
+ - Delete merged branches with `git branch -d feature#46-old-branch`
  - Change numbers in `version`
  - List the changes with `git log --pretty=oneline` and added them to `CHANGELOG`
  - Make sure `CHANGELOG` has a proper date set
  - Commit (use **Git GUI**)
+ - Check unstaged modifications with `git status`
+ - Check tags with `git tag`
  - Tag the commit with a new version number: `git tag -a vXXX -m "FastenerPattern version XXX"` where XXX is the version
  - Push with `git push origin vXXX`
  - Verify with `git show vXXX`
