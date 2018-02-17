@@ -57,6 +57,9 @@ private Q_SLOTS:
     void setDirty();
     void setClean();
 
+    void setUndoText(const QString &undoText);
+    void setRedoText(const QString &redoText);
+
     void on_action_4BoltJoint_triggered();
     void on_action_PatternJoint_triggered();
     void on_action_RandomPattern_triggered();

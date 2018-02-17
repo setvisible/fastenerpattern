@@ -281,6 +281,22 @@ void MainWindow::setClean()
 
 /******************************************************************************
  ******************************************************************************/
+void MainWindow::setUndoText(const QString &undoText)
+{
+    QString text = tr("&Undo%0").arg(undoText.isEmpty() ? QString() : QString(": %0").arg(undoText));
+    ui->action_Undo->setText(text);
+    ui->action_Undo->setStatusTip(text.remove(QLatin1Char('&')));
+}
+
+void MainWindow::setRedoText(const QString &redoText)
+{
+    QString text = tr("&Redo%0").arg(redoText.isEmpty() ? QString() : QString(": %0").arg(redoText));
+    ui->action_Redo->setText(text);
+    ui->action_Redo->setStatusTip(text.remove(QLatin1Char('&')));
+}
+
+/******************************************************************************
+ ******************************************************************************/
 QString MainWindow::askSaveFileName(const QString &fileFilter, const QString &title)
 {
     QString suggestedPath;
@@ -343,12 +359,14 @@ void MainWindow::createActions()
         ui->action_Undo->setStatusTip(tr("Undo"));
         connect(ui->action_Undo, SIGNAL(triggered()), stack, SLOT(undo()));
         connect(stack, SIGNAL(canUndoChanged(bool)), ui->action_Undo, SLOT(setEnabled(bool)));
+        connect(stack, SIGNAL(undoTextChanged(QString)), this, SLOT(setUndoText(QString)));
         ui->action_Undo->setEnabled(false);
 
         ui->action_Redo->setShortcuts(QKeySequence::Redo);
         ui->action_Redo->setStatusTip(tr("Redo"));
         connect(ui->action_Redo, SIGNAL(triggered()), stack, SLOT(redo()));
         connect(stack, SIGNAL(canRedoChanged(bool)), ui->action_Redo, SLOT(setEnabled(bool)));
+        connect(stack, SIGNAL(redoTextChanged(QString)), this, SLOT(setRedoText(QString)));
         ui->action_Redo->setEnabled(false);
 
         ui->action_ShowUndoRedoPanel->setStatusTip(tr("Show Undo/Redo Panel"));

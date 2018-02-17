@@ -213,7 +213,7 @@
      <normaloff>:/icons/menu/bolt_add_24x24.png</normaloff>:/icons/menu/bolt_add_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Add Fastener</string>
+    <string>Add &amp;Fastener</string>
    </property>
    <property name="toolTip">
     <string>Add Fastener</string>
@@ -225,7 +225,7 @@
      <normaloff>:/icons/menu/bolt_delete_24x24.png</normaloff>:/icons/menu/bolt_delete_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Remove</string>
+    <string>&amp;Remove</string>
    </property>
   </action>
   <action name="action_SelectAll">
@@ -234,7 +234,7 @@
      <normaloff>:/icons/menu/bolt_select_all_24x24.png</normaloff>:/icons/menu/bolt_select_all_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Select All</string>
+    <string>Select &amp;All</string>
    </property>
   </action>
   <action name="action_Duplicate">
@@ -243,7 +243,7 @@
      <normaloff>:/icons/menu/bolt_duplicate_24x24.png</normaloff>:/icons/menu/bolt_duplicate_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Duplicate</string>
+    <string>&amp;Duplicate</string>
    </property>
   </action>
   <action name="action_Properties">
@@ -262,7 +262,7 @@
      <normaloff>:/icons/menu/edit_undo_24x24.png</normaloff>:/icons/menu/edit_undo_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Undo</string>
+    <string>&amp;Undo</string>
    </property>
   </action>
   <action name="action_Redo">
@@ -271,7 +271,7 @@
      <normaloff>:/icons/menu/edit_redo_24x24.png</normaloff>:/icons/menu/edit_redo_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Redo</string>
+    <string>&amp;Redo</string>
    </property>
   </action>
   <action name="action_AddDesignSpace">
@@ -280,7 +280,7 @@
      <normaloff>:/icons/menu/edit_design_space_add_24x24.png</normaloff>:/icons/menu/edit_design_space_add_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Add Design Space</string>
+    <string>Add &amp;Design Space</string>
    </property>
   </action>
   <action name="action_RemoveDesignSpace">
@@ -289,7 +289,7 @@
      <normaloff>:/icons/menu/edit_design_space_remove_24x24.png</normaloff>:/icons/menu/edit_design_space_remove_24x24.png</iconset>
    </property>
    <property name="text">
-    <string>Remove Design Space</string>
+    <string>Remove Design &amp;Space</string>
    </property>
   </action>
   <action name="action_ShowUndoRedoPanel">
