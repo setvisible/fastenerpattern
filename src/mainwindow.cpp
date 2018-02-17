@@ -39,13 +39,15 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-#include <QtCore/QDebug>
 #include <QtCore/QStandardPaths>
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QUndoView>
+#ifdef QT_DEBUG
+#  include <QtCore/QDebug>
+#endif
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
