@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,7 @@
 #include <Widgets/AbstractSpliceView>
 
 class QString;
+class QTimer;
 
 namespace Ui {
 class FastenerWidget;
@@ -30,16 +31,12 @@ class FastenerWidget : public AbstractSpliceView
 {
     Q_OBJECT
     Q_PROPERTY(int decimals READ decimals WRITE setDecimals)
-    Q_PROPERTY(Fastener fastener READ fastener WRITE setFastener)
 public:
     explicit FastenerWidget(QWidget *parent = 0);
     ~FastenerWidget();
 
     int decimals() const;
     void setDecimals(int digits);
-
-    Fastener fastener() const;
-    void setFastener(const Fastener &fastener);
 
 public Q_SLOTS:
     virtual void onFastenerChanged(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
@@ -50,10 +47,16 @@ private Q_SLOTS:
     void onValueChanged(double);
     void onStateChanged(int);
     void onChanged();
+    void updateInfo();
 
 private:
     Ui::FastenerWidget *ui;
     int m_currentIndex;
+    QTimer *m_timer;
+    void updateInfoLater(int msec = 100);
+
+    Fastener fromGUI() const;
+    void toGUI(const Fastener &fastener);
 };
 
 #endif // WIDGETS_FASTENER_WIDGET_H

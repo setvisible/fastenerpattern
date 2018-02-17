@@ -1,4 +1,4 @@
-/* - FastenerPattern - Copyright (C) 2016 Sebastien Vavassori
+/* - FastenerPattern - Copyright (C) 2016-2018 Sebastien Vavassori
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
 #ifndef WIDGETS_SOLVER_WIDGET_H
 #define WIDGETS_SOLVER_WIDGET_H
 
-#include <QtWidgets/QWidget>
+#include <Widgets/AbstractSpliceView>
 
 enum class SolverParameters;
 
@@ -25,30 +25,23 @@ namespace Ui {
 class SolverWidget;
 }
 
-class SolverWidget : public QWidget
+class SolverWidget : public AbstractSpliceView
 {
     Q_OBJECT
-    Q_PROPERTY(SolverParameters params READ params WRITE setParams NOTIFY paramsChanged)
 public:
     explicit SolverWidget(QWidget *parent = 0);
     ~SolverWidget();
 
-Q_SIGNALS:
-    void paramsChanged(SolverParameters params);
-
 public Q_SLOTS:
-    SolverParameters params() const;
-    void setParams(SolverParameters params);
+    virtual void onSolverParamsChanged() Q_DECL_OVERRIDE;
 
-protected Q_SLOTS:
+private Q_SLOTS:
     void onRadioToggled();
 
 private:
     Ui::SolverWidget *ui;
-    SolverParameters m_params;
-
-    void toGUI(SolverParameters params);
     SolverParameters fromGUI() const;
+    void toGUI(SolverParameters params);
 };
 
 #endif // WIDGETS_SOLVER_WIDGET_H

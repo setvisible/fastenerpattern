@@ -28,6 +28,7 @@
 class DesignSpace;
 class Fastener;
 class Tensor;
+class ISolver;
 enum class SolverParameters;
 
 class AbstractSpliceModel : public QObject
@@ -49,9 +50,11 @@ public:
     Q_INVOKABLE virtual QSet<int> selectedDesignSpaceIndexes() const = 0;
 
     Q_INVOKABLE virtual Tensor appliedLoad() const = 0;
-    Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
     Q_INVOKABLE virtual SolverParameters solverParameters() const = 0;
 
+    Q_INVOKABLE virtual Tensor resultAt(const int index) const = 0;
+
+    virtual ISolver* solver() const = 0;
 
 Q_SIGNALS:
 
@@ -68,58 +71,52 @@ Q_SIGNALS:
     void selectionDesignSpaceChanged();
 
     void appliedLoadChanged();
+    void solverParamsChanged();
+
     void resultsChanged();
 
 
 public Q_SLOTS:
 
     /* Public Setters */
-    Q_INVOKABLE virtual bool insertFastener(const int index, const Fastener &fastener) {
+    Q_INVOKABLE virtual void insertFastener(const int index, const Fastener &fastener) {
         Q_UNUSED(index);
         Q_UNUSED(fastener);
-        return false;
     }
 
-    Q_INVOKABLE virtual bool setFastener(const int index, const Fastener &fastener) {
+    Q_INVOKABLE virtual void setFastener(const int index, const Fastener &fastener) {
         Q_UNUSED(index);
         Q_UNUSED(fastener);
-        return false;
     }
 
-    Q_INVOKABLE virtual bool removeFastener(const int index) {
+    Q_INVOKABLE virtual void removeFastener(const int index) {
         Q_UNUSED(index);
-        return false;
     }
 
-    Q_INVOKABLE virtual bool insertDesignSpace(const int index, const DesignSpace &designSpace) {
+    Q_INVOKABLE virtual void insertDesignSpace(const int index, const DesignSpace &designSpace) {
         Q_UNUSED(index);
         Q_UNUSED(designSpace);
-        return false;
     }
 
-    Q_INVOKABLE virtual bool setDesignSpace(const int index, const DesignSpace &designSpace) {
+    Q_INVOKABLE virtual void setDesignSpace(const int index, const DesignSpace &designSpace) {
         Q_UNUSED(index);
         Q_UNUSED(designSpace);
-        return false;
     }
 
-    Q_INVOKABLE virtual bool removeDesignSpace(const int index) {
+    Q_INVOKABLE virtual void removeDesignSpace(const int index) {
         Q_UNUSED(index);
-        return false;
     }
 
-    Q_INVOKABLE virtual bool setAppliedLoad(const Tensor &loadcase) {
+    Q_INVOKABLE virtual void setFastenerSelection(const QSet<int> indexes);
+
+    Q_INVOKABLE virtual void setDesignSpaceSelection(const QSet<int> indexes);
+
+    Q_INVOKABLE virtual void setAppliedLoad(const Tensor &loadcase) {
         Q_UNUSED(loadcase);
-        return false;
     }
 
-    Q_INVOKABLE virtual bool setFastenerSelection(const QSet<int> indexes);
-
-    Q_INVOKABLE virtual bool setDesignSpaceSelection(const QSet<int> indexes);
-
-    Q_INVOKABLE virtual bool setSolverParameters(SolverParameters params) {
+    Q_INVOKABLE virtual void setSolverParameters(SolverParameters params) {
         Q_UNUSED(params);
-        return false;
     }
 
 };

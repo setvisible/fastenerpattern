@@ -73,9 +73,6 @@ SpliceGraphicsWidget::SpliceGraphicsWidget(QWidget *parent) : AbstractSpliceView
 
     /// \todo Auto resize instead ?
     m_backgroundWidget->scene()->setSceneRect(-1000, -1000, 2000, 2000);
-
-    /* No delay to ensure a quick GUI response for this widget. */
-    this->setUpdateDelay(0);
 }
 
 SpliceGraphicsWidget::~SpliceGraphicsWidget()
@@ -147,20 +144,16 @@ void SpliceGraphicsWidget::onDesignSpaceItemChanged()
 void SpliceGraphicsWidget::onFastenerInserted(const int index, const Fastener &fastener)
 {
     FastenerItem *item = new FastenerItem();
-    QObject::connect(item, SIGNAL(xChanged()), this, SLOT(onFastenerItemPositionChanged()));
-    QObject::connect(item, SIGNAL(yChanged()), this, SLOT(onFastenerItemPositionChanged()));
-
     m_backgroundWidget->scene()->addItem(item);
     m_fastenerItems.insert(index, item);
-
     item->setPositionInMeter(fastener.positionX.value(), fastener.positionY.value());
     item->setDiameterInMeter(fastener.diameter.value());
-
     item->setResultantVisible(m_resultantVisible);
     item->setComponentVisible(m_componentVisible);
     item->setTorqueVisible(m_torqueVisible);
     item->setLabelVisible(m_labelVisible);
-
+    QObject::connect(item, SIGNAL(xChanged()), this, SLOT(onFastenerItemPositionChanged()));
+    QObject::connect(item, SIGNAL(yChanged()), this, SLOT(onFastenerItemPositionChanged()));
     this->updateDistanceItemPositions();
 }
 
@@ -168,8 +161,10 @@ void SpliceGraphicsWidget::onFastenerChanged(const int index, const Fastener &fa
 {
     if (index >= 0 && index < m_fastenerItems.count()) {
         FastenerItem *item = m_fastenerItems[index];
+        bool blocked = item->blockSignals(true);
         item->setPositionInMeter(fastener.positionX.value(), fastener.positionY.value());
         item->setDiameterInMeter(fastener.diameter.value());
+        item->blockSignals(blocked);
     }
     this->updateDistanceItemPositions();
 }
@@ -196,16 +191,20 @@ void SpliceGraphicsWidget::onDesignSpaceInserted(const int index, const DesignSp
     m_backgroundWidget->scene()->addItem(item);
     m_designSpaceItems.insert(index, item);
 
+    bool blocked = item->blockSignals(true);
     item->setName(designSpace.name);
     item->setPolygonInMeter(designSpace.polygon);
+    item->blockSignals(blocked);
 }
 
 void SpliceGraphicsWidget::onDesignSpaceChanged(const int index, const DesignSpace &designSpace)
 {
     if (index >= 0 && index < m_designSpaceItems.count()) {
         DesignSpaceItem *item = m_designSpaceItems[index];
+        bool blocked = item->blockSignals(true);
         item->setName(designSpace.name);
         item->setPolygonInMeter(designSpace.polygon);
+        item->blockSignals(blocked);
     }
 }
 
@@ -242,18 +241,22 @@ void SpliceGraphicsWidget::onResultsChanged()
  ******************************************************************************/
 void SpliceGraphicsWidget::onSelectionFastenerChanged()
 {
+    bool blocked = m_backgroundWidget->scene()->blockSignals(true);
     QSet<int> set = model()->selectedFastenerIndexes();
     for( int i = 0; i < m_fastenerItems.count(); ++i) {
         m_fastenerItems.at(i)->setSelected(set.contains(i));
     }
+    m_backgroundWidget->scene()->blockSignals(blocked);
 }
 
 void SpliceGraphicsWidget::onSelectionDesignSpaceChanged()
 {
+    bool blocked = m_backgroundWidget->scene()->blockSignals(true);
     QSet<int> set = model()->selectedDesignSpaceIndexes();
     for( int i = 0; i < m_designSpaceItems.count(); ++i) {
         m_designSpaceItems.at(i)->setSelected(set.contains(i));
     }
+    m_backgroundWidget->scene()->blockSignals(blocked);
 }
 
 /******************************************************************************

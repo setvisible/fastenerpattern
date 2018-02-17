@@ -19,6 +19,8 @@
 
 #include <Widgets/AbstractSpliceView>
 
+class QTimer;
+
 class Fastener;
 
 namespace Ui {
@@ -40,12 +42,16 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void onItemSelectionChanged();
+    void updateTable();
+    void updateSelection();
 
 private:
     Ui::DesignVariableWidget *ui;
+    QTimer *m_tableTimer;
+    QTimer *m_selectionTimer;
     void resizeColumnToContents();
-    void updateTable();
-
+    void updateTableLater(int msec = 100);
+    void updateSelectionLater(int msec = 100);
 };
 
 #endif // WIDGETS_DESIGN_VARIABLE_WIDGET_H

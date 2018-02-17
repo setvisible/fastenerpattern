@@ -19,8 +19,10 @@
 
 #include <QtWidgets/QWidget>
 
+#define C_SHORT_DELAY_MSEC 10
+#define C_LONG_DELAY_MSEC 100
+
 class AbstractSpliceModel;
-class DelayTimer;
 class DesignSpace;
 class Fastener;
 
@@ -43,19 +45,16 @@ public Q_SLOTS:
     virtual void onDesignSpaceChanged(const int index, const DesignSpace &designSpace);
     virtual void onDesignSpaceRemoved(const int index);
 
-    virtual void onAppliedLoadChanged();
-    virtual void onResultsChanged();
-
     virtual void onSelectionFastenerChanged();
     virtual void onSelectionDesignSpaceChanged();
 
-protected:
-    int updateDelay() const;
-    void setUpdateDelay(const int msec);
+    virtual void onAppliedLoadChanged();
+    virtual void onSolverParamsChanged();
+
+    virtual void onResultsChanged();
 
 private:
     AbstractSpliceModel *m_model;
-    DelayTimer *m_delayTimer;
 };
 
 #endif // WIDGETS_ABSTRACT_SPLICE_VIEW_H

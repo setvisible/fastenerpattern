@@ -6,8 +6,8 @@
 # For conditions of distribution and use, see the disclaimer
 # and license in LICENSE
 
-cmake_minimum_required(VERSION 3.0)
-#cmake_policy(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
+#cmake_policy(VERSION 2.8)
 
 project(FastenerPattern)
 
@@ -100,7 +100,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/core/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/editor/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/math/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/utils/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/widgets/CMakeLists.txt)
 
 
@@ -215,6 +214,9 @@ endif(MSVC OR MSYS OR MINGW)
 ##############################################################################
 # Deploying executable
 ##############################################################################
-install(TARGETS ${FastenerPattern_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS ${FastenerPattern_NAME}
+        RUNTIME
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+    )
 
 

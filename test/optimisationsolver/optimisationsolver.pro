@@ -12,9 +12,30 @@ SOURCES     += $$PWD/dummysolver.cpp
 INCLUDEPATH += ../../include
 
 # Dependancies:
-include($$PWD/../../src/core/core.pri)
+HEADERS += $$PWD/../../src/core/optimizer/controller.h
+SOURCES += $$PWD/../../src/core/optimizer/controller.cpp
 
-HEADERS     += $$PWD/../../src/math/utils.h
+HEADERS += $$PWD/../../src/core/optimizer/maxminload.h
+SOURCES += $$PWD/../../src/core/optimizer/maxminload.cpp
+
+HEADERS += $$PWD/../../src/core/optimizer/optimisationsolver.h
+SOURCES += $$PWD/../../src/core/optimizer/optimisationsolver.cpp
+
+HEADERS += $$PWD/../../src/core/designspace.h
+SOURCES += $$PWD/../../src/core/designspace.cpp
+
+HEADERS += $$PWD/../../src/core/fastener.h
+SOURCES += $$PWD/../../src/core/fastener.cpp
+
+HEADERS += $$PWD/../../src/core/splice.h
+SOURCES += $$PWD/../../src/core/splice.cpp
+
+HEADERS += $$PWD/../../src/core/tensor.h
+SOURCES += $$PWD/../../src/core/tensor.cpp
+
+HEADERS += $$PWD/../../src/core/solvers/isolver.h
+HEADERS += $$PWD/../../src/core/units/unit_system.h
+HEADERS += $$PWD/../../src/math/utils.h
 
 #-------------------------------------------------
 # Boost

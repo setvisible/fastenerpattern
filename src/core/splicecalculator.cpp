@@ -16,15 +16,13 @@
 
 #include "splicecalculator.h"
 
+#include <Core/DesignSpace>
+#include <Core/Fastener>
 #include <Core/Splice>
-#include <Core/Solvers/Parameters>
+#include <Core/Tensor>
 #include <Core/Solvers/ISolver>
+#include <Core/Solvers/Parameters>
 #include <Core/Solvers/RigidBodySolver>
-
-#include "splice.h"
-#include "designspace.h"
-#include "fastener.h"
-#include "tensor.h"
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
@@ -43,9 +41,8 @@
 SpliceCalculator::SpliceCalculator(QObject *parent) : AbstractSpliceModel(parent)
   , m_params(SolverParameters::NoSolver)
   , m_solver(Q_NULLPTR)
-  , m_splice(new Splice(this))
+  , m_splice(QSharedPointer<Splice>(new Splice))
 {
-    this->clear();
 }
 
 /******************************************************************************
@@ -73,6 +70,7 @@ void SpliceCalculator::clear()
     setDesignSpaceSelection(emptySet);
 
     setAppliedLoad(Tensor(0*N, 0*N, 0*N_m));
+    setSolverParameters(SolverParameters::RigidBodySolverWithIsoBearing);
 
     for (int i = fastenerCount()-1; i >=0; --i) {
         removeFastener(i);
@@ -80,6 +78,12 @@ void SpliceCalculator::clear()
     for (int i = designSpaceCount()-1; i >=0; --i) {
         removeDesignSpace(i);
     }
+
+    emit selectionFastenerChanged();
+    emit selectionDesignSpaceChanged();
+    emit appliedLoadChanged();
+    emit solverParamsChanged();
+    recalculate();
 }
 
 /******************************************************************************
@@ -234,34 +238,32 @@ QSet<int> SpliceCalculator::selectedDesignSpaceIndexes() const
 
 /******************************************************************************
  ******************************************************************************/
-bool SpliceCalculator::insertFastener(const int index, const Fastener &fastener)
+void SpliceCalculator::insertFastener(const int index, const Fastener &fastener)
 {
     m_splice->insertFastener(index, fastener);
     emit fastenerInserted(index, fastener);
     emit changed();
     recalculate();
-    return true;
 }
 
 
-bool SpliceCalculator::setFastener(const int index, const Fastener &fastener)
+void SpliceCalculator::setFastener(const int index, const Fastener &fastener)
 {
     if (index < 0 || index >= m_splice->fastenerCount())
-        return false;
+        return;
 
     const Fastener old = m_splice->fastenerAt(index);
     if (old == fastener)
-        return false;
+        return;
 
     m_splice->setFastenerAt(index, fastener);
 
     emit fastenerChanged(index, fastener);
     emit changed();
     recalculate();
-    return true;
 }
 
-bool SpliceCalculator::removeFastener(const int index)
+void SpliceCalculator::removeFastener(const int index)
 {
     if (m_selectedFastenerIndexes.remove( index )) {
         emit selectionFastenerChanged();
@@ -271,46 +273,44 @@ bool SpliceCalculator::removeFastener(const int index)
         emit fastenerRemoved(index);
         emit changed();
         recalculate();
-        return true;
     }
-    return false;
 }
 
 /******************************************************************************
  ******************************************************************************/
-bool SpliceCalculator::insertDesignSpace(const int index, const DesignSpace &designSpace)
+void SpliceCalculator::insertDesignSpace(const int index, const DesignSpace &designSpace)
 {
     m_splice->insertDesignSpace(index, designSpace);
     emit designSpaceInserted(index, designSpace);
     emit changed();
-
     // ** Remark **
     // Changing the design space does change the immediat results.
     // This is why the following methods are not called:
     //     recalculate();
     // ** Remark **
-
-    return true;
 }
 
-bool SpliceCalculator::setDesignSpace(const int index, const DesignSpace &designSpace)
+void SpliceCalculator::setDesignSpace(const int index, const DesignSpace &designSpace)
 {
     if (index < 0 || index >= m_splice->designSpaceCount())
-        return false;
+        return;
 
     const DesignSpace old = m_splice->designSpaceAt(index);
     if (old == designSpace)
-        return false;
+        return;
 
     m_splice->setDesignSpaceAt(index, designSpace);
 
     emit designSpaceChanged(index, designSpace);
     emit changed();
-    // recalculate();
-    return true;
+    // ** Remark **
+    // Changing the design space does change the immediat results.
+    // This is why the following methods are not called:
+    //     recalculate();
+    // ** Remark **
 }
 
-bool SpliceCalculator::removeDesignSpace(const int index)
+void SpliceCalculator::removeDesignSpace(const int index)
 {
     if (m_selectedDesignSpaceIndexes.remove( index )) {
         emit selectionDesignSpaceChanged();
@@ -319,29 +319,30 @@ bool SpliceCalculator::removeDesignSpace(const int index)
         m_splice->removeDesignSpaceAt(index);
         emit designSpaceRemoved(index);
         emit changed();
-        // recalculate();
-        return true;
+        // ** Remark **
+        // Changing the design space does change the immediat results.
+        // This is why the following methods are not called:
+        //     recalculate();
+        // ** Remark **
     }
-    return false;
 }
 
 /******************************************************************************
  ******************************************************************************/
-bool SpliceCalculator::setAppliedLoad(const Tensor &loadcase)
+void SpliceCalculator::setAppliedLoad(const Tensor &appliedLoad)
 {
-    if (m_splice->appliedLoad() == loadcase)
-        return false;
-    m_splice->setAppliedLoad(loadcase);
-    emit appliedLoadChanged();
-    emit changed();
-    recalculate();
-    return true;
+    if (m_splice->appliedLoad() != appliedLoad) {
+        m_splice->setAppliedLoad(appliedLoad);
+        emit appliedLoadChanged();
+        emit changed();
+        recalculate();
+    }
 }
 
-bool SpliceCalculator::setSolverParameters(SolverParameters params)
+void SpliceCalculator::setSolverParameters(SolverParameters params)
 {
     if (m_params == params)
-        return false;
+        return;
 
     if (m_solver) {
         delete m_solver;
@@ -375,29 +376,27 @@ bool SpliceCalculator::setSolverParameters(SolverParameters params)
         break;
     }
     m_params = params;
+    emit solverParamsChanged();
+    emit changed();
     recalculate();
-    return true;
 }
 
 /******************************************************************************
  ******************************************************************************/
-bool SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
+void SpliceCalculator::setFastenerSelection(const QSet<int> indexes)
 {
     if (m_selectedFastenerIndexes == indexes)
-        return false;
+        return;
     m_selectedFastenerIndexes = indexes;
-
     emit selectionFastenerChanged();
-    return true;
 }
 
-bool SpliceCalculator::setDesignSpaceSelection(const QSet<int> indexes)
+void SpliceCalculator::setDesignSpaceSelection(const QSet<int> indexes)
 {
     if (m_selectedDesignSpaceIndexes == indexes)
-        return false;
+        return;
     m_selectedDesignSpaceIndexes = indexes;
     emit selectionDesignSpaceChanged();
-    return true;
 }
 
 /******************************************************************************
@@ -407,7 +406,7 @@ void SpliceCalculator::recalculate()
     /// \todo Use worker thread here.
     /// \todo see  Mandelbrot Example  or  Blocking Fortune Client Example
     if (m_solver && m_splice) {
-        m_results = m_solver->calculate( m_splice );
+        m_results = m_solver->calculate( m_splice.data() );
     } else {
         m_results.clear();
     }

@@ -19,7 +19,6 @@
 
 #include <Core/AbstractSpliceModel>
 #include <Core/Splice>
-#include <Core/SpliceCalculator>
 #include <Core/Optimizer/Controller>
 #include <Core/Optimizer/OptimisationSolver>
 
@@ -27,16 +26,20 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QDateTime>
+#include <QtCore/QSharedPointer>
 
 /*! \class OptimisationWidget
- * \brief The class OptimisationWidget is the GUI that allows User
+ * \brief The class OptimisationWidget is the GUI that allows the user
  * to start, follow and stop the optimisation analysis.
  *
- * \remark The OptimisationSolver::start() method is an expensive task.
- * Then, the Controller runs another thread than the GUI.
+ * The optimisation calculation is a very CPU expensive task.
+ * To keep the GUI responsive during the calculation, the \a start()
+ * method calls a independant Controller that runs the calculation
+ * into an independant thread.
  *
- * \remark Due to the limited width of the OptimisationWidget,
- * try to keep the length of the messages less than 40 characters.
+ * During the calculation process, the Controller
+ *
+ * \sa Controller
  */
 OptimisationWidget::OptimisationWidget(QWidget *parent) : QWidget(parent)
   , ui(new Ui::OptimisationWidget)
@@ -97,12 +100,12 @@ OptimisationWidget::~OptimisationWidget()
 
 /******************************************************************************
  ******************************************************************************/
-SpliceCalculator *OptimisationWidget::spliceCalculator() const
+AbstractSpliceModel *OptimisationWidget::model() const
 {
     return m_calculator;
 }
 
-void OptimisationWidget::setSpliceCalculator(SpliceCalculator *calculator)
+void OptimisationWidget::setModel(AbstractSpliceModel *calculator)
 {
     m_calculator = calculator;
 }
@@ -111,8 +114,8 @@ void OptimisationWidget::setSpliceCalculator(SpliceCalculator *calculator)
  ******************************************************************************/
 void OptimisationWidget::onShowResultToggled(bool checked)
 {
-    Splice *splice = (checked ? m_controller->output()
-                              : m_controller->input() );
+    QSharedPointer<Splice> splice = (checked ? m_controller->output()
+                                             : m_controller->input() );
     for (int i = 0; i < splice->fastenerCount(); ++i) {
         m_calculator->setFastener(i, splice->fastenerAt(i));
     }
@@ -165,6 +168,12 @@ void OptimisationWidget::onControllerMessageDebug(QString message)
 
 /******************************************************************************
  ******************************************************************************/
+/*! \brief Append the given \a message to the console with the given \a timestamp,
+ * and colors the message according to the \a type of message.
+ *
+ * \remark Due to the limited width of the QTextEdit in the OptimisationWidget's UI,
+ * you'd better off to log messages with less than 40 characters.
+ */
 void OptimisationWidget::log(int type, qint64 timestamp, const QString &message)
 {
     switch (type) {
@@ -186,28 +195,37 @@ void OptimisationWidget::log(int type, qint64 timestamp, const QString &message)
     }
 }
 
+
 /******************************************************************************
  ******************************************************************************/
+static inline QSharedPointer<Splice> currentSpliceCopy(AbstractSpliceModel *calculator)
+{
+    Q_ASSERT(calculator);
+    QSharedPointer<Splice> splice = QSharedPointer<Splice>(new Splice);
+    splice->setAppliedLoad( calculator->appliedLoad() );
+    for (int i = 0; i < calculator->designSpaceCount(); ++i) {
+        splice->addDesignSpace( calculator->designSpaceAt(i) );
+    }
+    for (int i = 0; i < calculator->fastenerCount(); ++i) {
+        splice->addFastener( calculator->fastenerAt(i) );
+    }
+    return splice;
+}
+
+/*! \brief Start the calculation.
+  */
 void OptimisationWidget::start()
 {
-    /// \todo Save the initial splice somewhere
-
-    /// \bug memory leak !
-    Splice* input = new Splice();
-
-    input->setAppliedLoad( m_calculator->appliedLoad() );
-    for (int i = 0; i < m_calculator->designSpaceCount(); ++i) {
-        input->addDesignSpace( m_calculator->designSpaceAt(i) );
-    }
-    for (int i = 0; i < m_calculator->fastenerCount(); ++i) {
-        input->addFastener( m_calculator->fastenerAt(i) );
-    }
-
+    QSharedPointer<Splice> input = currentSpliceCopy(m_calculator);
+    m_controller->setInput( input );
     m_controller->setSolver( m_calculator->solver() );
-    m_controller->setInput(input);
     m_controller->start();
 }
 
+/*! \brief Stop the calculation.
+  * It cancels the computation, but the last optimized result is available
+  * with onShowResultToggled().
+  */
 void OptimisationWidget::stop()
 {
     m_controller->cancel();

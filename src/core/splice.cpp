@@ -34,8 +34,8 @@
  * Use read() and write() to serialize to JSON format.
  */
 
-Splice::Splice(QObject *parent) : QObject(parent)
-  , m_title(QString())
+Splice::Splice()
+  : m_title(QString())
   , m_author(QString())
   , m_date(QString())
   , m_description(QString())
@@ -197,7 +197,13 @@ void Splice::addFastener(const Fastener &fastener)
 
 void Splice::addFastener(const QVector<Fastener> &fasteners)
 {
+#if QT_VERSION >= 0x050500
     m_fasteners.append(fasteners);
+#else
+    foreach (auto f, fasteners) {
+        m_fasteners.append(f);
+    }
+#endif
 }
 
 void Splice::setFastenerAt(const int index, const Fastener &fastener)
@@ -245,12 +251,18 @@ void Splice::addDesignSpace(const DesignSpace &designSpace)
 
 void Splice::addDesignSpace(const QVector<DesignSpace> &designSpaces)
 {
+#if QT_VERSION >= 0x050500
     m_designSpaces.append(designSpaces);
+#else
+    foreach (auto ds, designSpaces) {
+        m_designSpaces.append(ds);
+    }
+#endif
 }
 
 void Splice::setDesignSpaceAt(const int index, const DesignSpace &designSpace)
 {
-    m_designSpaces[index] = designSpace;
+    m_designSpaces[index] = designSpace; // replace() ?
 }
 
 void Splice::removeDesignSpaceAt(const int index)

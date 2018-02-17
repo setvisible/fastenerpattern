@@ -20,6 +20,7 @@
 #include <Core/AbstractSpliceModel>
 
 #include <QtCore/QSet>
+#include <QtCore/QSharedPointer>
 
 QT_BEGIN_NAMESPACE
 class QDebug;
@@ -44,23 +45,14 @@ class SpliceCalculator : public AbstractSpliceModel
 public:
     explicit SpliceCalculator(QObject *parent = Q_NULLPTR);
 
-    void clear();
-
     /* JSON Serialization */
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
     QString title() const;
-    void setTitle(const QString &title);
-
     QString author() const;
-    void setAuthor(const QString &author);
-
     QString date() const;
-    void setDate(const QString &date);
-
     QString description() const;
-    void setDescription(const QString &description);
 
     virtual int fastenerCount() const Q_DECL_OVERRIDE;
     virtual Fastener fastenerAt(const int index) const Q_DECL_OVERRIDE;
@@ -75,37 +67,42 @@ public:
     virtual QSet<int> selectedFastenerIndexes() const Q_DECL_OVERRIDE;
     virtual QSet<int> selectedDesignSpaceIndexes() const Q_DECL_OVERRIDE;
 
-
-    ISolver* solver() const { return m_solver; } /// \todo This is a hack!
+    virtual ISolver* solver() const Q_DECL_OVERRIDE { return m_solver; }
 
 Q_SIGNALS:
     void changed();
 
 public Q_SLOTS:
-    virtual bool insertFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual bool setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
-    virtual bool removeFastener(const int index) Q_DECL_OVERRIDE;
+    virtual void clear();
 
-    virtual bool insertDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
-    virtual bool setDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
-    virtual bool removeDesignSpace(const int index) Q_DECL_OVERRIDE;
+    virtual void setTitle(const QString &title);
+    virtual void setAuthor(const QString &author);
+    virtual void setDate(const QString &date);
+    virtual void setDescription(const QString &description);
 
-    virtual bool setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
-    virtual bool setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
+    virtual void insertFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void setFastener(const int index, const Fastener &fastener) Q_DECL_OVERRIDE;
+    virtual void removeFastener(const int index) Q_DECL_OVERRIDE;
 
-    virtual bool setFastenerSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
-    virtual bool setDesignSpaceSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
+    virtual void insertDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void setDesignSpace(const int index, const DesignSpace &designSpace) Q_DECL_OVERRIDE;
+    virtual void removeDesignSpace(const int index) Q_DECL_OVERRIDE;
+
+    virtual void setAppliedLoad(const Tensor &appliedLoad) Q_DECL_OVERRIDE;
+    virtual void setSolverParameters(SolverParameters params) Q_DECL_OVERRIDE;
+
+    virtual void setFastenerSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
+    virtual void setDesignSpaceSelection(const QSet<int> indexes) Q_DECL_OVERRIDE;
 
 private:
     SolverParameters m_params;
     ISolver *m_solver;
-    Splice* m_splice;
+    QSharedPointer<Splice> m_splice;
     QSet<int> m_selectedFastenerIndexes;
     QSet<int> m_selectedDesignSpaceIndexes;
     QList<Tensor> m_results;
 
     void recalculate();
-
 };
 
 #endif // CORE_SPLICE_CALCULATOR_H

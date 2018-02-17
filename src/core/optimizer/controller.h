@@ -18,6 +18,7 @@
 #define CORE_OPTIMISATION_CONTROLLER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QSharedPointer>
 
 QT_BEGIN_NAMESPACE
 class QString;
@@ -35,13 +36,13 @@ public:
     explicit Controller(QObject *parent = Q_NULLPTR);
     ~Controller();
 
-    Splice *input() const;
-    void setInput(Splice *splice);
-
     ISolver *solver() const;
     void setSolver(ISolver *solver);
 
-    Splice *output() const;
+    QSharedPointer<Splice> input() const;
+    void setInput(const QSharedPointer<Splice> &splice);
+
+    QSharedPointer<Splice> output() const;
 
     void start();
     void cancel();
@@ -64,8 +65,8 @@ Q_SIGNALS:
 private:
     OptimisationSolver *m_optimizer;
     ISolver *m_solver;
-    Splice* m_input;
-    Splice* m_output;
+    QSharedPointer<Splice> m_input;
+    QSharedPointer<Splice> m_output;
     int m_iteration;
     int m_iterationCount;
 

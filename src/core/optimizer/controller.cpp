@@ -56,29 +56,38 @@ private:
 
 /*! \class Controller
  * \brief The class Controller manages the optimisation from A to Z.
+ *
  * In particular, Controller manages the creation and destruction of the threads
  * during the computation, in order to balance the computation load
  * on multiple CPUs.
  *
- * Note that OptimisationSolver::runAsync() performs one unique optimisation loop.
+ * Controller delegates the calculation to OptimisationSolver.
+ *
+ *
+ * \section under-the-hood Under the hood
  *
  * Controller launches OptimisationSolver::runAsync() one after one,
  * and emits signals to be eventually catched by the GUI.
  *
- * \remark OptimisationSolver MUST be thread-safe (and then reentrant).
+ *
+ * \section tasks-and-threads Tasks and Threads
+ *
+ * Controller manages the creation of Task objects.
+ * Each Task is an independant part of the whole optimisation process.
+ * The Controller distributes the optimisation through all the CPUs.
  *
  * \sa OptimisationSolver
  */
 Controller::Controller(QObject *parent) : QObject(parent)
   , m_optimizer(new OptimisationSolver(this))
   , m_solver(Q_NULLPTR)
-  , m_input(Q_NULLPTR)
-  , m_output(new Splice(this))
+  , m_input(QSharedPointer<Splice>(new Splice))
+  , m_output(QSharedPointer<Splice>(new Splice))
   , m_iteration(0)
   , m_iterationCount(10000)
 {
-
-    /* When a task is completed, the controller starts a new task directly,
+    /*
+     * When a task is completed, the controller starts a new task directly,
      * without waiting for the end of the other running tasks.
      * It's possible to run a slot immediately in the Qt's events queue
      * with 'Qt::DirectConnection'.
@@ -98,21 +107,6 @@ Controller::~Controller()
 {
     /// \todo wait for the remaining tasks to finished ?
     waitForFinishing();
-
-    if (m_output)
-        delete m_output;
-}
-
-/******************************************************************************
- ******************************************************************************/
-Splice *Controller::input() const
-{
-    return m_input;
-}
-
-void Controller::setInput(Splice *splice)
-{
-    m_input = splice;
 }
 
 /******************************************************************************
@@ -127,13 +121,20 @@ void Controller::setSolver(ISolver *solver)
     m_solver = solver;
 }
 
-/******************************************************************************
- ******************************************************************************/
-Splice *Controller::output() const
+QSharedPointer<Splice> Controller::input() const
+{
+    return m_input;
+}
+
+void Controller::setInput(const QSharedPointer<Splice> &splice)
+{
+    m_input = splice;
+}
+
+QSharedPointer<Splice> Controller::output() const
 {
     return m_output;
 }
-
 
 /******************************************************************************
  ******************************************************************************/
@@ -224,8 +225,8 @@ void Controller::start()
     \*********************************************************************/
     Q_ASSERT(m_optimizer);
     Q_ASSERT(m_solver);
-    Q_ASSERT(m_input);
-    Q_ASSERT(m_output);
+    Q_ASSERT(!m_input.isNull());
+    Q_ASSERT(!m_output.isNull());
 
     emit started();
     emit progressed(0);
@@ -237,8 +238,8 @@ void Controller::start()
     m_optimizer->setDesignObjective( OptimisationDesignObjective::MinimizeMaxLoad );
     m_optimizer->setDesignConstraints( OptimisationDesignConstraint::MinPitchDistance_4Phi );
     m_optimizer->setRandomIterations( 1 );
-    m_optimizer->setInput( m_input );
-    m_optimizer->setOutput( m_output );
+    m_optimizer->setInput( m_input.data() );
+    m_optimizer->setOutput( m_output.data() );
 
     m_iteration = m_iterationCount;
 

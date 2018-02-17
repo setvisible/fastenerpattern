@@ -79,7 +79,11 @@ bool BackgroundWidget::testFlag(Feature feature) const
 
 void BackgroundWidget::setFlag(Feature feature, const bool enabled)
 {
+#if QT_VERSION >= 0x050700
     m_enabledFeatures.setFlag(feature, enabled);
+#else
+    enabled ? (m_enabledFeatures |= feature) : (m_enabledFeatures &= ~feature);
+#endif
     this->updateView();
 }
 

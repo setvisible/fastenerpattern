@@ -25,10 +25,10 @@ class DesignOptionWidget;
 class DesignSpaceWidget;
 class DesignVariableWidget;
 class FastenerWidget;
+class FastenerTableWidget;
 class OptimisationWidget;
 class ResultWidget;
 class SolverWidget;
-class TableWidget;
 
 namespace Ui {
 class MainWidget;
@@ -47,10 +47,10 @@ public:
     DesignSpaceWidget* designSpaceWidget() const;
     DesignVariableWidget* designVariableWidget() const;
     FastenerWidget* fastenerWidget() const;
+    FastenerTableWidget* fastenerTableWidget() const;
     OptimisationWidget* optimisationWidget() const;
     ResultWidget* resultWidget() const;
     SolverWidget* solverWidget() const;
-    TableWidget* tableWidget() const;
 
     int currentIndex() const;
 
