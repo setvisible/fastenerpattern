@@ -61,7 +61,7 @@ The following intructions are in the
 
 3. Build
 
-     - On Unix or Mac OS X
+     - On Linux or Mac OS X
 
             $ mkdir -p build
             $ cd build/
@@ -76,7 +76,7 @@ The following intructions are in the
 
         Enjoy FastenerPattern using `fastenerpattern`.
 
-        Rem: On MacOSX, you may must type
+        Rem: On MacOSX, you may have to type
         `$ chmod +x install.sh`
         after `$ make` for installing.
 
